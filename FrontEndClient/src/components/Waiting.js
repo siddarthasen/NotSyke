@@ -25,91 +25,37 @@ const useStyles = makeStyles({
   }
 });
 
-const Chat = ({location}) => {
-  const [name, setName] = useState('')
-  const [room, setRoom] = useState('')
-  const [messages, setMessages] = useState([])
-  const [message, setMessage] = useState('')
-  const [value, setValue] = React.useState(0);
-
-  const classes = useStyles();
-  const ENDPOINT = 'localhost:5000'
-  // useEffect(() => {
-  //   const {name, room} = queryString.parse(location.search)
-  //   socket = io(ENDPOINT);
-  //   setName(name);
-  //   setRoom(room);
-  //   console.log(room, name)
-  //   socket.emit('join', {name, room}, (error) => {
-  //     // alert(error)
-  //   });
-  //   return() => {
-  //     socket.emit('disconnect');
-  //
-  //     socket.off();
-  //   }
-  // }, [ENDPOINT, location.search])
-
-
-const sendRequest = () => {
-  console.log(name, room)
-  socket = io(ENDPOINT);
+const Waiting = (props) => {
+  const [members, setMembers] = useState([])
+  useEffect(() => {
+    let name = props.location.state.name
+    let room = props.location.state.room
+    let endpoint = props.location.state.endpoint
+    socket = io(endpoint)
     socket.emit('join', {name, room}, (error) => {
-      // alert(error)
-    });
-}
+        if(error)
+        {
+          alert(error)
+        }
+      });
+    console.log(props.location.state.endpoint)
 
-  const displayPrompt = (value) =>
-  {
-    if(value == 0)
-    {
-    return(
-      <CardFormat
-      value={value}
-      handleChange={handleChange}
-      buttonName={"Join Room"}
-      name={name}
-      setName={setName}
-      room={room}
-      setRoom={setRoom}
-      sendRequest={sendRequest}/>
-    )
-  }
-  else
-  {
-    return(
-      <CardFormat
-      value={value}
-      handleChange={handleChange}
-      buttonName={"Create Room"}
-      name={name}
-      setName={setName}
-      room={room}
-      setRoom={setRoom}
-      sendRequest/>
-    )
-  }
-  }
+    socket.on('message', (data) => console.log(data));
+  },[])
+  //inital to connect to Server
 
-  const handleChange = (event, newValue) => {
-    console.log(newValue)
-    setValue(newValue);
-  };
+  useEffect(() => {
+    socket.on('add_member', (data) => console.log(data));
+  }, [members])
+
+
 
 
   return (
     <div>
-      <Spring
-      from={{ transform: 'translate3d(0,-800px,0)' }}
-      to={{ transform: 'translate3d(0,0px,0)' }}>
-      {props => (
-        <div style={props}>
-        {displayPrompt(value)}
-      </div>
-    )}
-      </Spring>
+      <h1>HEllo</h1>
     </div>
   );
 }
 
-export default Chat;
+export default Waiting;

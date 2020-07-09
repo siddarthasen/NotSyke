@@ -1,0 +1,22 @@
+
+Joining
+client => name, room
+
+create
+client => name
+generate a unique id (5 digits) that can be given back to the client on the waiting room
+
+
+//users and the rooms
+
+//creating a rooms
+  use the unique id as akey for the hash map
+//when the user r logging in
+  //check whether thier code is a ley in the hash map
+  if(key exists)
+  then add the name to the hashmap
+   return: list of members, and the room code
+   use the boardcast function to tell members who has joined
+
+
+  //Actual Gameplay:

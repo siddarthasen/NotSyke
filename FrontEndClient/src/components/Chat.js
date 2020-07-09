@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import queryString from 'query-string'
-import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -52,13 +51,14 @@ const Chat = ({location}) => {
 
 
 const sendRequest = () => {
-  console.log(name, room)
-  socket = io(ENDPOINT);
-    socket.emit('join', {name, room}, (error) => {
-      // alert(error)
-    });
+  // console.log(name, room)
+  // socket = io(ENDPOINT);
+  //   socket.emit('join', {name, room}, (error) => {
+  //     // alert(error)
+  //   });
 }
 
+  //used for displaying the UI for the homepage depending on the create/join
   const displayPrompt = (value) =>
   {
     if(value == 0)

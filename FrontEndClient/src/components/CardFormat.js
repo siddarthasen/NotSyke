@@ -11,8 +11,12 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import './CardFormat.css'
+
+let socket;
+
 
 const useStyles = makeStyles({
   card: {
@@ -62,7 +66,27 @@ const useStyles = makeStyles({
   }
 });
 
-
+const joinRoom = (buttonName, name, room, history) => {
+  const ENDPOINT = 'localhost:5000'
+  // socket = io(ENDPOINT)
+  if(buttonName.localeCompare('Create Room') == 0)
+  {
+    console.log("here")
+  }
+  else
+  {
+    // socket.emit('join', {name, room}, (error) => {
+    //     if(error)
+    //     {
+    //       alert(error)
+    //     }
+    //     else {
+    //       history.push('/Waiting', {name: name, room: room, endpoint: ENDPOINT})
+    //     }
+    //   });
+    history.push('/Waiting', {name: name, room: room, endpoint: ENDPOINT})
+  }
+}
 
 const RenderRoom = ({value, classes, name, setName, room, setRoom}) => {
   if(value === 0)
@@ -88,20 +112,27 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom}) => {
   }
   else {
     return(
-      <Grid container item direction="column"  justify="center" alignItems="center" style={{ minHeight: '25vh' }}>
-      <input
-      className={classes.text}
-      type="text"
-      value={name}
-      placeholder="Username"
-      onChange={(e) => setName(e.target.value)}
-      />
+      <Grid
+      container
+      item
+      direction="column"
+      justify="center"
+      alignItems="center"
+      style={{ minHeight: '25vh' }}>
+        <input
+        className={classes.text}
+        type="text"
+        value={name}
+        placeholder="Username"
+        onChange={(e) => setName(e.target.value)}
+        />
       </Grid>
       )
   }
 }
 
 const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRoom, sendRequest}) => {
+  let history = useHistory();
   const classes = useStyles();
   return (
   <Grid container
@@ -124,7 +155,7 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
           <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
         </CardContent>
         <CardActions>
-          <Button className={classes.test1} value={buttonName} onClick={()=> console.log("here")}>{buttonName}</Button>
+          <Button className={classes.test1} value={buttonName} onClick={()=> joinRoom(buttonName, room, name, history)}>{buttonName}</Button>
         </CardActions>
       </Card>
     </Grid>

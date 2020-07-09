@@ -18,18 +18,46 @@ const io = socketio(server);
 
 
 //connections to a client here
+//add all the logic for the members in this function
 io.on('connection', (socket) => {
-  console.log("We have new connection");
+  // socket.on('check', ({name, room}) => {
+  //
+  // })
+  //create a function that ONLY CHECKS whether the room/name is valid
+
+  //for create a room just join Room below is fine
+
+  //this function actually inserts the name into the key in the hashmap to make sure the user is in the group
   socket.on('join', ({name, room}, callback) => {
-    const {error, user} = addUser({id:socket.id, name, room});
+    const {error, user} = addUser({id:socket.id, name, room}); //inserts name
     if(error)
     {
-      return callback(error)
+      return callback(error) //return the error
     }
-    socket.emit('message', {user: 'admin', text: `${user.name}, Welcome to the room ${user.room}}`})
-    socket.broadcast.to(user.room).emit('message', {user: 'admin', text: `${user.name} has joined`})
-    socket.join(user.room);
+    else
+    {
+      console.log("User " + name + 'has joined ' + room)
+    }
 
+    // socket.on("add_user", name => {
+    //   name: "testing",
+    //   message: "Welcome, it works"
+    // })
+    console.log(socket.id)
+    destination = socket.id
+    socket.emit('message', {user: 'admin', text: `${user.name}, Welcome to the room ${user.room}}`}) //sends the message to the client as soon as they join
+    // socket.broadcast.to(user.room).emit('message', {user: 'admin', text: `${user.name} has joined`})
+    // socket.join(user.room);
+
+    //ENDING OF USED CODE
+    //AFTER THIS ADD FUNCTIONALITY FOR:
+      //broadcasting list of members everytime a new user joins
+      //creating a room (check whether room is taken) and returning the generwted id
+
+
+
+      
+    //..............................................//
 
     socket.on('sendMessage', (message, callback) => {
       const user = getUser(socket.id);
