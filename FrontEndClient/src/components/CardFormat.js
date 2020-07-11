@@ -72,6 +72,7 @@ const joinRoom = (buttonName, name, room, history) => {
   if(buttonName.localeCompare('Create Room') == 0)
   {
     console.log("here")
+    history.push('/Waiting', {name: name, room: room, endpoint: ENDPOINT})
   }
   else
   {

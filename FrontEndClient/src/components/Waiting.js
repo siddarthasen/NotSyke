@@ -13,7 +13,8 @@ import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 import CardFormat from './CardFormat'
  import { Spring } from 'react-spring/renderprops'
-
+ import { useSelector, useDispatch } from 'react-redux';
+//mport actions from actions.js
 let socket;
 
 const useStyles = makeStyles({
@@ -26,19 +27,27 @@ const useStyles = makeStyles({
 });
 
 const Waiting = (props) => {
-  const [members, setMembers] = useState([])
+  //Access redux state tree:
+  let members = useSelector(state=> state.members)
+  console.log(members)
+  
+  const dispatch = useDispatch()
+  
   useEffect(() => {
     let name = props.location.state.name
     let room = props.location.state.room
     let endpoint = props.location.state.endpoint
+    //assume this stuff is in action.js file
     socket = io(endpoint)
     socket.emit('join', {name, room}, (error) => {
         if(error)
         {
-          alert(error)
+          alert(error);
         }
+        console.log("name: " + name);
+        console.log("room" + room)
       });
-    console.log(props.location.state.endpoint)
+
 
     socket.on('message', (data) => console.log(data));
   },[])
@@ -53,7 +62,7 @@ const Waiting = (props) => {
 
   return (
     <div>
-      <h1>HEllo</h1>
+      <h1>Hello</h1>
     </div>
   );
 }

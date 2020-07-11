@@ -25,19 +25,17 @@ io.on('connection', (socket) => {
   //create a function that ONLY CHECKS whether the room/name is valid
 
   //for create a room just join Room below is fine
-
   //this function actually inserts the name into the key in the hashmap to make sure the user is in the group
   socket.on('join', ({name, room}, callback) => {
     const {error, user} = addUser({id:socket.id, name, room}); //inserts name
-    if(error)
-    {
+    if(error) {
       return callback(error) //return the error
     }
-    else
-    {
+    else {
+      socket.join(room);
       console.log("User " + name + 'has joined ' + room)
     }
-
+    //https://stackoverflow.com/questions/19150220/creating-rooms-in-socket-io#:~:text=Rooms%20in%20Socket.IO%20don,function%20(room)%20%7B%20socket.
     // socket.on("add_user", name => {
     //   name: "testing",
     //   message: "Welcome, it works"
@@ -57,6 +55,9 @@ io.on('connection', (socket) => {
 
       
     //..............................................//
+    // socket.on('create', function (room) {
+    //   socket.join(room)
+    // });
 
     socket.on('sendMessage', (message, callback) => {
       const user = getUser(socket.id);
@@ -64,6 +65,7 @@ io.on('connection', (socket) => {
     })
     callback();
   });
+
   //disconnect client
   socket.on('disconnect', () => {
     const user = removeUser(socket.id)
