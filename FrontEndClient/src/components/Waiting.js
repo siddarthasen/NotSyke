@@ -29,7 +29,6 @@ const useStyles = makeStyles({
 const Waiting = (props) => {
   //Access redux state tree:
   let members = useSelector(state=> state.members)
-  console.log(members)
   
   const dispatch = useDispatch()
   
@@ -40,21 +39,20 @@ const Waiting = (props) => {
     let type = props.location.state.type
     //assume this stuff is in action.js file
     socket = io(endpoint)
-    socket.emit('join', {type, name, room}, (error) => {
-        if(error)
-        {
-          alert(error);
-        }
-      });
-
-
-    socket.on('message', (data) => console.log(data));
+    socket.emit('join', {type: type, name: name, room: room});
+    console.log('POINT A');
+    socket.on('waiting-info', (object) => {
+      console.log('initial');
+      console.log('room Stuff: ', object)});
+      
   },[])
   //inital to connect to Server
 
   useEffect(() => {
-    socket.on('add_member', (data) => console.log(data));
-  }, [members])
+    socket.on('waiting-info', (object) => {
+      console.log('members join');
+      console.log('room Stuff: ', object)});
+  })
 
 
 
@@ -62,6 +60,7 @@ const Waiting = (props) => {
   return (
     <div>
       <h1>Hello</h1>
+      
     </div>
   );
 }

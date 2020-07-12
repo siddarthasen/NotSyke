@@ -19,63 +19,30 @@ var roomNum = 1;
 
 var roomList = {}
 
-io.on('connection', function(socket){
+io.on('connection', function(socket) {
 
   socket.on('join', function({type, name, room}) {
     if (type === 'Create') {
-      // console.log("serverRoom: " +  room);
-      // roomNum++;
-      var roomID = generateRoomID().toString()
-      while(roomList.hasOwnProperty(roomID))
-      {
-        roomID = generateRoomID().toString()
+      room = generateRoomID().toString()
+      while(roomList.hasOwnProperty(room)) {
+        room = generateRoomID().toString()
       }
       socket.join(room);
-      roomList[roomID] = [] //list of users
-      roomList[roomID].push(name)
-      console.log("roomList: ", roomList) 
-      // if(io.sockets.adapter.rooms['123'])
-      // {
-      //   var clients = io.sockets.adapter.rooms['123'].length;
-      //   console.log("there are " + clients + " in room 1")
-      // }
-      // if(io.sockets.adapter.rooms['456'])
-      // {
-      //   var clients = io.sockets.adapter.rooms['456'].length;
-      //   console.log("there are " + clients + " in room 2")
-      // }
-      // console.log("All people: " , socket.adapter.rooms);
-      // console.log("All people: "  ,io.sockets.clients());
-      
-      // var clientsTwo = io.sockets.adapter.rooms['456'];
-      // console.log("there are " + clientsTwo + " in room 2")
-    } else if (type === 'Join') {
+      console.log("socket.rooms: ", socket.adapter.rooms);
+      console.log("////////////////////////////")
+      roomList[room] = [] //list of users
+      roomList[room].push(name)
+      socket.emit('waiting-info', {roomID: room, members: roomList[room]});
+    }
+    else if (roomList.hasOwnProperty(room)) {
       // console.log("All people: " , socket.adapter.rooms);
       // @error check if person's name is unique
-      if(roomList.hasOwnProperty(room))
-      {
-        socket.join(room);
-        // @Sid, are we going to change the if statement here back to roomList.contains(room)?
-        roomList[room].push(room);  
-      }
-      else 
-      {
-        console.log("error")
-        alert("error")
-      }
-      // if(io.sockets.adapter.rooms['123'])
-      // {
-      //   var clients = io.sockets.adapter.rooms['123'].length;
-      //   console.log("there are " + clients + " in room 1")
-      // }
-      // if(io.sockets.adapter.rooms['456'])
-      // {
-      //   var clients = io.sockets.adapter.rooms['456'].length;
-      //   console.log("there are " , clients,  " in room 2")
-      // }
-    }
-     else {
-      // @error room does not exist
+      socket.join(room);
+      roomList[room].push(name);
+      console.log("socket.rooms: ", socket.adapter.rooms);
+      console.log("////////////////////////////")
+      // socket.emit('waiting-info', {roomID: room, members: roomList[room]})
+      io.in(room).emit('waiting-info', {roomID: room, members: roomList[room]});
     }
   })
 
@@ -129,7 +96,6 @@ io.on('connection', function(socket){
 //       //creating a room (check whether room is taken) and returning the generwted id
 
 
-
       
 //     //..............................................//
 //     // socket.on('create', function (room) {
@@ -158,3 +124,31 @@ io.on('connection', function(socket){
 app.use(router);
 
 server.listen(PORT, () => console.log(`Server has started`));
+
+
+      // if(io.sockets.adapter.rooms['123'])
+      // {
+      //   var clients = io.sockets.adapter.rooms['123'].length;
+      //   console.log("there are " + clients + " in room 1")
+      // }
+      // if(io.sockets.adapter.rooms['456'])
+      // {
+      //   var clients = io.sockets.adapter.rooms['456'].length;
+      //   console.log("there are " + clients + " in room 2")
+      // }
+      // console.log("All people: " , socket.adapter.rooms);
+      // console.log("All people: "  ,io.sockets.clients());
+      
+      // var clientsTwo = io.sockets.adapter.rooms['456'];
+      // console.log("there are " + clientsTwo + " in room 2")
+
+            // if(io.sockets.adapter.rooms['123'])
+      // {
+      //   var clients = io.sockets.adapter.rooms['123'].length;
+      //   console.log("there are " + clients + " in room 1")
+      // }
+      // if(io.sockets.adapter.rooms['456'])
+      // {
+      //   var clients = io.sockets.adapter.rooms['456'].length;
+      //   console.log("there are " , clients,  " in room 2")
+      // }
