@@ -20,14 +20,7 @@ var roomNum = 1;
 var roomList = {}
 
 io.on('connection', function(socket){
-  // console.log("the socket is" , socket)
 
-  // if (roomNum % 2 == 0) {
-  //   socket.join('room1');
-  // } else {
-  //   socket.join('room2');
-  // }
-  
   socket.on('join', function({type, name, room}) {
     if (type === 'Create') {
       // console.log("serverRoom: " +  room);
@@ -40,7 +33,7 @@ io.on('connection', function(socket){
       socket.join(room);
       roomList[roomID] = [] //list of users
       roomList[roomID].push(name)
-      console.log(roomList)
+      console.log("roomList: ", roomList) 
       // if(io.sockets.adapter.rooms['123'])
       // {
       //   var clients = io.sockets.adapter.rooms['123'].length;
@@ -62,7 +55,8 @@ io.on('connection', function(socket){
       if(roomList.hasOwnProperty(room))
       {
         socket.join(room);
-        roomList[room].push(room);
+        // @Sid, are we going to change the if statement here back to roomList.contains(room)?
+        roomList[room].push(room);  
       }
       else 
       {

@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CardFormat from './CardFormat'
  import { Spring } from 'react-spring/renderprops'
  import { useSelector, useDispatch } from 'react-redux';
-//mport actions from actions.js
+//import actions from actions.js
 let socket;
 
 const useStyles = makeStyles({
