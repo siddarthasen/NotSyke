@@ -37,7 +37,7 @@ const addUser = ({id, name, room}) =>
 }
 
 const generateRoomID = () => {
-  return Math.random().toString(36).slice(2)
+  return Math.random().toString(36).substring(2,5);
 }
 
 //removed user from the arry. but we need it for the hashmap
