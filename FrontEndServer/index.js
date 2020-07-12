@@ -46,6 +46,13 @@ io.on('connection', function(socket) {
     }
   })
 
+  socket.on('sendMessage', function({room, answer, user}) {
+    io.in(room).emit('waiting-info', {user: user, answer: answer);
+  }
+  
+  )
+
+
   // console.log("socket.rooms: " + socket.adapter.rooms); // contains an object with all of the roomnames as keys and values
 
   // var clientsOne = io.sockets.clients();
