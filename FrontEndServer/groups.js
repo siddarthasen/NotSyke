@@ -36,6 +36,17 @@ const addUser = ({id, name, room}) =>
   return {user}
 }
 
+const generateRoomID = () => {
+  return Math.random().toString(36).slice(2)
+  // var ans = ''
+  // for (var i = 5; i > 0; i--) { 
+  //     console.log(Math.floor(Math.random()).toString())
+  //       ans.concat(Math.floor(Math.random()).toString()); 
+  // } 
+  // console.log(ans)
+  // console.log("here")
+}
+
 //removed user from the arry. but we need it for the hashmap
 const removeUser = (id) => {
   const index = users.findIndex((user) => user.id === id);
@@ -50,4 +61,4 @@ const getUsersInRoom = (room) => users.filter((user) => user.room === room);
 
 // const generateRoomCode;
 
-module.exports = {addUser, removeUser, getUser, getUsersInRoom};
+module.exports = {addUser, removeUser, getUser, getUsersInRoom, generateRoomID};

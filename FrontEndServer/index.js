@@ -3,7 +3,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const http = require('http');
 
-const {addUser, removeUser, getUser, getUsersInRoom} = require('./groups');
+const {addUser, removeUser, getUser, getUsersInRoom, generateRoomID} = require('./groups');
 
 const PORT = process.env.PORT || 5000;
 
@@ -17,10 +17,10 @@ const io = socketio(server);
 
 var roomNum = 1;
 
-var roomList = []
+var roomList = {}
 
 io.on('connection', function(socket){
-  console.log("the socket is" + socket)
+  // console.log("the socket is" , socket)
 
   // if (roomNum % 2 == 0) {
   //   socket.join('room1');
@@ -29,44 +29,56 @@ io.on('connection', function(socket){
   // }
   
   socket.on('join', function({type, name, room}) {
-    console.log('type: ' + type);
-    console.log('name: ' + name);
-    console.log('room: ' + room);
     if (type === 'Create') {
-      room = roomNum % 2 === 1 ? "123": "456";
-      console.log("serverRoom: " +  room);
-      roomNum++;
+      // console.log("serverRoom: " +  room);
+      // roomNum++;
+      var roomID = generateRoomID().toString()
+      while(roomList.hasOwnProperty(roomID))
+      {
+        roomID = generateRoomID().toString()
+      }
       socket.join(room);
-      roomList.push(room);
-      if(io.sockets.adapter.rooms['123'])
-      {
-        var clients = io.sockets.adapter.rooms['123'].length;
-        console.log("there are " + clients + " in room 1")
-      }
-      if(io.sockets.adapter.rooms['456'])
-      {
-        var clients = io.sockets.adapter.rooms['456'].length;
-        console.log("there are " + clients + " in room 2")
-      }
-      console.log("All people: " + socket.adapter.rooms);
-      console.log("All people: " + io.sockets.clients());
+      roomList[roomID] = [] //list of users
+      roomList[roomID].push(name)
+      console.log(roomList)
+      // if(io.sockets.adapter.rooms['123'])
+      // {
+      //   var clients = io.sockets.adapter.rooms['123'].length;
+      //   console.log("there are " + clients + " in room 1")
+      // }
+      // if(io.sockets.adapter.rooms['456'])
+      // {
+      //   var clients = io.sockets.adapter.rooms['456'].length;
+      //   console.log("there are " + clients + " in room 2")
+      // }
+      // console.log("All people: " , socket.adapter.rooms);
+      // console.log("All people: "  ,io.sockets.clients());
       
       // var clientsTwo = io.sockets.adapter.rooms['456'];
       // console.log("there are " + clientsTwo + " in room 2")
     } else if (type === 'Join') {
-      if(io.sockets.adapter.rooms['123'])
-      {
-        var clients = io.sockets.adapter.rooms['123'].length;
-        console.log("there are " + clients + " in room 1")
-      }
-      if(io.sockets.adapter.rooms['456'])
-      {
-        var clients = io.sockets.adapter.rooms['456'].length;
-        console.log("there are " + clients + " in room 2")
-      }
-      console.log("All people: " + socket.adapter.rooms.toString());
+      // console.log("All people: " , socket.adapter.rooms);
       // @error check if person's name is unique
-      socket.join(room);
+      if(roomList.hasOwnProperty(room))
+      {
+        socket.join(room);
+        roomList[room].push(room);
+      }
+      else 
+      {
+        console.log("error")
+        alert("error")
+      }
+      // if(io.sockets.adapter.rooms['123'])
+      // {
+      //   var clients = io.sockets.adapter.rooms['123'].length;
+      //   console.log("there are " + clients + " in room 1")
+      // }
+      // if(io.sockets.adapter.rooms['456'])
+      // {
+      //   var clients = io.sockets.adapter.rooms['456'].length;
+      //   console.log("there are " , clients,  " in room 2")
+      // }
     }
      else {
       // @error room does not exist
