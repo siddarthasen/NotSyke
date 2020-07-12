@@ -66,26 +66,17 @@ const useStyles = makeStyles({
   }
 });
 
-const joinRoom = (buttonName, name, room, history) => {
+const joinRoom = (buttonName, room, name, history) => {
   const ENDPOINT = 'localhost:5000'
   // socket = io(ENDPOINT)
   if(buttonName.localeCompare('Create Room') == 0)
   {
-    console.log("here")
-    history.push('/Waiting', {name: name, room: room, endpoint: ENDPOINT})
+    
+    history.push('/Waiting', {type: "Create", name: name, room: room, endpoint: ENDPOINT})
   }
   else
   {
-    // socket.emit('join', {name, room}, (error) => {
-    //     if(error)
-    //     {
-    //       alert(error)
-    //     }
-    //     else {
-    //       history.push('/Waiting', {name: name, room: room, endpoint: ENDPOINT})
-    //     }
-    //   });
-    history.push('/Waiting', {name: name, room: room, endpoint: ENDPOINT})
+    history.push('/Waiting', {type: "Join", name: name, room: room, endpoint: ENDPOINT})
   }
 }
 

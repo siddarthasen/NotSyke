@@ -37,15 +37,14 @@ const Waiting = (props) => {
     let name = props.location.state.name
     let room = props.location.state.room
     let endpoint = props.location.state.endpoint
+    let type = props.location.state.type
     //assume this stuff is in action.js file
     socket = io(endpoint)
-    socket.emit('join', {name, room}, (error) => {
+    socket.emit('join', {type, name, room}, (error) => {
         if(error)
         {
           alert(error);
         }
-        console.log("name: " + name);
-        console.log("room" + room)
       });
 
 

@@ -17,24 +17,71 @@ const io = socketio(server);
 
 var roomNum = 1;
 
-io.on('connection', function(socket){
-  if (roomNum % 2 == 0) {
-    socket.join('room1');
-  } else {
-    socket.join('room2');
-  }
+var roomList = []
 
-  roomNum++;
-  console.log(socket.rooms); // contains an object with all of the roomnames as keys and values
+io.on('connection', function(socket){
+  console.log("the socket is" + socket)
+
+  // if (roomNum % 2 == 0) {
+  //   socket.join('room1');
+  // } else {
+  //   socket.join('room2');
+  // }
+  
+  socket.on('join', function({type, name, room}) {
+    console.log('type: ' + type);
+    console.log('name: ' + name);
+    console.log('room: ' + room);
+    if (type === 'Create') {
+      room = roomNum % 2 === 1 ? "123": "456";
+      console.log("serverRoom: " +  room);
+      roomNum++;
+      socket.join(room);
+      roomList.push(room);
+      if(io.sockets.adapter.rooms['123'])
+      {
+        var clients = io.sockets.adapter.rooms['123'].length;
+        console.log("there are " + clients + " in room 1")
+      }
+      if(io.sockets.adapter.rooms['456'])
+      {
+        var clients = io.sockets.adapter.rooms['456'].length;
+        console.log("there are " + clients + " in room 2")
+      }
+      console.log("All people: " + socket.adapter.rooms);
+      console.log("All people: " + io.sockets.clients());
+      
+      // var clientsTwo = io.sockets.adapter.rooms['456'];
+      // console.log("there are " + clientsTwo + " in room 2")
+    } else if (type === 'Join') {
+      if(io.sockets.adapter.rooms['123'])
+      {
+        var clients = io.sockets.adapter.rooms['123'].length;
+        console.log("there are " + clients + " in room 1")
+      }
+      if(io.sockets.adapter.rooms['456'])
+      {
+        var clients = io.sockets.adapter.rooms['456'].length;
+        console.log("there are " + clients + " in room 2")
+      }
+      console.log("All people: " + socket.adapter.rooms.toString());
+      // @error check if person's name is unique
+      socket.join(room);
+    }
+     else {
+      // @error room does not exist
+    }
+  })
+
+  // console.log("socket.rooms: " + socket.adapter.rooms); // contains an object with all of the roomnames as keys and values
 
   // var clientsOne = io.sockets.clients();
   
-  var clients = io.sockets.adapter.rooms['room1'];
-  var clientsTwo = io.sockets.adapter.rooms['room2'];
+ 
 
   // console.log(clientsOne);
-  console.log(clients);
-  console.log(clientsTwo);
+  // console.log(clients);
+  // console.log(clientsTwo);
 })
 
 //connections to a client here
