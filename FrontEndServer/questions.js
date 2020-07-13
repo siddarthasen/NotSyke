@@ -12,6 +12,11 @@
 */
 questions = [
     {id: 1, first: "What is ", second: "'s favorite food?"},
+    {id: 2, first: "", second: ""},
+    {id: 3, first: "", second: ""},
+    {id: 4, first: "", second: ""},
+    {id: 5, first: "", second: ""},
+    {id: 6, first: "", second: ""},
 
 ]
 
