@@ -18,7 +18,6 @@ import {
  import { Spring } from 'react-spring/renderprops'
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './actions'
-import { useHistory } from "react-router-dom";
 let socket;
 
 
@@ -32,16 +31,17 @@ const useStyles = makeStyles({
 });
 
 const Waiting = (props) => {
-  let history = useHistory();
   //Access redux state tree:
   let members = useSelector(state=> state.members)
   let socket1 = useSelector(state=> state.socket)
+  console.log(members)
   let roomID = useSelector(state => state.roomID)
-  let start = useSelector(state => state.start)
   let name = props.location.state.name
 let room = props.location.state.room
 let endpoint = props.location.state.endpoint
 let type = props.location.state.type
+
+const [move, setMove] = useState(false)
   
   const dispatch = useDispatch()
   
@@ -61,46 +61,23 @@ let type = props.location.state.type
   },[])
   //inital to connect to Server
 
-  // useEffect(() => {
-  //   socket.on('waiting-info', (object) => {;
-  //     console.log('room Stuff: ', object)});
-  // })
-
   useEffect(() => {
-    socket.on('start', (start) => {
-      history.push('/Game', {name: name, room: room})
-    })
+    socket.on('waiting-info', (object) => {;
+      console.log('room Stuff: ', object)});
   })
 
-  const startGame = () => {
-    dispatch(actions.startGame(roomID, socket, (update) => {
-      history.push('/Game', {name: name, room: room})
-    }))
-  }
-
-  // useEffect(() => {
-    
-  //   history.push('/Game', {name: name, room: room})
-  // }, [move])
+  useEffect(() => {
+    console.log(socket1)
+    history.push('/Game', {name: name, room: room})
+  }, [move])
 
 
 
+console.log(type)
   return (
     <div>
       <h1>Hello</h1>
-      <h1> The room id is {roomID}</h1>
-      <Grid item direction="column">
-      {members.map((item, i) => (
-                    <Card style={{margin: 10}}>
-                      <List key={i}>
-                        <ListItem key={i} style={{margin: 15}}>
-                          <ListItemText id={i} primary={item}/>
-                        </ListItem>
-                    </List>
-                  </Card>
-                    ))}
-        </Grid>
-        {type==="Create" && members.length > 1? <Button onClick={startGame}>Here</Button> : null}
+      <h1>WELCOME TO THE GAME</h1>
     </div>
   );
 }

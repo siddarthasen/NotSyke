@@ -61,7 +61,7 @@ const sendRequest = () => {
   //used for displaying the UI for the homepage depending on the create/join
   const displayPrompt = (value) =>
   {
-    if(value == 0)
+    if(value === 0)
     {
     return(
       <CardFormat

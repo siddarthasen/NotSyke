@@ -22,6 +22,7 @@ var roomList = {}
 io.on('connection', function(socket) {
 
   socket.on('join', function({type, name, room}) {
+    name = name.trim().toLowerCase();
     if (type === 'Create') {
       room = generateRoomID().toString()
       while(roomList.hasOwnProperty(room)) {
@@ -39,18 +40,19 @@ io.on('connection', function(socket) {
       // @error check if person's name is unique
       socket.join(room);
       roomList[room].push(name);
-      console.log("socket.rooms: ", socket.adapter.rooms);
-      console.log("////////////////////////////")
       // socket.emit('waiting-info', {roomID: room, members: roomList[room]})
       io.in(room).emit('waiting-info', {roomID: room, members: roomList[room]});
     }
   })
 
-  socket.on('sendMessage', function({room, answer, user}) {
-    io.in(room).emit('waiting-info', {user: user, answer: answer);
-  }
-  
-  )
+  socket.on('requestPrompt', function({room}) {
+    name = "Parshva"
+    var question = `If ${name} was a 10 yr old, what would he play with?`
+    io.in(room).emit('sentPrompt', {user: user, question: question});
+  })
+  socket.on('start_game' , function({room}) {
+    io.in(room).emit('start', {start: true});
+  })
 
 
   // console.log("socket.rooms: " + socket.adapter.rooms); // contains an object with all of the roomnames as keys and values
