@@ -6,6 +6,7 @@ class User {
     this.id = id;
     this.name = name;
     this.room = room;
+    this.answer = answer
   }
 }
 

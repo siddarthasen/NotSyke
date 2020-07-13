@@ -2,15 +2,21 @@
 
 
 const initalState = {
-    signIn: false,
     messages: [],
-    members: []
+    members: [],
+    socket: {},
+    roomID: '',
+    start: false
 }
 
 function reducer(state=initalState, action) {
     switch(action.type){
-        case "CHECK_LOGIN":
-            return{...state, signIn: action.payload}
+        case 'RET_LOGIN_INFO':
+            return{...state, members: action.payload.members, roomID: action.payload.roomID}
+        case 'SET_SOCKET':
+            return{...state, socket: action.payload}
+        case 'START_GAME':
+            return{...state, start: action.payload}
         default: 
             return{...state}
     }
