@@ -32,7 +32,7 @@ const Chat = ({location}) => {
   const [value, setValue] = React.useState(0);
 
   const classes = useStyles();
-  const ENDPOINT = 'localhost:5000'
+  const ENDPOINT = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
   // useEffect(() => {
   //   const {name, room} = queryString.parse(location.search)
   //   socket = io(ENDPOINT);

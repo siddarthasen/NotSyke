@@ -6,6 +6,7 @@ const http = require('http');
 const {addUser, removeUser, getUser, getUsersInRoom, generateRoomID} = require('./groups');
 
 const PORT = process.env.PORT || 5000;
+console.log(PORT)
 
 const router = require('./router');
 
@@ -15,9 +16,14 @@ const server = http.createServer(app);
 
 const io = socketio(server);
 
-var roomNum = 1;
-
 var roomList = {}
+class User {
+  constructor(name) {
+    this.name = name
+    this.points = 0;
+    this.answer = ''
+  }
+}
 
 io.on('connection', function(socket) {
 
@@ -29,135 +35,83 @@ io.on('connection', function(socket) {
         room = generateRoomID().toString()
       }
       socket.join(room);
-      console.log("socket.rooms: ", socket.adapter.rooms);
-      console.log("////////////////////////////")
-      roomList[room] = [] //list of users
-      roomList[room].push(name)
-      socket.emit('waiting-info', {roomID: room, members: roomList[room]});
+      roomList[room] = []
+      const user = new User(name)
+      roomList[room].push(user)
+      let members = roomList[room].map(({name}) => name)
+      socket.emit('waiting-info', {roomID: room, members: members});
     }
     else if (roomList.hasOwnProperty(room)) {
-      // console.log("All people: " , socket.adapter.rooms);
-      // @error check if person's name is unique
       socket.join(room);
-      roomList[room].push(name);
-      // socket.emit('waiting-info', {roomID: room, members: roomList[room]})
-      io.in(room).emit('waiting-info', {roomID: room, members: roomList[room]});
+      const user = new User(name)
+      roomList[room].push(user)
+      let members = roomList[room].map(({name}) => name)
+      io.in(room).emit('waiting-info', {roomID: room, members: members});
     }
-  })
+  });
 
   socket.on('requestPrompt', function({room}) {
+    //if(answer for each user is not empyy)-> clear it
     name = "Parshva"
     var question = `If ${name} was a 10 yr old, what would he play with?`
-    io.in(room).emit('sentPrompt', {user: user, question: question});
-  })
+    io.in(room).emit('sentPrompt', {question: question});
+  });
+
   socket.on('start_game' , function({room}) {
     io.in(room).emit('start', {start: true});
-  })
+  });
 
+/*  On PLAYER-DISCONNECT, we remove the NAME in the list of members 
+    from the particular room. Then we emit the updated member list. 
+    We are broadcasting to send the updated member list everyone except the 
+    disconnected user @Sid. */
+ socket.on('player-disconnect', function({roomID, name}) {
+   let temp = roomList[roomID];
+   if (temp & temp.length) {
+     temp.splice(temp.indexOf(name), 1);
+     io.broadcast.emit('removal-update', {members: roomList[roomID]}); 
+   }
+ })
 
-  // console.log("socket.rooms: " + socket.adapter.rooms); // contains an object with all of the roomnames as keys and values
+ socket.on('submitAnswer' , function({room, name, answer}) {
+   let user;
+   for(i in roomList[room])
+   {
+     if(name === roomList[room][i].name)
+     {
+      roomList[room][i].answer = answer
+     }
+     console.log("The user is" , roomList[room][i].name)
+     console.log("The user is" + roomList[room])
+   }
+   for(var i=0; i< roomList[room].length; i++)
+   {
+     console.log(roomList[room][i])
+     if(roomList[room][i].answer === '')
+     {
+       break
+     }
+     if(i ===roomList[room].length-1)
+     {
+       //have to push answers here otherwise it might conflict with other rooms
+       let answers = []
+       for(i in roomList[room])
+       {
+         answers.push(roomList[room][i].answer)
+       }
+       io.in(room).emit('answers', {answers: answers});
+       console.log("All answers r completed")
 
-  // var clientsOne = io.sockets.clients();
-  
- 
+     }
+   }
+   console.log("ROOM IS" + room, "NAME IS", name, answer)
+   //push the answe in the array and then check whetherall the answers have been submitted
+   //if so, emit the function which release all the answers in the array and then clear
+   //forgot we also need the user's name as well
+ })
 
-  // console.log(clientsOne);
-  // console.log(clients);
-  // console.log(clientsTwo);
 })
-
-//connections to a client here
-//add all the logic for the members in this function
-// io.on('connection', socket => {
-//   // console.log(socket);
-//   // console.log("^this is socket");
-//   // socket.on('check', ({name, room}) => {
-//   //
-//   // })
-//   //create a function that ONLY CHECKS whether the room/name is valid
-
-//   //for create a room just join Room below is fine
-//   //this function actually inserts the name into the key in the hashmap to make sure the user is in the group
-//   socket.on('join', ({name, room}, callback) => {
-//     const {error, user} = addUser({id:socket.id, name, room}); //inserts name
-//     // if(error) {
-//       console.log(socket.rooms)
-//       return callback(error) //return the error
-//     // }
-//     // else {
-//     //   socket.join(room);
-//     //   console.log("User " + name + 'has joined ' + room)
-//     // }
-//     //https://stackoverflow.com/questions/19150220/creating-rooms-in-socket-io#:~:text=Rooms%20in%20Socket.IO%20don,function%20(room)%20%7B%20socket.
-//     // socket.on("add_user", name => {
-//     //   name: "testing",
-//     //   message: "Welcome, it works"
-//     // })
-//     console.log(socket.id)
-//     destination = socket.id
-//     socket.emit('message', {user: 'admin', text: `${user.name}, Welcome to the room ${user.room}}`}) //sends the message to the client as soon as they join
-//     // socket.broadcast.to(user.room).emit('message', {user: 'admin', text: `${user.name} has joined`})
-//     // socket.join(user.room);
-
-//     //ENDING OF USED CODE
-//     //AFTER THIS ADD FUNCTIONALITY FOR:
-//       //broadcasting list of members everytime a new user joins
-//       //creating a room (check whether room is taken) and returning the generwted id
-
-
-      
-//     //..............................................//
-//     // socket.on('create', function (room) {
-//     //   socket.join(room)
-//     // });
-    
-
-//     socket.on('sendMessage', (message, callback) => {
-//       const user = getUser(socket.id);
-//       io.to(user.room).emit('message', {user:user.name, text: message})
-//     })
-//     callback();
-//   });
-
-//   //disconnect client
-//   socket.on('disconnect', () => {
-//     const user = removeUser(socket.id)
-//     if(user)
-//     {
-//       io.to(user.room).emit('message', {user:'admin', text: `${user.name} has left`})
-//     }
-//     console.log("user has left");
-//   })
-// });
 
 app.use(router);
 
 server.listen(PORT, () => console.log(`Server has started`));
-
-
-      // if(io.sockets.adapter.rooms['123'])
-      // {
-      //   var clients = io.sockets.adapter.rooms['123'].length;
-      //   console.log("there are " + clients + " in room 1")
-      // }
-      // if(io.sockets.adapter.rooms['456'])
-      // {
-      //   var clients = io.sockets.adapter.rooms['456'].length;
-      //   console.log("there are " + clients + " in room 2")
-      // }
-      // console.log("All people: " , socket.adapter.rooms);
-      // console.log("All people: "  ,io.sockets.clients());
-      
-      // var clientsTwo = io.sockets.adapter.rooms['456'];
-      // console.log("there are " + clientsTwo + " in room 2")
-
-            // if(io.sockets.adapter.rooms['123'])
-      // {
-      //   var clients = io.sockets.adapter.rooms['123'].length;
-      //   console.log("there are " + clients + " in room 1")
-      // }
-      // if(io.sockets.adapter.rooms['456'])
-      // {
-      //   var clients = io.sockets.adapter.rooms['456'].length;
-      //   console.log("there are " , clients,  " in room 2")
-      // }

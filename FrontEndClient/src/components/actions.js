@@ -19,3 +19,15 @@ export const startGame = (room, socket, callback) => async dispatch => {
     })
     
 }
+
+export const requestPrompt = (room, socket) => async dispatch => {
+    socket.emit('requestPrompt', {room: room})
+    socket.on('sentPrompt', (response) => {
+        dispatch({type: 'DISPLAY_QUESTION', payload: response.question})
+    })
+    
+}
+
+export const sendAnswer = (room, name, answer, socket) => async dispatch => {
+    socket.emit('submitAnswer', {room: room, name:name, answer: answer})
+}

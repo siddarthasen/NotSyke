@@ -18,6 +18,7 @@ import {
  import { Spring } from 'react-spring/renderprops'
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './actions'
+import { useHistory } from "react-router-dom";
 let socket;
 
 
@@ -30,56 +31,47 @@ const useStyles = makeStyles({
   }
 });
 
-const Waiting = (props) => {
+const Game = (props) => {
+  let history = useHistory();
   //Access redux state tree:
   let members = useSelector(state=> state.members)
-  let socket1 = useSelector(state=> state.socket)
-  console.log(members)
+  let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
   let name = props.location.state.name
 let room = props.location.state.room
 let endpoint = props.location.state.endpoint
 let type = props.location.state.type
 
-const [move, setMove] = useState(false)
+
+let question = useSelector(state=> state.question)
+
+const [answer, setAnswer] = useState('')
   
   const dispatch = useDispatch()
   
   useEffect(() => {
-    socket = io(endpoint)
-    dispatch({type: 'SET_SOCKET', payload: socket})
-    //assume this stuff is in action.js file
-    dispatch(actions.sendLogIn(type, name, room, endpoint, socket, io))
-    console.log(members, roomID)
-    // socket = io(endpoint)
-    // socket.emit('join', {type: type, name: name, room: room});
-    // console.log('POINT A');
-    // socket.on('waiting-info', (object) => {
-    //   console.log('initial');
-    //   console.log('room Stuff: ', object)});
-      
-  },[])
-  //inital to connect to Server
+    dispatch(actions.requestPrompt(roomID, socket))
 
-  useEffect(() => {
-    socket.on('waiting-info', (object) => {;
-      console.log('room Stuff: ', object)});
-  })
+},[]);
 
-  useEffect(() => {
-    console.log(socket1)
-    history.push('/Game', {name: name, room: room})
-  }, [move])
+const submitAnswer = (event) => {
+  dispatch(actions.sendAnswer(roomID, name, answer, socket))
+  history.push('/Answers', {name: name, room: room})
+}
 
 
-
-console.log(type)
   return (
     <div>
       <h1>Hello</h1>
-      <h1>WELCOME TO THE GAME</h1>
+      <h1>{question}</h1>
+      <input
+        type="text"
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+        />
+        <Button onClick={submitAnswer}>Submit</Button>
     </div>
   );
 }
 
-export default Waiting;
+export default Game;

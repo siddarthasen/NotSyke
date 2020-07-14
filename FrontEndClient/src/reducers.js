@@ -17,6 +17,8 @@ function reducer(state=initalState, action) {
             return{...state, socket: action.payload}
         case 'START_GAME':
             return{...state, start: action.payload}
+        case 'DISPLAY_QUESTION':
+            return{...state, question: action.payload}
         default: 
             return{...state}
     }
