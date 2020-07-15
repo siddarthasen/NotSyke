@@ -110,6 +110,16 @@ io.on('connection', function(socket) {
    //forgot we also need the user's name as well
  })
 
+ socket.on('send_choice', function({room, name, choice}) {
+   for(i in roomList[room])
+   {
+     if(choice === roomList[room][i].answer)
+     {
+       roomList[room][i].points += 1
+     }
+   }
+ })
+
 })
 
 app.use(router);

@@ -40,6 +40,7 @@ let room = props.location.state.room
   
   const dispatch = useDispatch()
   const [answers, setAnswers] = useState([])
+  const [choice, setChoice] = useState('')
   
   useEffect(() => {
     socket.on('answers', ({answers}) => {
@@ -47,6 +48,16 @@ let room = props.location.state.room
     console.log(answers)
     })
   })
+
+  useEffect(()=> {
+      socket.on('next_question', ({move}) => {
+        history.push('/Game', {name: name, room: room})
+      })
+  })
+
+  const sendChoice = (choice) => {
+    setChoice(choice)
+  }
 
 
   return (
@@ -57,7 +68,7 @@ let room = props.location.state.room
                     <Card style={{margin: 10}}>
                       <List key={i}>
                         <ListItem key={i} style={{margin: 15}}>
-                          <ListItemText id={i} primary={item}/>
+                          <Button onClick={() => sendChoice(item)}><ListItemText id={i} primary={item}/></Button>
                         </ListItem>
                     </List>
                   </Card>
