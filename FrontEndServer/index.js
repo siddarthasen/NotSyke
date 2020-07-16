@@ -101,7 +101,13 @@ io.on('connection', function(socket) {
        {
          answers.push(roomList[room][i].answer)
        }
-       io.in(room).emit('answers', {answers: answers});
+       //@SID: 
+       //create a answer object which contains the following
+      //  user: {
+      //    Userid (generated initally as user joins): ononwed,
+      //    answer (which has been submitted): nownc
+      //  }
+       io.in(room).emit('answers', {user: user});
        console.log("All answers r completed")
 
      }
@@ -113,6 +119,8 @@ io.on('connection', function(socket) {
  })
 
  socket.on('send_choice', function({room, name, choice}) {
+   //@SID
+   //expect userID right here, and increment the respective points
    console.log(name, choice, room)
    for(i in roomList[room])
    {
