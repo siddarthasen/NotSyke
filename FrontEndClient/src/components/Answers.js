@@ -37,6 +37,7 @@ const Answers = (props) => {
   let roomID = useSelector(state => state.roomID)
   let name = props.location.state.name
 let room = props.location.state.room
+let answer = props.location.state.answer
   
   const dispatch = useDispatch()
   const [answers, setAnswers] = useState([])
@@ -51,11 +52,21 @@ let room = props.location.state.room
 
   useEffect(()=> {
       socket.on('next_question', ({move}) => {
-        history.push('/Game', {name: name, room: room})
+        // history.push('/Game', {name: name, room: room})
       })
   })
 
   const sendChoice = (choice) => {
+    console.log(choice, answer)
+    if(choice === answer)
+    {
+      alert("Cant choice cuz urs")
+    }
+    else 
+    {
+      console.log(roomID)
+      dispatch(actions.sendChoice(roomID, name, choice, socket))
+    }
     setChoice(choice)
   }
 

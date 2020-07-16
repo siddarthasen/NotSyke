@@ -22,6 +22,8 @@ class User {
     this.name = name
     this.points = 0;
     this.answer = ''
+    this.id = generateRoomID().toString(), //used for checking which user was picked 
+    this.done = false //used to check whether all parties have answered
   }
 }
 
@@ -111,14 +113,21 @@ io.on('connection', function(socket) {
  })
 
  socket.on('send_choice', function({room, name, choice}) {
+   console.log(name, choice, room)
    for(i in roomList[room])
    {
-     if(choice === roomList[room][i].answer)
+    //edge case where two seperate people chose the same answer. so for each indivudal we also need an id whcih will be passed in when given choices
+     if(choice === roomList[room][i].choice)
      {
        roomList[room][i].points += 1
+       //have some sort of flag which tells users their answer is done
+       //check if all the flags are done, then emit a repsonse which tells people to go to score page
      }
    }
+   console.log(roomList)
  })
+
+ 
 
 })
 

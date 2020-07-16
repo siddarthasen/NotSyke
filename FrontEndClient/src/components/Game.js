@@ -56,7 +56,8 @@ const [answer, setAnswer] = useState('')
 
 const submitAnswer = (event) => {
   dispatch(actions.sendAnswer(roomID, name, answer, socket))
-  history.push('/Answers', {name: name, room: room})
+  console.log(answer)
+  history.push('/Answers', {name: name, room: room, answer: answer})
 }
 
 

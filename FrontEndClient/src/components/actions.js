@@ -31,3 +31,7 @@ export const requestPrompt = (room, socket) => async dispatch => {
 export const sendAnswer = (room, name, answer, socket) => async dispatch => {
     socket.emit('submitAnswer', {room: room, name:name, answer: answer})
 }
+
+export const sendChoice = (room, name, choice, socket) => async dispatch => {
+    socket.emit('send_choice', {room: room, name:name, choice: choice})
+}
