@@ -38,9 +38,9 @@ const Game = (props) => {
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
   let name = props.location.state.name
-let room = props.location.state.room
-let endpoint = props.location.state.endpoint
-let type = props.location.state.type
+  let room = props.location.state.room
+  let endpoint = props.location.state.endpoint
+  let type = props.location.state.type
 
 
 let question = useSelector(state=> state.question)

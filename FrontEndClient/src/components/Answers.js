@@ -36,17 +36,18 @@ const Answers = (props) => {
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
   let name = props.location.state.name
-let room = props.location.state.room
-let answer = props.location.state.answer
+  let room = props.location.state.room
+  let answer = props.location.state.answer
   
   const dispatch = useDispatch()
-  const [answers, setAnswers] = useState([])
-  const [choice, setChoice] = useState('')
+  const [answerInfo, answerInfo] = useState(null);
+  const [choice, setChoice] = useState('');
   
+
   useEffect(() => {
-    socket.on('answers', ({answers}) => {
-        setAnswers(answers)
-    console.log(answers)
+    socket.on('answers', (answerInfo) => {
+        setAnswerInfo(answerInfo);
+    console.log(answer);
     })
   })
 
@@ -65,13 +66,17 @@ let answer = props.location.state.answer
     else 
     {
       console.log(roomID)
-      dispatch(actions.sendChoice(roomID, name, choice, socket))
+      dispatch(actions.sendChoice(roomID, 'HARRY CHANGE THIS TO ID', choice, socket))
     }
     setChoice(choice)
   }
 
 
   return (
+    /* @Harry, add some field for the choice's User's id.
+       So if the first choice was 'abc', when that is clicked, 
+       server knows who's choice it is. 
+    */
     <div>
       <h1>Hello</h1>
       <Grid item direction="column">
