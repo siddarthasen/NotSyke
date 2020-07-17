@@ -7,11 +7,15 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 import CardFormat from './CardFormat'
+import Chip from '@material-ui/core/Chip';
+import Slide from '@material-ui/core/Slide';
+import '../fonts/Chewy-Regular.ttf'
 import {
   withStyles, Avatar, Divider, CardHeader, List, ListItemText, ListItem
 } from '@material-ui/core';
@@ -23,15 +27,58 @@ let socket;
 
 
 const useStyles = makeStyles({
-  title: {
-    flex: 1,
-    flexDirection: 'row',
+  card: {
+    borderRadius: 40,
+    height: 500,
+    width: 400,
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'black'
+  },
+  title: {
+    fontSize: 30,
+    fontFamily: 'Chewy-Regular',
+    textAlign: 'center',
+    padding: 15
+  },
+  bar: {
+    alignSelf: 'center',
+    fontColor: 'black',
+    background: 'transparent'
+  },
+  test: {
+    color: 'white',
+    fontColor: 'black',
+    background: 'black'
+  },
+  text: {
+    padding: 5,
+    width: 300,
+    height: 50,
+    fontSize: 25,
+    borderColor: 'black',
+    borderRadius: 10,
+    borderWidth: 3,
+    fontFamily: 'Sedan',
+    backgroundColor: '#black',
+    marginTop: 15,
+    alignSelf: 'center'
+  },
+  test1: {
+    flex: 1,
+    marginLeft: 30,
+    marginRight: 30,
+    height: 45,
+    alignItems: 'center',
+    fontSize: 20,
+    fontFamily: 'Sedan',
+    fontColor: 'white',
     justifyContent: 'center'
   }
 });
 
 const Waiting = (props) => {
+  const classes = useStyles();
   let history = useHistory();
   //Access redux state tree:
   let members = useSelector(state=> state.members)
@@ -40,6 +87,7 @@ const Waiting = (props) => {
   let start = useSelector(state => state.start)
   let name = props.location.state.name
   let room = props.location.state.room
+  const [slide, setSlide] = useState(false);
   // let endpoint = props.location.state.endpoint
   let type = props.location.state.type
     
@@ -53,6 +101,7 @@ const Waiting = (props) => {
     dispatch({type: 'SET_SOCKET', payload: socket})
     //assume this stuff is in action.js file
     dispatch(actions.sendLogIn(type, name, room, endpoint, socket, io))
+    setSlide(true)
       
   },[]);
 
@@ -89,21 +138,35 @@ const Waiting = (props) => {
 
   return (
     <div>
-      <h1> The room id is {roomID}</h1>
       <Grid item direction="column">
-        <Card>
-      {members.map((item, i) => (
-                    <Card style={{margin: 10}}>
-                      <List key={i}>
-                        <ListItem key={i} style={{margin: 15}}>
-                          <ListItemText id={i} primary={item}/>
-                        </ListItem>
+      <Grid container
+  spacing={0}
+  direction="column"
+  alignItems="center"
+  justify="center"
+  style={{ minHeight: '100vh' }}>
+    <Typography style={{fontSize: 40, marginBottom: 20}}>Room ID: {roomID}</Typography>
+    <Box border={3} borderRadius={40}>
+    <Card className={classes.card}>
+    <Typography className = {classes.title}>
+    Waiting for People to Join...
+    </Typography>
+    {members.map((item, i) => (
+                      <List key={i} style={{display: 'flex', justifyContent: 'center'}}>
+                        <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left'}}/>
+                        </Grid>
+                        </Slide>
                     </List>
-                  </Card>
                     ))}
-              </Card>
+            {type==="Create" && members.length > 1? <Button variant="outlined" className={classes.test1} color="primary" onClick={startGame}>Here</Button> : null}
+      </Card>
+      </Box>
+    </Grid>
+
+
         </Grid>
-        {type==="Create" && members.length > 1? <Button onClick={startGame}>Here</Button> : null}
     </div>
   );
 }

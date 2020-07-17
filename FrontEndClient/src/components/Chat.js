@@ -103,17 +103,17 @@ const sendRequest = () => {
       <Particles className="particles" params={{
   "particles": {
     "number": {
-      "value": 23,
+      "value": 15,
       "density": {
         "enable": true,
-        "value_area": 800
+        "value_area": 1600
       }
     },
     "color": {
       "value": "#ebedfa"
     },
     "shape": {
-      "type": "circle",
+      "type": "images",
       "stroke": {
         "width": 0,
         "color": "#000"
@@ -121,12 +121,21 @@ const sendRequest = () => {
       "polygon": {
         "nb_sides": 6
       },
-      "image": {
-        "src": "https://lh3.googleusercontent.com/proxy/6OAXOI_ya6Uh4uBEGKZ6M-dFGL0regfEdYLOTprR4FZZzSaU2Y1gMDYho_608G6SaWhfO6q4sVxWtw8k40CXxyG6LIV_PVd2gcldcS9_KD5mAt6eX3_J4rGx2aNm3gaIVS2Z2Hkrb9u9OoG6I2nw30CqDcJlAFtQR6Yibs2P_xI",
-        "width": 100,
-        "height": 100
-      }
+      "image":  [ {
+        "src": "https://media.discordapp.net/attachments/729673704778366986/733760176577970296/laugh.png",
+        "width": 20,
+        "height": 20
+      },
+      {
+      "src": "https://media.discordapp.net/attachments/729673704778366986/733760179039895671/brain.png?width=676&height=676",
+      "width": 20,
+      "height": 20
     },
+    {
+      "src": "https://media.discordapp.net/attachments/729673704778366986/733760159788171385/lightbulb.png?width=676&height=676",
+      "width": 20,
+      "height": 20
+    }]},
     "opacity": {
       "value": 0.3,
       "random": true,
@@ -161,7 +170,7 @@ const sendRequest = () => {
       "random": false,
       "straight": false,
       "out_mode": "out",
-      "bounce": false,
+      "bounce": true,
       "attract": {
         "enable": true,
         "rotateX": 600,
@@ -173,7 +182,7 @@ const sendRequest = () => {
     "detect_on": "canvas",
     "events": {
       "onhover": {
-        "enable": false,
+        "enable": true,
         "mode": "grab"
       },
       "onclick": {
