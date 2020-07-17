@@ -40,14 +40,21 @@ const Answers = (props) => {
   let answer = props.location.state.answer
   
   const dispatch = useDispatch()
-  const [answerInfo, answerInfo] = useState(null);
+  const [ID, setID] = useState([]);
+  const [answers, setAnswers] = useState([])
   const [choice, setChoice] = useState('');
+  const [renderPoints, setrenderPoints] = useState(false)
+  const [points, setPoints] = useState([])//place in redux so we can dd animation of number increasing
+  const [player, setPlayers] = useState([]);
   
 
   useEffect(() => {
     socket.on('answers', (answerInfo) => {
-        setAnswerInfo(answerInfo);
-    console.log(answer);
+      let answer = answerInfo.answerInfo.map(({answer}) => answer)
+      let id = answerInfo.answerInfo.map(({id}) => id) 
+      setAnswers(answer)
+      setID(id)
+      console.log(answer, id)
     })
   })
 
@@ -57,18 +64,84 @@ const Answers = (props) => {
       })
   })
 
-  const sendChoice = (choice) => {
-    console.log(choice, answer)
-    if(choice === answer)
+  useEffect(() => {
+    socket.on('choices', (choiceInfo) => {
+      if(renderPoints === false)
+      {
+        let players = choiceInfo.choiceInfo.map(({name}) => name)
+        let points = choiceInfo.choiceInfo.map(({points}) => points) 
+        setPlayers(players)
+        setPoints(points)
+        setrenderPoints(true)
+        console.log(players)
+      }
+      // history.push('/Game', {name: name, room: room})
+    })
+
+  })
+
+  function shuffle(array) {
+    array.sort(() => Math.random() - 0.5);
+    return array
+  }
+
+  const sendChoice = (index) => {
+    if(answers[index] === answer)
     {
       alert("Cant choice cuz urs")
     }
     else 
     {
       console.log(roomID)
-      dispatch(actions.sendChoice(roomID, 'HARRY CHANGE THIS TO ID', choice, socket))
+      dispatch(actions.sendChoice(roomID, ID[index], socket))
     }
     setChoice(choice)
+  }
+
+const RenderFinal = () => {
+  console.log("here2")
+  return(
+    <Grid item direction="column">
+      {player.map((item, i) => (
+        <Card style={{margin: 10}}>
+          <List key={i}>
+            <ListItem key={i} style={{margin: 15}}>
+              <h1>{item}</h1>
+            </ListItem>
+        </List>
+      </Card>
+        ))}
+    </Grid>
+  )
+}
+
+const RenderFirst = () => {
+  console.log("here")
+  return(
+    <Grid item direction="column">
+  {answers.map((item, i) => (
+    <Card style={{margin: 10}}>
+      <List key={i}>
+        <ListItem key={i} style={{margin: 15}}>
+          <Button onClick={() => sendChoice(i)}><ListItemText id={i} primary={item}/></Button>
+        </ListItem>
+    </List>
+  </Card>
+    ))}
+    </Grid>
+  )
+}
+
+
+  const renderScreens = () => {
+    if(renderPoints === true)
+    {
+      return <RenderFinal/>
+    }
+    else
+    {
+      return <RenderFirst/>
+    }
   }
 
 
@@ -79,19 +152,19 @@ const Answers = (props) => {
     */
     <div>
       <h1>Hello</h1>
-      <Grid item direction="column">
-      {answers.map((item, i) => (
-                    <Card style={{margin: 10}}>
-                      <List key={i}>
-                        <ListItem key={i} style={{margin: 15}}>
-                          <Button onClick={() => sendChoice(item)}><ListItemText id={i} primary={item}/></Button>
-                        </ListItem>
-                    </List>
-                  </Card>
-                    ))}
-        </Grid>
+      {renderPoints ? RenderFinal : RenderFirst}
     </div>
   );
 }
 
 export default Answers;
+
+
+
+//@HArry:
+//TO DO LIST:
+//fix answr.js for conditional rendering
+//routing back to promtp screen on screen press
+//need to add the "waiting on people"
+//error checking for begginging
+//have some sort of end game button so game can end on comand

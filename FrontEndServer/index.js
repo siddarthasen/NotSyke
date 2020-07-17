@@ -47,7 +47,8 @@ io.on('connection', function(socket) {
         room = generateRoomID().toString()
       }
       socket.join(room);
-      const roomObj = new Room();
+      const roomObj = new Room(); //contains info about the room; the key is still room id
+      roomList[room] = roomObj
       roomObj.userList.push(new User(name));
       let members = roomList[room].userList.map(({name}) => name);
       socket.emit('waiting-info', {roomID: room, members: members});
@@ -68,27 +69,66 @@ io.on('connection', function(socket) {
 
   socket.on('requestPrompt', function({room}) {
     //if(answer for each user is not empyy)-> clear it
-    roomList[room].answers = 0;
-    roomList[room].choices = 0;
+    for(i in roomList[room])
+    {
+      roomList[room].answers = 0
+      roomList[room].choice = 0
+    }
     name = "Parshva"
     var question = `If ${name} was a 10 yr old, what would he play with?`
     io.in(room).emit('sentPrompt', {question: question});
   });
 
  socket.on('submitAnswer' , function({room, name, answer}) {
-   roomList[room][roomList[room].indexOf(name)].answer = answer;
-   roomList[room].choiceList;
-   roomList[room].answers++;
+
+   for(i in roomList[room].userList)
+   {
+     if(name === roomList[room].userList[i].name)
+     {
+      roomList[room].userList[i].answer = answer;
+      roomList[room].answers++;
+      break;
+     }
+   }
    if (roomList[room].answers == roomList[room].userList.length) {
-    io.in(room).emit('answers', { answerInfo: roomList[room].userList.map(({id, answer}) => {id, answer})});
+     let answerInfo = []
+     roomList[room].userList.forEach(function(member)
+     {
+        answerInfo.push(
+          {
+            id: member.id,
+            answer: member.answer
+          }
+        )
+     })
+     console.log(answerInfo)
+    io.in(room).emit('answers', { answerInfo: answerInfo });
    };
  });
 
- socket.on('sendChoice', function({room, name, choice}) {
-   roomList[room].choices++;
-   roomList[room].userList[roomList[room].userList.indexOf(name)].points;
+ socket.on('sendChoice', function({room, userID}) {
+   console.log(room, userID)
+   for(i in roomList[room].userList)
+   {
+     if(roomList[room].userList[i].id === userID)
+     {
+      roomList[room].userList[i].points++
+      roomList[room].choices++;
+     }
+   }
    if (roomList[room].choices == roomList[room].userList.length) {
-    io.in(room).emit('choices', {choiceInfo: roomList[room].userList.map(({id, answer}) => {id, answer})})
+    let finalInfo = []
+    roomList[room].userList.forEach(function(member)
+    {
+       finalInfo.push(
+         {
+           points: member.points,
+           name: member.name
+         }
+       )
+    })
+    console.log(finalInfo)
+    io.in(room).emit('choices', {choiceInfo: finalInfo} )
    };
  })
 

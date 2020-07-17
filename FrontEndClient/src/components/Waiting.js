@@ -46,8 +46,8 @@ const Waiting = (props) => {
   const dispatch = useDispatch()
   
   useEffect(() => {
-    var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-    // var endpoint = "localhost:5000"
+    // var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
+    var endpoint = "localhost:5000"
     console.log(endpoint)
     socket = io(endpoint)
     dispatch({type: 'SET_SOCKET', payload: socket})
@@ -89,9 +89,9 @@ const Waiting = (props) => {
 
   return (
     <div>
-      <h1>Hello</h1>
       <h1> The room id is {roomID}</h1>
       <Grid item direction="column">
+        <Card>
       {members.map((item, i) => (
                     <Card style={{margin: 10}}>
                       <List key={i}>
@@ -101,6 +101,7 @@ const Waiting = (props) => {
                     </List>
                   </Card>
                     ))}
+              </Card>
         </Grid>
         {type==="Create" && members.length > 1? <Button onClick={startGame}>Here</Button> : null}
     </div>

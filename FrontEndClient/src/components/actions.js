@@ -32,6 +32,6 @@ export const sendAnswer = (room, name, answer, socket) => async dispatch => {
 }
 
 /* Best choice answer chosen by the person. */
-export const sendChoice = (room, name, choice, socket) => async dispatch => {
-    socket.emit('sendChoice', {room: room, name: name, choice: choice})
+export const sendChoice = (room, userID, socket) => async dispatch => {
+    socket.emit('sendChoice', {room: room, userID: userID})
 }

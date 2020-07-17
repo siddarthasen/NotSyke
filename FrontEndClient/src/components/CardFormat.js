@@ -23,7 +23,9 @@ const useStyles = makeStyles({
     borderRadius: 40,
     height: 500,
     width: 400,
-    alignItems: 'center'
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'black'
   },
   title: {
     fontSize: 30,
@@ -39,18 +41,18 @@ const useStyles = makeStyles({
   test: {
     color: 'white',
     fontColor: 'black',
-    background: '#5db1f4'
+    background: 'black'
   },
   text: {
     padding: 5,
     width: 300,
     height: 50,
     fontSize: 25,
-    borderColor: '#5db1f4',
+    borderColor: 'black',
     borderRadius: 10,
     borderWidth: 3,
     fontFamily: 'Sedan',
-    backgroundColor: '#d4ecff',
+    backgroundColor: '#black',
     marginTop: 15,
     alignSelf: 'center'
   },
@@ -60,9 +62,10 @@ const useStyles = makeStyles({
     marginRight: 30,
     height: 45,
     alignItems: 'center',
-    backgroundColor: '#d4ecff',
+    background: 'grey',
     fontSize: 20,
-    fontFamily: 'Sedan'
+    fontFamily: 'Sedan',
+    fontColor: 'white'
   }
 });
 

@@ -12,6 +12,7 @@ import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 import CardFormat from './CardFormat'
 import { Spring } from 'react-spring/renderprops'
+import Particles from 'react-particles-js'
 
 let socket;
 
@@ -99,7 +100,117 @@ const sendRequest = () => {
 
   return (
     <div>
-      <Spring
+      <Particles className="particles" params={{
+  "particles": {
+    "number": {
+      "value": 23,
+      "density": {
+        "enable": true,
+        "value_area": 800
+      }
+    },
+    "color": {
+      "value": "#ebedfa"
+    },
+    "shape": {
+      "type": "circle",
+      "stroke": {
+        "width": 0,
+        "color": "#000"
+      },
+      "polygon": {
+        "nb_sides": 6
+      },
+      "image": {
+        "src": "https://lh3.googleusercontent.com/proxy/6OAXOI_ya6Uh4uBEGKZ6M-dFGL0regfEdYLOTprR4FZZzSaU2Y1gMDYho_608G6SaWhfO6q4sVxWtw8k40CXxyG6LIV_PVd2gcldcS9_KD5mAt6eX3_J4rGx2aNm3gaIVS2Z2Hkrb9u9OoG6I2nw30CqDcJlAFtQR6Yibs2P_xI",
+        "width": 100,
+        "height": 100
+      }
+    },
+    "opacity": {
+      "value": 0.3,
+      "random": true,
+      "anim": {
+        "enable": false,
+        "speed": 1,
+        "opacity_min": 0.1,
+        "sync": false
+      }
+    },
+    "size": {
+      "value": 64.06919473030872,
+      "random": false,
+      "anim": {
+        "enable": true,
+        "speed": 10,
+        "size_min": 40,
+        "sync": false
+      }
+    },
+    "line_linked": {
+      "enable": false,
+      "distance": 200,
+      "color": "#ffffff",
+      "opacity": 1,
+      "width": 2
+    },
+    "move": {
+      "enable": true,
+      "speed": 8,
+      "direction": "none",
+      "random": false,
+      "straight": false,
+      "out_mode": "out",
+      "bounce": false,
+      "attract": {
+        "enable": true,
+        "rotateX": 600,
+        "rotateY": 1200
+      }
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": {
+        "enable": false,
+        "mode": "grab"
+      },
+      "onclick": {
+        "enable": true,
+        "mode": "push"
+      },
+      "resize": true
+    },
+    "modes": {
+      "grab": {
+        "distance": 400,
+        "line_linked": {
+          "opacity": 1
+        }
+      },
+      "bubble": {
+        "distance": 400,
+        "size": 1,
+        "duration": 2,
+        "opacity": 8,
+        "speed": 3
+      },
+      "repulse": {
+        "distance": 200,
+        "duration": 0.4
+      },
+      "push": {
+        "particles_nb": 4
+      },
+      "remove": {
+        "particles_nb": 2
+      }
+    }
+  },
+  "retina_detect": true
+}} />
+            <Spring
       from={{ transform: 'translate3d(0,-800px,0)' }}
       to={{ transform: 'translate3d(0,0px,0)' }}>
       {props => (

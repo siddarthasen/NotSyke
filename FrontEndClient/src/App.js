@@ -4,6 +4,7 @@ import Waiting from './components/Waiting'
 import Chat from './components/Chat'
 import Game from './components/Game'
 import Answers from './components/Answers'
+import Particles from 'react-particles-js'
 
 const App = () => (
   <Router>
