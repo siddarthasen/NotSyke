@@ -88,6 +88,7 @@ io.on('connection', function(socket) {
       break;
      }
    }
+   console.log(roomList[room].answers)
    if (roomList[room].answers == roomList[room].userList.length) {
      let answerInfo = []
      roomList[room].userList.forEach(function(member)
