@@ -77,6 +77,7 @@ io.on('connection', function(socket) {
   });
 
  socket.on('submitAnswer' , function({room, name, answer}) {
+   console.log(name + "answer is" + answer)
 
    for(i in roomList[room].userList)
    {
