@@ -40,7 +40,7 @@ class User {
 io.on('connection', function(socket) {
 
   socket.on('join', function({type, name, room}) {
-    name = name.trim().toLowerCase();
+    // name = name.trim().toLowerCase();
     if (type === 'Create') {
       room = generateRoomID().toString()
       while(roomList.hasOwnProperty(room)) {
