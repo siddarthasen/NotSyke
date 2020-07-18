@@ -81,6 +81,7 @@ io.on('connection', function(socket) {
 
    for(i in roomList[room].userList)
    {
+     console.log(roomList[room].userList[i].name + " the name passed in is" + name)
      if(name === roomList[room].userList[i].name)
      {
       roomList[room].userList[i].answer = answer;
