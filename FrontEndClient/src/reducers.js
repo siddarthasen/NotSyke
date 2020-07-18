@@ -6,7 +6,8 @@ const initalState = {
     members: [],
     socket: {},
     roomID: '',
-    start: false
+    start: false,
+    creator: false
 }
 
 function reducer(state=initalState, action) {
@@ -19,6 +20,8 @@ function reducer(state=initalState, action) {
             return{...state, start: action.payload}
         case 'DISPLAY_QUESTION':
             return{...state, question: action.payload}
+        case 'SET_CREATOR':
+                return{...state, creator: action.payload}
         default: 
             return{...state}
     }

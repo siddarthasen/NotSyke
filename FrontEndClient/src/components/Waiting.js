@@ -100,6 +100,10 @@ const Waiting = (props) => {
     socket = io(endpoint)
     dispatch({type: 'SET_SOCKET', payload: socket})
     //assume this stuff is in action.js file
+    if(type === 'Create')
+    {
+      dispatch({type: 'SET_CREATOR', payload: true})
+    }
     dispatch(actions.sendLogIn(type, name, room, endpoint, socket, io))
     setSlide(true)
       

@@ -18,6 +18,7 @@ import {
  import { Spring } from 'react-spring/renderprops'
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './actions'
+import { useHistory } from "react-router-dom";
 let socket;
 
 
@@ -33,6 +34,7 @@ const useStyles = makeStyles({
 const Answers = (props) => {
   //Access redux state tree:
   let members = useSelector(state=> state.members)
+  let creator = useSelector(state=> state.creator)
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
   let name = props.location.state.name
@@ -46,6 +48,7 @@ const Answers = (props) => {
   const [renderPoints, setrenderPoints] = useState(false)
   const [points, setPoints] = useState([])//place in redux so we can dd animation of number increasing
   const [player, setPlayers] = useState([]);
+  let history = useHistory();
   
 
   useEffect(() => {
@@ -58,10 +61,10 @@ const Answers = (props) => {
     })
   })
 
-  useEffect(()=> {
-      socket.on('next_question', ({move}) => {
-        // history.push('/Game', {name: name, room: room})
-      })
+  useEffect(() => {
+    socket.on('start', (start) => {
+      history.push('/Game', {name: name, room: room})
+    })
   })
 
   useEffect(() => {
@@ -98,26 +101,37 @@ const Answers = (props) => {
     setChoice(choice)
   }
 
-const RenderFinal = () => {
-  console.log("here2")
-  return(
-    <Grid item direction="column">
-      {player.map((item, i) => (
-        <Card style={{margin: 10}}>
-          <List key={i}>
-            <ListItem key={i} style={{margin: 15}}>
-              <h1>{item}</h1>
-            </ListItem>
-        </List>
-      </Card>
-        ))}
-    </Grid>
-  )
-}
+  const movePage = () => {
+    dispatch(actions.startGame(roomID, socket, (update) => {
+      history.push('/Game', {name: name, room: room})
+    }))
+  }
 
-const RenderFirst = () => {
-  console.log("here")
+
+if(renderPoints)
+{
+  console.log("The creator is" + creator)
+  return (
+   <div>
+   <Grid item direction="column">
+     {player.map((item, i) => (
+       <Card style={{margin: 10}}>
+         <List key={i}>
+           <ListItem key={i} style={{margin: 15}}>
+             <h1>{item} has {points[i]} points</h1>
+           </ListItem>
+       </List>
+     </Card>
+       ))}
+       {creator ? <Button onClick={movePage}>Next</Button> : null}
+   </Grid>
+   </div>
+  );
+}
+else
+{
   return(
+    <div>
     <Grid item direction="column">
   {answers.map((item, i) => (
     <Card style={{margin: 10}}>
@@ -129,32 +143,10 @@ const RenderFirst = () => {
   </Card>
     ))}
     </Grid>
+    </div>
   )
 }
 
-
-  const renderScreens = () => {
-    if(renderPoints === true)
-    {
-      return <RenderFinal/>
-    }
-    else
-    {
-      return <RenderFirst/>
-    }
-  }
-
-
-  return (
-    /* @Harry, add some field for the choice's User's id.
-       So if the first choice was 'abc', when that is clicked, 
-       server knows who's choice it is. 
-    */
-    <div>
-      <h1>Hello</h1>
-      {renderPoints ? RenderFinal : RenderFirst}
-    </div>
-  );
 }
 
 export default Answers;

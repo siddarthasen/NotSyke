@@ -63,17 +63,14 @@ io.on('connection', function(socket) {
     }
   });
 
-  socket.on('start_game' , function({room}) {
+  socket.on('start_game' , function({room}) { //will be reused for anytime
     io.in(room).emit('start', {start: true});
   });
 
   socket.on('requestPrompt', function({room}) {
     //if(answer for each user is not empyy)-> clear it
-    for(i in roomList[room])
-    {
-      roomList[room].answers = 0
-      roomList[room].choice = 0
-    }
+    roomList[room].answers = 0
+    roomList[room].choice = 0
     name = "Parshva"
     var question = `If ${name} was a 10 yr old, what would he play with?`
     io.in(room).emit('sentPrompt', {question: question});
@@ -117,6 +114,7 @@ io.on('connection', function(socket) {
      }
    }
    if (roomList[room].choices == roomList[room].userList.length) {
+    roomList[room].choices = 0
     let finalInfo = []
     roomList[room].userList.forEach(function(member)
     {
