@@ -95,10 +95,9 @@ const Answers = (props) => {
     }
     else 
     {
-      console.log(roomID)
       dispatch(actions.sendChoice(roomID, ID[index], socket))
+      setChoice(true)
     }
-    setChoice(choice)
   }
 
   const movePage = () => {
@@ -128,7 +127,7 @@ if(renderPoints)
    </div>
   );
 }
-else
+else if(choice == false)
 {
   return(
     <div>
@@ -144,6 +143,12 @@ else
     ))}
     </Grid>
     </div>
+  )
+}
+else
+{
+  return(
+    <h1>Please Wait for others to answer</h1>
   )
 }
 

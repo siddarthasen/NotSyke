@@ -107,7 +107,7 @@ io.on('connection', function(socket) {
  });
 
  socket.on('sendChoice', function({room, userID}) {
-   console.log(room, userID)
+   console.log("submitted answer")
    for(i in roomList[room].userList)
    {
      if(roomList[room].userList[i].id === userID)

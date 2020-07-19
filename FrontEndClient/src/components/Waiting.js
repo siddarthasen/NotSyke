@@ -94,8 +94,8 @@ const Waiting = (props) => {
   const dispatch = useDispatch()
   
   useEffect(() => {
-    var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-    // var endpoint = "localhost:5000"
+    // var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
+    var endpoint = "localhost:5000"
     console.log(endpoint)
     socket = io(endpoint)
     dispatch({type: 'SET_SOCKET', payload: socket})
