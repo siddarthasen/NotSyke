@@ -97,10 +97,17 @@ const sendRequest = () => {
     setValue(newValue);
   };
 
+  const canvasStyle = {
+    width: '100%',
+    height: '100%',
+    position: 'fixed',
+    top: '0',
+    left: '0'
+  };
 
   return (
     <div>
-      <Particles className="particles" params={{
+      <Particles className="particles" style={canvasStyle} params={{
   "particles": {
     "number": {
       "value": 15,
