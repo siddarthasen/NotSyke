@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: 30,
-    fontFamily: 'Chewy-Regular',
+    fontFamily: 'Chewy-Regular.ttf',
     textAlign: 'center',
     padding: 15
   },

@@ -44,7 +44,7 @@ const Answers = (props) => {
   const dispatch = useDispatch()
   const [ID, setID] = useState([]);
   const [answers, setAnswers] = useState([])
-  const [choice, setChoice] = useState('');
+  const [choice, setChoice] = useState(false);
   const [renderPoints, setrenderPoints] = useState(false)
   const [points, setPoints] = useState([])//place in redux so we can dd animation of number increasing
   const [player, setPlayers] = useState([]);
