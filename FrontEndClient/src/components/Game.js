@@ -58,7 +58,8 @@ const useStyles = makeStyles({
     fontSize: 25,
     flex: 1,
     flexWrap: 'wrap',
-    padding: 20
+    padding: 20,
+    fontFamily: 'Segoe Print'
     
   },
   question: {
@@ -69,11 +70,24 @@ const useStyles = makeStyles({
     padding: 15,
     paddingLeft: 25,
     margin: 10,
-    fontFamily: 'Chiller'
+    fontFamily: 'Segoe Print'
   },
   answerBox: {
     width: 550,
     height: 325
+  },
+  test1: {
+    color: 'black',
+    flex: 1,
+    marginLeft: 30,
+    marginRight: 30,
+    height: 45,
+    alignItems: 'center',
+    fontSize: 20,
+    fontFamily: 'Segoe Print',
+    fontColor: 'white',
+    width: 200,
+    marginTop: 30
   }
 });
 
@@ -104,7 +118,7 @@ const [answer, setAnswer] = useState('')
 const submitAnswer = (event) => {
   dispatch(actions.sendAnswer(roomID, name, answer, socket))
   console.log(answer)
-  history.push('/Answers', {name: name, room: room, answer: answer})
+  history.push('/Answers', {name: name, room: room, answer: answer, question: question})
 }
 
 
@@ -116,12 +130,18 @@ const submitAnswer = (event) => {
           alignItems="center"
           justify="center"
           style={{ minHeight: '100vh' }}>
+            <Spring
+      from={{ transform: 'translate3d(0,0px,0)' }}
+      to={{ transform: 'translate3d(0,0px,0)' }}>
+      {props => (
+        <div style={props}>
       <Card className={classes.card}>
         <Grid container direction="column" justify="space-between"  alignItems="center" className={classes.square}>
-            <Typography className={classes.question}>If parshva was 10 hwo is he? thoth tr htr hhoth  t rhjtohjtrhjo fdbd dbf dfb </Typography>
+            <Typography className={classes.question}>{question}</Typography>
             <Grid item justify="center">
               <Box border={3} borderRadius={40} className={classes.answerBox}>
         <InputBase
+        placeholder="Enter Your Answer"
         multiline
         className={classes.answer}
         rows={10}
@@ -130,9 +150,12 @@ const submitAnswer = (event) => {
         />
         </Box>
         </Grid>
-        <Button variant="contained" color="primary"  onClick={submitAnswer} className={classes.button}>Submit</Button>
+        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={submitAnswer}>Submit</AwesomeButton>
         </Grid>
       </Card>
+      </div>
+      )}
+      </Spring>
       </Grid>
     </div>
   );

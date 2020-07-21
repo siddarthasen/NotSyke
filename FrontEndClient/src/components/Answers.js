@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import queryString from 'query-string'
 import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
@@ -19,19 +19,97 @@ import {
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './actions'
 import { useHistory } from "react-router-dom";
+import Chip from '@material-ui/core/Chip';
+import Slide from '@material-ui/core/Slide';
+import { AwesomeButton } from "react-awesome-button";
+import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
+import Box from '@material-ui/core/Box';
 let socket;
 
-
 const useStyles = makeStyles({
+  question: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    fontSize: 25,
+    padding: 15,
+    paddingLeft: 25,
+    margin: 10,
+    fontFamily: 'Segoe Print'
+  },
+  card: {
+    borderRadius: 40,
+    height: 550,
+    width: 700,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'black'
+  },
   title: {
+    display: 'flex',
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    fontSize: 45,
+    fontFamily: 'Segoe Print',
+    alignContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center'
+  },
+  bar: {
+    alignSelf: 'center',
+    fontColor: 'black',
+    background: 'transparent'
+  },
+  test: {
+    color: 'white',
+    fontColor: 'black',
+    background: 'black'
+  },
+  text: {
+    padding: 5,
+    width: 300,
+    height: 50,
+    fontSize: 25,
+    borderColor: 'black',
+    borderRadius: 10,
+    borderWidth: 3,
+    fontFamily: 'Segoe Print',
+    backgroundColor: '#black',
+    marginTop: 15,
+    alignSelf: 'center',
+    color: 'white'
+  },
+  test1: {
+    color: 'black',
+    flex: 1,
+    marginLeft: 200,
+    marginRight: 200,
+    height: 49,
+    width: 300,
+    alignItems: 'center',
+    fontSize: 25,
+    fontFamily: 'Segoe Print',
+    fontColor: 'white',
+    jusitfyContent: 'center'
+  },
+  text2: {
+    color: 'black',
+    flex: 1,
+    alignItems: 'center',
+    fontSize: 25,
+    fontFamily: 'Segoe Print',
+    fontColor: 'white',
+    jusitfyContent: 'center',
+    margin: 3,
+    height: 40
   }
 });
 
 const Answers = (props) => {
+  var count = 0;
+  const classes = useStyles();
   //Access redux state tree:
   let members = useSelector(state=> state.members)
   let creator = useSelector(state=> state.creator)
@@ -40,6 +118,8 @@ const Answers = (props) => {
   let name = props.location.state.name
   let room = props.location.state.room
   let answer = props.location.state.answer
+  let question = props.location.state.question
+  const [slide, setSlide] = useState(false);
   
   const dispatch = useDispatch()
   const [ID, setID] = useState([]);
@@ -49,7 +129,6 @@ const Answers = (props) => {
   const [points, setPoints] = useState([])//place in redux so we can dd animation of number increasing
   const [player, setPlayers] = useState([]);
   let history = useHistory();
-  
 
   useEffect(() => {
     socket.on('answers', (answerInfo) => {
@@ -58,6 +137,7 @@ const Answers = (props) => {
       setAnswers(answer)
       setID(id)
       console.log(answer, id)
+      setSlide(true)
     })
   })
 
@@ -102,45 +182,109 @@ const Answers = (props) => {
 
   const movePage = () => {
     dispatch(actions.startGame(roomID, socket, (update) => {
+      clearInterval(timer)
       history.push('/Game', {name: name, room: room})
     }))
   }
 
+  const renderSentence = (player, points) => {
+    return(
+      `${player} has ${points} points`
+    )
+  }
+
+  const timer = setInterval(function(){
+    count++;
+    if(document.getElementById('loadingtext1'))
+    {
+    document.getElementById('loadingtext1').innerHTML = "Waiting for People to Answer" + new Array(count % 5).join('.');
+    }
+  }, 1000);
 
 if(renderPoints)
 {
-  console.log("The creator is" + creator)
+
+  clearInterval(timer)
+
+
+
   return (
-   <div>
-   <Grid item direction="column">
-     {player.map((item, i) => (
-       <Card style={{margin: 10}}>
-         <List key={i}>
-           <ListItem key={i} style={{margin: 15}}>
-             <h1>{item} has {points[i]} points</h1>
-           </ListItem>
-       </List>
-     </Card>
-       ))}
-       {creator ? <Button onClick={movePage}>Next</Button> : null}
-   </Grid>
-   </div>
+    <div>
+    <Grid item direction="column">
+    <Grid container
+spacing={0}
+direction="column"
+alignItems="center"
+justify="center"
+style={{ minHeight: '100vh' }}>
+  <Spring
+    from={{ transform: 'translate3d(0,0px,0)' }}
+    to={{ transform: 'translate3d(0,0px,0)' }}>
+    {props => (
+      <div style={props}>
+  <Box border={3} borderRadius={40}>
+  <Card className={classes.card}>
+  <Typography style={{fontSize: 30,
+    fontFamily: 'Segoe Print',
+    textAlign: 'center',
+    padding: 10}}>Scores</Typography>
+  {player.map((item, i) => (
+       <List key={i}>
+         <ListItem key={i} style={{margin: 2}}>
+  <Typography   style={{display: 'flex', margin: 5, fontSize: 25, padding: 3, justifyContent: 'left', fontFamily: 'Segoe Print'}}>{renderSentence(item, points[i])}</Typography>
+         </ListItem>
+         <Divider />
+     </List>
+     ))}
+          {creator? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={movePage}>Next question</AwesomeButton> : null}
+    </Card>
+    </Box>
+    </div>
+    )}
+    </Spring>
+  </Grid>
+
+
+      </Grid>
+  </div>
   );
 }
-else if(choice == false)
+else if(choice == false && answers.length > 0)
 {
+  clearInterval(timer)
+  // setSlide(true)
   return(
     <div>
     <Grid item direction="column">
+    <Grid 
+    container
+  spacing={0}
+  direction="column"
+  alignItems="center"
+  justify="center"
+  style={{ minHeight: '100vh' }}>
+      <Spring
+    from={{ transform: 'translate3d(0,0px,0)' }}
+    to={{ transform: 'translate3d(0,0px,0)' }}>
+    {props => (
+      <div style={props}>
+    <Card className={classes.card}>
+  <Typography className={classes.question}>{question}</Typography>
+
   {answers.map((item, i) => (
-    <Card style={{margin: 10}}>
-      <List key={i}>
-        <ListItem key={i} style={{margin: 15}}>
-          <Button onClick={() => sendChoice(i)}><ListItemText id={i} primary={item}/></Button>
-        </ListItem>
-    </List>
+    <List key={i} style={{display: 'flex', flex: 1, justifyContent: 'center'}}>
+                          <Slide direction="up" in={slide} mountOnEnter unmountOnExit timeout={1000}>                        
+                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                          <AwesomeButton className={classes.text2} type="secondary" ripple onPress={() => sendChoice(i)}>{item}</AwesomeButton>
+                        </Grid>
+                        </Slide>
+                    </List>    ))}
+
   </Card>
-    ))}
+  </div>
+    )}
+    </Spring>
+    </Grid>
     </Grid>
     </div>
   )
@@ -148,7 +292,9 @@ else if(choice == false)
 else
 {
   return(
-    <h1>Please Wait for others to answer</h1>
+    <div>
+    <Typography id="loadingtext1" className = {classes.title}>Waiting for People to Answer</Typography>
+    </div>
   )
 }
 

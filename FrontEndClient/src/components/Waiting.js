@@ -23,6 +23,8 @@ import {
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from './actions'
 import { useHistory } from "react-router-dom";
+import { AwesomeButton } from "react-awesome-button";
+import './CardFormat.css'
 let socket;
 
 
@@ -33,11 +35,12 @@ const useStyles = makeStyles({
     width: 400,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: 'black'
+    borderColor: 'black',
+    zIndex: 300
   },
   title: {
     fontSize: 30,
-    fontFamily: 'Chewy-Regular.ttf',
+    fontFamily: 'Segoe Print',
     textAlign: 'center',
     padding: 15
   },
@@ -59,21 +62,23 @@ const useStyles = makeStyles({
     borderColor: 'black',
     borderRadius: 10,
     borderWidth: 3,
-    fontFamily: 'Sedan',
+    fontFamily: 'Segoe Print',
     backgroundColor: '#black',
     marginTop: 15,
     alignSelf: 'center'
   },
   test1: {
+    color: 'black',
     flex: 1,
-    marginLeft: 30,
-    marginRight: 30,
+    marginLeft: 100,
+    marginRight: 100,
     height: 45,
+    width: 200,
     alignItems: 'center',
     fontSize: 20,
-    fontFamily: 'Sedan',
+    fontFamily: 'Segoe Print',
     fontColor: 'white',
-    justifyContent: 'center'
+    jusitfyContent: 'center'
   }
 });
 
@@ -94,8 +99,8 @@ const Waiting = (props) => {
   const dispatch = useDispatch()
   
   useEffect(() => {
-    // var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-    var endpoint = "localhost:5000"
+    var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
+    // var endpoint = "localhost:5000"
     console.log(endpoint)
     socket = io(endpoint)
     dispatch({type: 'SET_SOCKET', payload: socket})
@@ -139,6 +144,16 @@ const Waiting = (props) => {
         // rerender the components 
       });
   };
+  var render = 0
+  var count = 0;
+setInterval(function(){
+  count++;
+  if(document.getElementById('loadingtext'))
+  {
+  document.getElementById('loadingtext').innerHTML = "Waiting for People to Join" + new Array(count % 5).join('.');
+  }
+  render = 1
+}, 1000);
 
   return (
     <div>
@@ -149,24 +164,30 @@ const Waiting = (props) => {
   alignItems="center"
   justify="center"
   style={{ minHeight: '100vh' }}>
-    <Typography style={{fontSize: 40, marginBottom: 20}}>Room ID: {roomID}</Typography>
+    <Typography style={{fontSize: 40, marginBottom: 20, fontFamily: 'Segoe Print'}}>Room ID: {roomID}</Typography>
+    <Spring
+      from={{ transform: 'translate3d(0,0px,0)' }}
+      to={{ transform: 'translate3d(0,0px,0)' }}>
+      {props => (
+        <div style={props}>
     <Box border={3} borderRadius={40}>
     <Card className={classes.card}>
-    <Typography className = {classes.title}>
-    Waiting for People to Join...
-    </Typography>
+    <Typography id="loadingtext" className = {classes.title}>Waiting for People to Join</Typography>
     {members.map((item, i) => (
                       <List key={i} style={{display: 'flex', justifyContent: 'center'}}>
                         <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
                           <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left'}}/>
+                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
                         </Grid>
                         </Slide>
                     </List>
                     ))}
-            {type==="Create" && members.length > 1? <Button variant="outlined" className={classes.test1} color="primary" onClick={startGame}>Here</Button> : null}
+            {type==="Create" && members.length > 1? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={startGame}>Start Game</AwesomeButton> : null}
       </Card>
       </Box>
+      </div>
+      )}
+      </Spring>
     </Grid>
 
 

@@ -14,6 +14,9 @@ import TextField from '@material-ui/core/TextField';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import './CardFormat.css'
+import { AwesomeButton } from "react-awesome-button";
+import Box from '@material-ui/core/Box';
+import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
 
 let socket;
 
@@ -29,7 +32,7 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: 30,
-    fontFamily: 'Sedan',
+    fontFamily: 'Segoe Print',
     textAlign: 'center',
     padding: 15
   },
@@ -48,23 +51,21 @@ const useStyles = makeStyles({
     width: 300,
     height: 50,
     fontSize: 25,
-    borderColor: 'black',
-    borderRadius: 10,
+    borderRadius: 20,
     borderWidth: 3,
-    fontFamily: 'Sedan',
-    backgroundColor: '#black',
+    fontFamily: 'Segoe Print',
     marginTop: 15,
     alignSelf: 'center'
   },
   test1: {
+    color: 'black',
     flex: 1,
     marginLeft: 30,
     marginRight: 30,
     height: 45,
     alignItems: 'center',
-    background: 'grey',
     fontSize: 20,
-    fontFamily: 'Sedan',
+    fontFamily: 'Segoe Print',
     fontColor: 'white'
   }
 });
@@ -136,23 +137,25 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   alignItems="center"
   justify="center"
   style={{ minHeight: '100vh' }}>
+    <Box border={3} borderRadius={40}>
     <Card className={classes.card}>
     <Typography className = {classes.title}>
     Not Psych!
     </Typography>
       <AppBar position="static" className={classes.test}>
             <Tabs value={value} onChange={handleChange}  className={classes.bar}>
-              <Tab label="Join Room"  />
-              <Tab label="Create Room"  />
+              <Tab style={{fontFamily: 'Segoe Print'}}label="Join Room"  />
+              <Tab style={{fontFamily: 'Segoe Print'}} label="Create Room"  />
             </Tabs>
         </AppBar>
         <CardContent>
           <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
         </CardContent>
         <CardActions>
-          <Button className={classes.test1} value={buttonName} onClick={()=> joinRoom(buttonName, room, name, history)}>{buttonName}</Button>
+        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history)}>{buttonName}</AwesomeButton>
         </CardActions>
       </Card>
+      </Box>
     </Grid>
   )
 }

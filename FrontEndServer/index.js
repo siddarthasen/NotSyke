@@ -2,9 +2,9 @@ const express = require('express');
 //express is being used for FrontEndServer
 const socketio = require('socket.io');
 const http = require('http');
+var questions = require('./questions/questions.json')
 
 const {addUser, removeUser, getUser, getUsersInRoom, generateRoomID} = require('./groups');
-
 const PORT = process.env.PORT || 5000;
 console.log(PORT)
 
@@ -69,10 +69,15 @@ io.on('connection', function(socket) {
 
   socket.on('requestPrompt', function({room}) {
     //if(answer for each user is not empyy)-> clear it
+    console.log(Math.floor(Math.random() * 10))
+    let user = roomList[room].userList[(Math.floor(Math.random() * 100) % (roomList[room].userList.length - 1))].name
+    let random = (Math.floor(Math.random() * 100) % 100) + 1
+    let phrase = questions.questions[random]
+    let question = questions.questions[random].first
+    question = question.concat(user, phrase.second)
+    console.log(question)
     roomList[room].answers = 0
     roomList[room].choice = 0
-    name = "Parshva"
-    var question = `If ${name} was a 10 yr old, what would he play with?`
     io.in(room).emit('sentPrompt', {question: question});
   });
 
