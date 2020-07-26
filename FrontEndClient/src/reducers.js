@@ -22,6 +22,8 @@ function reducer(state=initalState, action) {
             return{...state, question: action.payload}
         case 'SET_CREATOR':
                 return{...state, creator: action.payload}
+        case 'RESET_USER':
+                return{initalState}
         default: 
             return{...state}
     }

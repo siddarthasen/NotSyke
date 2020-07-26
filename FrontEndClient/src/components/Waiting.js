@@ -99,9 +99,11 @@ const Waiting = (props) => {
   const dispatch = useDispatch()
   
   useEffect(() => {
-    var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-    // var endpoint = "localhost:5000"
-    console.log(endpoint)
+    // localStorage.setItem(socket, 'socket')
+    // //setting an item into chrome cache
+    // socket = localStorage.getItem('socket')
+    // var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
+    var endpoint = "localhost:5000"
     socket = io(endpoint)
     dispatch({type: 'SET_SOCKET', payload: socket})
     //assume this stuff is in action.js file
@@ -119,6 +121,21 @@ const Waiting = (props) => {
       history.push('/Game', {name: name, room: room})
     })
   })
+
+  /* add this to shared file.*/
+  window.addEventListener('beforeunload', function (e) {
+    alert(e)
+    e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+    // Chrome requires returnValue to be set
+    socket.emit('remove_user', {roomID: roomID, name: name})
+    dispatch({type: 'RESET_USER'})
+    history.push('/')
+    e.returnValue = '';
+  });
+  window.addEventListener('backbutton', function(){
+    alert("test")
+    return false;
+    })
 
   const startGame = () => { //used for creator
     dispatch(actions.startGame(roomID, socket, (update) => {

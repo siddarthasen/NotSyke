@@ -140,7 +140,7 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
     <Box border={3} borderRadius={40}>
     <Card className={classes.card}>
     <Typography className = {classes.title}>
-    Not Psych!
+    NotPsych!
     </Typography>
       <AppBar position="static" className={classes.test}>
             <Tabs value={value} onChange={handleChange}  className={classes.bar}>

@@ -71,70 +71,31 @@ io.on('connection', function(socket) {
     //if(answer for each user is not empyy)-> clear it
     console.log(Math.floor(Math.random() * 10))
     let user = roomList[room].userList[(Math.floor(Math.random() * 100) % (roomList[room].userList.length - 1))].name
-    let random = (Math.floor(Math.random() * 100) % 100) + 1
-    let phrase = questions.questions[random]
-    let question = questions.questions[random].first
+    let random = (Math.floor(Math.random() * 100) % 100) - 1
+    let phrase = questions.questions[38]
+    let question = phrase.first
     question = question.concat(user, phrase.second)
-    console.log(question)
+    console.log('questions ', question);
     roomList[room].answers = 0
-    roomList[room].choice = 0
+    roomList[room].choices = 0
     io.in(room).emit('sentPrompt', {question: question});
   });
 
  socket.on('submitAnswer' , function({room, name, answer}) {
-   console.log(name + "answer is" + answer)
-
-   for(i in roomList[room].userList)
-   {
-     console.log(roomList[room].userList[i].name + " the name passed in is" + name)
-     if(name === roomList[room].userList[i].name)
-     {
-      roomList[room].userList[i].answer = answer;
-      roomList[room].answers++;
-      break;
-     }
-   }
+  roomList[room].userList.find((user) => user.name === name).answer = answer;
+   roomList[room].answers++;
    console.log(roomList[room].answers)
    if (roomList[room].answers == roomList[room].userList.length) {
-     let answerInfo = []
-     roomList[room].userList.forEach(function(member)
-     {
-        answerInfo.push(
-          {
-            id: member.id,
-            answer: member.answer
-          }
-        )
-     })
-     console.log(answerInfo)
-    io.in(room).emit('answers', { answerInfo: answerInfo });
+    io.in(room).emit('answers', { answerInfo: roomList[room].userList.map(user => ({id: user.id, answer: user.answer}))});
    };
  });
 
  socket.on('sendChoice', function({room, userID}) {
-   console.log("submitted answer")
-   for(i in roomList[room].userList)
-   {
-     if(roomList[room].userList[i].id === userID)
-     {
-      roomList[room].userList[i].points++
-      roomList[room].choices++;
-     }
-   }
-   if (roomList[room].choices == roomList[room].userList.length) {
+  roomList[room].userList.find((user) => user.id === userID).points++;
+  roomList[room].choices++;
+  if (roomList[room].choices == roomList[room].userList.length) {
     roomList[room].choices = 0
-    let finalInfo = []
-    roomList[room].userList.forEach(function(member)
-    {
-       finalInfo.push(
-         {
-           points: member.points,
-           name: member.name
-         }
-       )
-    })
-    console.log(finalInfo)
-    io.in(room).emit('choices', {choiceInfo: finalInfo} )
+    io.in(room).emit('choices', {choiceInfo: roomList[room].userList.map(each => ({name: each.name, points: each.points}))});
    };
  })
 
@@ -142,14 +103,39 @@ io.on('connection', function(socket) {
     from the particular room. Then we emit the updated member list. 
     We are broadcasting to send the updated member list everyone except the 
     disconnected user @Sid. */
- socket.on('player-disconnect', function({roomID, name}) {
-   let temp = roomList[roomID];
-   if (temp & temp.length) {
-     temp.splice(temp.indexOf(name), 1);
-     io.broadcast.emit('removal-update', {members: roomList[roomID]}); 
-   }
+//  socket.on('disconnect' {
+//     //  temp.splice(temp.indexOf(name), 1);
+//     //  io.broadcast.emit('removal-update', {members: roomList[roomID]}); 
+//  })
+
+ socket.on('remove_user', function({roomID, name, type}) {
+   console.log(roomID, name)
+  let temp = roomList[roomID];
+  roomList[roomID].userList.splice(roomList[room].userList.find((user) => user.name === name), 1)
+  let members = roomList[roomID].userList.map(({name}) => name);
+    io.in(room).emit('waiting-info', {roomID: room, members: members});
  })
 });
+
+
+// class Room {
+//   constructor() {
+//     this.userList = [];
+//     this.choiceList = {};
+//     this.answers = 0;
+//     this.choices = 0;
+//   }
+// }
+
+// class User {
+//   constructor(name) {
+//     this.name = name;
+//     this.points = 0;
+//     this.answer = '';
+//     this.id = generateRoomID().toString(); //used for checking which user was picked 
+//     this.done = false; //used to check whether all parties have answered
+//   }
+// };
 
 app.use(router);
 
