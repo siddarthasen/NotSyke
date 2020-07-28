@@ -108,7 +108,15 @@ io.on('connection', function(socket) {
 //     //  io.broadcast.emit('removal-update', {members: roomList[roomID]}); 
 //  })
 
- socket.on('remove_user', function({roomID, name, type}) {
+ socket.on('remove_user', function({roomID, name, type, page}) {
+   // we need the type of user (creator or joiner) 
+   // if a joiner leaves, then process normal, decrerase the num of players, 
+   // and then use the page var to act accordingly
+        //check if they r on the waiting(user)page
+        //check if they r on waiting page for submitting answers
+        //or on the waiting page for best choice answer
+        // also on the page where they havr to submit an answer
+   //if a creator leaves, u have to set another user to be a creator
    console.log(roomID, name)
   let temp = roomList[roomID];
   roomList[roomID].userList.splice(roomList[room].userList.find((user) => user.name === name), 1)
@@ -117,25 +125,7 @@ io.on('connection', function(socket) {
  })
 });
 
-
-// class Room {
-//   constructor() {
-//     this.userList = [];
-//     this.choiceList = {};
-//     this.answers = 0;
-//     this.choices = 0;
-//   }
-// }
-
-// class User {
-//   constructor(name) {
-//     this.name = name;
-//     this.points = 0;
-//     this.answer = '';
-//     this.id = generateRoomID().toString(); //used for checking which user was picked 
-//     this.done = false; //used to check whether all parties have answered
-//   }
-// };
+//handle
 
 app.use(router);
 
