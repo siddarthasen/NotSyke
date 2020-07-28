@@ -24,6 +24,24 @@ class Room {
     this.choiceList = {};
     this.answers = 0;
     this.choices = 0;
+    this.player_num = -1;
+  }
+
+  /* @Sid */
+  getNextPlayer() {
+    this.player_num += 1
+    this.player_num == this.player_num % this.userList.length;
+    return this.userList[this.player_num];
+  }
+
+  /* @Sid */
+  static randomizeList(lst) {
+    temp = Array.from(lst);
+    newList = [];
+    while (temp.length != 0) {
+      newList.push(temp.splice(Math.floor(Math.random() * Math.floor(temp.length)), 1)[0]);
+    }
+    return newList;
   }
 }
 
@@ -64,13 +82,16 @@ io.on('connection', function(socket) {
   });
 
   socket.on('start_game' , function({room}) { //will be reused for anytime
+    /* @Sid */
+    roomList[room].userList = Room.randomizeList(roomList[room].userList);
     io.in(room).emit('start', {start: true});
   });
 
   socket.on('requestPrompt', function({room}) {
     //if(answer for each user is not empyy)-> clear it
     console.log(Math.floor(Math.random() * 10))
-    let user = roomList[room].userList[(Math.floor(Math.random() * 100) % (roomList[room].userList.length - 1))].name
+    // let user = roomList[room].userList[(Math.floor(Math.random() * 100) % (roomList[room].userList.length - 1))].name
+    let user = roomList[room].getNextPlayer.name;
     let random = (Math.floor(Math.random() * 100) % 100) - 1
     let phrase = questions.questions[38]
     let question = phrase.first
@@ -86,7 +107,10 @@ io.on('connection', function(socket) {
    roomList[room].answers++;
    console.log(roomList[room].answers)
    if (roomList[room].answers == roomList[room].userList.length) {
-    io.in(room).emit('answers', { answerInfo: roomList[room].userList.map(user => ({id: user.id, answer: user.answer}))});
+
+    /* @Sid */
+     answerInfo = Room.randomizeList(roomList[room].userList.map(user => ({id: user.id, answer: user.answer})));
+     io.in(room).emit('answers', { answerInfo: answerInfo});
    };
  });
 
