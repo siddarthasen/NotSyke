@@ -36,6 +36,7 @@ class Room {
 
   /* @Sid */
   static randomizeList(lst) {
+    let temp, newList
     temp = Array.from(lst);
     newList = [];
     while (temp.length != 0) {
@@ -95,6 +96,7 @@ io.on('connection', function(socket) {
     let random = (Math.floor(Math.random() * 100) % 100) - 1
     let phrase = questions.questions[38]
     let question = phrase.first
+    console.log(user)
     question = question.concat(user, phrase.second)
     console.log('questions ', question);
     roomList[room].answers = 0
@@ -121,6 +123,15 @@ io.on('connection', function(socket) {
     roomList[room].choices = 0
     io.in(room).emit('choices', {choiceInfo: roomList[room].userList.map(each => ({name: each.name, points: each.points}))});
    };
+ })
+
+ socket.on('ready', function({room}) {
+   roomList[room].choices++
+   if(roomList[room].choices === roomList[room].userList.length)
+   {
+    roomList[room].choices = 0
+    io.in(room).emit('next_question', {start: true});
+   }
  })
 
  /*  On PLAYER-DISCONNECT, we remove the NAME in the list of members 

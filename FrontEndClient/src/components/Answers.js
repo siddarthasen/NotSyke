@@ -24,9 +24,11 @@ import Slide from '@material-ui/core/Slide';
 import { AwesomeButton } from "react-awesome-button";
 import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
 import Box from '@material-ui/core/Box';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 let socket;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   question: {
     display: 'flex',
     flex: 1,
@@ -104,8 +106,12 @@ const useStyles = makeStyles({
     jusitfyContent: 'center',
     margin: 3,
     height: 40
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   }
-});
+}));
 
 const Answers = (props) => {
   var count = 0;
@@ -115,11 +121,13 @@ const Answers = (props) => {
   let creator = useSelector(state=> state.creator)
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
+  let loading = useSelector(state => state.loading)
   let name = props.location.state.name
   let room = props.location.state.room
   let answer = props.location.state.answer
   let question = props.location.state.question
   const [slide, setSlide] = useState(false);
+  const [open, setOpen] = React.useState(false);
   
   const dispatch = useDispatch()
   const [ID, setID] = useState([]);
@@ -149,6 +157,7 @@ const Answers = (props) => {
 
   useEffect(() => {
     socket.on('choices', (choiceInfo) => {
+      dispatch({type: 'PASS_SCREEN'})
       if(renderPoints === false)
       {
         let players = choiceInfo.choiceInfo.map(({name}) => name)
@@ -175,13 +184,15 @@ const Answers = (props) => {
     }
     else 
     {
+      setOpen(true)
       dispatch(actions.sendChoice(roomID, ID[index], socket))
       setChoice(true)
     }
   }
 
   const movePage = () => {
-    dispatch(actions.startGame(roomID, socket, (update) => {
+    setOpen(true)
+    dispatch(actions.nextQuestion(roomID, socket, (update) => {
       clearInterval(timer)
       history.push('/Game', {name: name, room: room})
     }))
@@ -203,13 +214,15 @@ const Answers = (props) => {
 
 if(renderPoints)
 {
-
   clearInterval(timer)
 
 
 
   return (
     <div>
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     <Grid item direction="column">
     <Grid container
 spacing={0}
@@ -236,7 +249,7 @@ style={{ minHeight: '100vh' }}>
          <Divider />
      </List>
      ))}
-          {creator? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={movePage}>Next question</AwesomeButton> : null}
+          <AwesomeButton className={classes.test1} type="secondary" ripple onPress={movePage}>Next question</AwesomeButton>
     </Card>
     </Box>
     </div>
@@ -249,12 +262,15 @@ style={{ minHeight: '100vh' }}>
   </div>
   );
 }
-else if(choice == false && answers.length > 0)
+else
 {
   clearInterval(timer)
   // setSlide(true)
   return(
     <div>
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     <Grid item direction="column">
     <Grid 
     container
@@ -286,14 +302,6 @@ else if(choice == false && answers.length > 0)
     </Spring>
     </Grid>
     </Grid>
-    </div>
-  )
-}
-else
-{
-  return(
-    <div>
-    <Typography id="loadingtext1" className = {classes.title}>Waiting for People to Answer</Typography>
     </div>
   )
 }

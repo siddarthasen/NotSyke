@@ -19,6 +19,18 @@ export const startGame = (room, socket, callback) => async dispatch => {
     })   
 }
 
+export const nextQuestion = (room, socket, callback) => async dispatch => {
+    socket.emit('ready', {room: room})
+    dispatch({type: 'WAITING_PLAYERS'})
+    socket.on('next_question', (response) => {
+        dispatch({type: 'START_GAME', payload: response.start})
+        if(callback)
+        {
+            callback(response.start)
+        }
+    })   
+}
+
 export const requestPrompt = (room, socket) => async dispatch => {
     socket.emit('requestPrompt', {room: room})
     socket.on('sentPrompt', (response) => {
@@ -33,5 +45,6 @@ export const sendAnswer = (room, name, answer, socket) => async dispatch => {
 
 /* Best choice answer chosen by the person. */
 export const sendChoice = (room, userID, socket) => async dispatch => {
+    dispatch({type: 'WAITING_PLAYERS'})
     socket.emit('sendChoice', {room: room, userID: userID})
 }

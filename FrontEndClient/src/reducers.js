@@ -7,7 +7,8 @@ const initalState = {
     socket: {},
     roomID: '',
     start: false,
-    creator: false
+    creator: false,
+    loading: false
 }
 
 function reducer(state=initalState, action) {
@@ -17,13 +18,17 @@ function reducer(state=initalState, action) {
         case 'SET_SOCKET':
             return{...state, socket: action.payload}
         case 'START_GAME':
-            return{...state, start: action.payload}
+            return{...state, start: action.payload, loading: false}
         case 'DISPLAY_QUESTION':
-            return{...state, question: action.payload}
+            return{...state, question: action.payload, loading: false}
         case 'SET_CREATOR':
                 return{...state, creator: action.payload}
         case 'RESET_USER':
                 return{initalState}
+        case 'WAITING_PLAYERS':
+                return{...state, loading: true}
+        case 'PASS_SCREEN':
+                return{...state, loading:false}
         default: 
             return{...state}
     }
