@@ -180,7 +180,7 @@ const Answers = (props) => {
   const sendChoice = (index) => {
     if(answers[index] === answer)
     {
-      alert("Cant choice cuz urs")
+      alert("Please choose a different option. This is your answer.")
     }
     else 
     {

@@ -25,16 +25,29 @@ class Room {
     this.answers = 0;
     this.choices = 0;
     this.player_num = -1;
+    this.question_requests = 0;
   }
 
-  /* @Sid */
+  isNextQuestion() {
+    this.question_requests += 1;
+    return this.question_requests == this.userList.length;
+  }
+
   getNextPlayer() {
-    this.player_num += 1
-    this.player_num == this.player_num % this.userList.length;
+    this.player_num += 1;
+    this.player_num = this.player_num % this.userList.length;
     return this.userList[this.player_num];
   }
 
-  /* @Sid */
+  resetQuestionRequests() {
+    this.question_requests = 0;
+  }
+
+  resetResponses() {
+    this.answers = 0;
+    this.choices = 0;
+  }
+
   static randomizeList(lst) {
     let temp, newList
     temp = Array.from(lst);
@@ -92,16 +105,15 @@ io.on('connection', function(socket) {
     //if(answer for each user is not empyy)-> clear it
     console.log(Math.floor(Math.random() * 10))
     // let user = roomList[room].userList[(Math.floor(Math.random() * 100) % (roomList[room].userList.length - 1))].name
-    let user = roomList[room].getNextPlayer.name;
-    let random = (Math.floor(Math.random() * 100) % 100) - 1
-    let phrase = questions.questions[38]
-    let question = phrase.first
-    console.log(user)
-    question = question.concat(user, phrase.second)
-    console.log('questions ', question);
-    roomList[room].answers = 0
-    roomList[room].choices = 0
-    io.in(room).emit('sentPrompt', {question: question});
+    if (roomList[room].isNextQuestion()) {
+      let user = roomList[room].getNextPlayer().name;
+      let random = (Math.floor(Math.random() * 100) % 100) - 1
+      let phrase = questions.questions[38]
+      let question = phrase.first
+      question = question.concat(user, phrase.second)
+      roomList[room].resetResponses();
+      io.in(room).emit('sentPrompt', {question: question});
+    }
   });
 
  socket.on('submitAnswer' , function({room, name, answer}) {
@@ -117,6 +129,7 @@ io.on('connection', function(socket) {
  });
 
  socket.on('sendChoice', function({room, userID}) {
+  roomList[room].resetQuestionRequests();
   roomList[room].userList.find((user) => user.id === userID).points++;
   roomList[room].choices++;
   if (roomList[room].choices == roomList[room].userList.length) {
@@ -143,7 +156,14 @@ io.on('connection', function(socket) {
 //     //  io.broadcast.emit('removal-update', {members: roomList[roomID]}); 
 //  })
 
- socket.on('remove_user', function({roomID, name, type, page}) {
+ socket.on('remove_user', function({roomID, name}) {
+   console.log(name)
+   if(roomList[roomID]) 
+   {
+    console.log('removed member: ', roomList[roomID].userList.splice(roomList[roomID].userList.find((user) => user.name === name), 1));
+    let members = roomList[roomID].userList.map(({name}) => name);
+    io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
+   }
    // we need the type of user (creator or joiner) 
    // if a joiner leaves, then process normal, decrerase the num of players, 
    // and then use the page var to act accordingly
@@ -152,11 +172,11 @@ io.on('connection', function(socket) {
         //or on the waiting page for best choice answer
         // also on the page where they havr to submit an answer
    //if a creator leaves, u have to set another user to be a creator
-   console.log(roomID, name)
-  let temp = roomList[roomID];
-  roomList[roomID].userList.splice(roomList[room].userList.find((user) => user.name === name), 1)
-  let members = roomList[roomID].userList.map(({name}) => name);
-    io.in(room).emit('waiting-info', {roomID: room, members: members});
+  // let temp = roomList[roomID];
+  // roomList[roomID].userList.splice(roomList[room].userList.find((user) => user.name === name), 1)
+  // console.log(roomList[roomID].userList)
+  // let members = roomList[roomID].userList.map(({name}) => name);
+  //   io.in(room).emit('waiting-info', {roomID: room, members: members});
  })
 });
 

@@ -127,6 +127,7 @@ const Waiting = (props) => {
     alert(e)
     e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
     // Chrome requires returnValue to be set
+    console.log(roomID, name)
     socket.emit('remove_user', {roomID: roomID, name: name})
     dispatch({type: 'RESET_USER'})
     history.push('/')
@@ -147,7 +148,7 @@ const Waiting = (props) => {
       Emit to the server. Take out the DISCONNECT variable @Sid. */
   const disconnectUser = () => {
     socket.on('disconnect', () => {
-      socket.emit('player-disconnect', {roomID, name});
+      socket.emit('player-disconnect', {roomID: roomID, name: name});
     });
   };
 
