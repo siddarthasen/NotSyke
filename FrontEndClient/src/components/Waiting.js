@@ -24,6 +24,7 @@ import {
 import * as actions from './actions'
 import { useHistory } from "react-router-dom";
 import { AwesomeButton } from "react-awesome-button";
+import { Beforeunload } from 'react-beforeunload';
 import './CardFormat.css'
 let socket;
 
@@ -123,20 +124,20 @@ const Waiting = (props) => {
   })
 
   /* add this to shared file.*/
-  window.addEventListener('beforeunload', function (e) {
-    alert(e)
-    e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-    // Chrome requires returnValue to be set
-    console.log(roomID, name)
-    socket.emit('remove_user', {roomID: roomID, name: name})
-    dispatch({type: 'RESET_USER'})
-    history.push('/')
-    e.returnValue = '';
-  });
-  window.addEventListener('backbutton', function(){
-    alert("test")
-    return false;
-    })
+  // window.addEventListener('beforeunload', function (e) {
+  //   alert(e)
+  //   e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+  //   // Chrome requires returnValue to be set
+  //   console.log(roomID, name)
+  //   socket.emit('remove_user', {roomID: roomID, name: name})
+  //   dispatch({type: 'RESET_USER'})
+  //   history.push('/')
+  //   e.returnValue = '';
+  // });
+  // window.addEventListener('backbutton', function(){
+  //   alert("test")
+  //   return false;
+  //   })
 
   const startGame = () => { //used for creator
     dispatch(actions.startGame(roomID, socket, (update) => {
@@ -173,9 +174,20 @@ setInterval(function(){
   render = 1
 }, 1000);
 
+
+function stop(event)
+{
+  console.log(event)
+  event.preventDefault()
+  socket.emit('remove_user', {roomID: roomID, name: name})
+    dispatch({type: 'RESET_USER'})
+    history.push('/')
+    event.returnValue = '';
+}
   return (
     <div>
       <Grid item direction="column">
+      <Beforeunload onBeforeunload={event => {stop(event)}} />
       <Grid container
   spacing={0}
   direction="column"

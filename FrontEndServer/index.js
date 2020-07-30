@@ -48,6 +48,10 @@ class Room {
     this.choices = 0;
   }
 
+  uniqueName(name) {
+    return this.user.findIndex((user) => user.name === name) === -1;
+  }
+
   static randomizeList(lst) {
     let temp, newList
     temp = Array.from(lst);
@@ -87,11 +91,25 @@ io.on('connection', function(socket) {
 
     }
     else if (roomList.hasOwnProperty(room)) {
-      socket.join(room);
-      const user = new User(name);
-      roomList[room].userList.push(user);
-      let members = roomList[room].userList.map(({name}) => name);
-      io.in(room).emit('waiting-info', {roomID: room, members: members});
+    //is name exists in the roomList
+    //socket.emit('error', {error: "Name is already taken"})
+      if (roomList[room].uniqueName(name)) {
+        socket.join(room);
+        const user = new User(name);
+        roomList[room].userList.push(user);
+        let members = roomList[room].userList.map(({name}) => name);
+        io.in(room).emit('waiting-info', {roomID: room, members: members});
+      } else {
+        socket.emit('error', {error: "Name is already taken"});
+      }
+    } else {
+      try {
+        socket.emit('error', {error: 'no room found'});
+      }
+      catch {
+        console.log('Room not created yet.');
+        socket.emit('error', {error: 'no room found'});
+      }
     }
   });
 

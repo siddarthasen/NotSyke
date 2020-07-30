@@ -130,6 +130,13 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom}) => {
 const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRoom, sendRequest}) => {
   let history = useHistory();
   const classes = useStyles();
+
+  useEffect(() => {
+    socket.on('error', (response) => {
+      console.log(response)
+      alert(response)
+  })
+  })
   return (
   <Grid container
   spacing={0}
