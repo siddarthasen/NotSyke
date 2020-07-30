@@ -157,10 +157,10 @@ io.on('connection', function(socket) {
 //  })
 
  socket.on('remove_user', function({roomID, name}) {
-   console.log(name)
+   console.log('name before removal ', name)
    if(roomList[roomID]) 
    {
-    console.log('removed member: ', roomList[roomID].userList.splice(roomList[roomID].userList.find((user) => user.name === name), 1));
+    console.log('removed member: ', roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1));
     let members = roomList[roomID].userList.map(({name}) => name);
     io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
    }
