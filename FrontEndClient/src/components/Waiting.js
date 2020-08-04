@@ -123,6 +123,13 @@ const Waiting = (props) => {
     })
   })
 
+  useEffect(() => {
+    socket.on('next_question', () => {
+      history.push('/Game', {name: name, room: room})
+    })
+  })
+
+
   /* add this to shared file.*/
   // window.addEventListener('beforeunload', function (e) {
   //   alert(e)

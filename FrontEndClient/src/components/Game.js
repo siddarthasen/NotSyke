@@ -122,9 +122,9 @@ const [open, setOpen] = React.useState(false);
 
 },[]);
 
-const submitAnswer = (event) => {
+const chooseAnswer = (event) => {
   setOpen(true)
-  dispatch(actions.sendAnswer(roomID, name, answer, socket))
+  dispatch(actions.chooseAnswer(roomID, name, answer, socket))
   console.log(answer)
   history.push('/Answers', {name: name, room: room, answer: answer, question: question})
 }
@@ -161,7 +161,7 @@ const submitAnswer = (event) => {
         />
         </Box>
         </Grid>
-        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={submitAnswer}>Submit</AwesomeButton>
+        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={chooseAnswer}>Submit</AwesomeButton>
         </Grid>
       </Card>
       </div>

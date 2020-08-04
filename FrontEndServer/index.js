@@ -26,6 +26,8 @@ class Room {
     this.choices = 0;
     this.player_num = -1;
     this.question_requests = 0;
+    this.inGame = false;
+    this.waitingRoom = [];
   }
 
   isNextQuestion() {
@@ -49,7 +51,7 @@ class Room {
   }
 
   uniqueName(name) {
-    return this.user.findIndex((user) => user.name === name) === -1;
+    return this.userList.findIndex((user) => user.name === name) === -1;
   }
 
   static randomizeList(lst) {
@@ -95,10 +97,18 @@ io.on('connection', function(socket) {
     //socket.emit('error', {error: "Name is already taken"})
       if (roomList[room].uniqueName(name)) {
         socket.join(room);
+        if(roomList[room].inGame === false){
         const user = new User(name);
         roomList[room].userList.push(user);
         let members = roomList[room].userList.map(({name}) => name);
         io.in(room).emit('waiting-info', {roomID: room, members: members});
+        }
+        else{
+          const user = new User(name);
+          roomList[room].waitingRoom.push(user)
+          let members = roomList[room].userList.map(({name}) => name);
+          socket.emit('waiting-info', {roomID: room, members: members})
+        }
       } else {
         socket.emit('error', {error: "Name is already taken"});
       }
@@ -115,8 +125,11 @@ io.on('connection', function(socket) {
 
   socket.on('start_game' , function({room}) { //will be reused for anytime
     /* @Sid */
-    roomList[room].userList = Room.randomizeList(roomList[room].userList);
-    io.in(room).emit('start', {start: true});
+    if (roomList[room]) {
+      roomList[room].userList = Room.randomizeList(roomList[room].userList);
+      roomList[room].inGame = true
+      io.in(room).emit('start', {start: true});
+    }
   });
 
   socket.on('requestPrompt', function({room}) {
@@ -134,25 +147,28 @@ io.on('connection', function(socket) {
     }
   });
 
- socket.on('submitAnswer' , function({room, name, answer}) {
-  roomList[room].userList.find((user) => user.name === name).answer = answer;
-   roomList[room].answers++;
-   console.log(roomList[room].answers)
+ socket.on('submitAnswer' , function({room, name, answer, disconnect}) {
+   if (!disconnect) {
+    roomList[room].userList.find((user) => user.name === name).answer = answer;
+    roomList[room].answers++;
+   }
    if (roomList[room].answers == roomList[room].userList.length) {
 
     /* @Sid */
      answerInfo = Room.randomizeList(roomList[room].userList.map(user => ({id: user.id, answer: user.answer})));
-     io.in(room).emit('answers', { answerInfo: answerInfo});
+     io.in(room).emit('displayAnswers', { answerInfo: answerInfo});
    };
  });
 
- socket.on('sendChoice', function({room, userID}) {
-  roomList[room].resetQuestionRequests();
-  roomList[room].userList.find((user) => user.id === userID).points++;
-  roomList[room].choices++;
+ socket.on('chooseAnswer', function({room, userID, disconnect}) {
+  if (!disconnect) {
+    roomList[room].resetQuestionRequests();
+    roomList[room].userList.find((user) => user.id === userID).points++;
+    roomList[room].choices++;
+  }
   if (roomList[room].choices == roomList[room].userList.length) {
     roomList[room].choices = 0
-    io.in(room).emit('choices', {choiceInfo: roomList[room].userList.map(each => ({name: each.name, points: each.points}))});
+    io.in(room).emit('displayPoints', {choiceInfo: roomList[room].userList.map(each => ({name: each.name, points: each.points}))});
    };
  })
 
@@ -161,6 +177,10 @@ io.on('connection', function(socket) {
    if(roomList[room].choices === roomList[room].userList.length)
    {
     roomList[room].choices = 0
+    if(roomList[room].waitingRoom.length){
+      roomList[room].userList.concat(roomList[room].waitingRoom)
+      roomList[room].waitingRoom = []
+    }
     io.in(room).emit('next_question', {start: true});
    }
  })
@@ -175,13 +195,33 @@ io.on('connection', function(socket) {
 //  })
 
  socket.on('remove_user', function({roomID, name}) {
-   console.log('name before removal ', name)
-   if(roomList[roomID]) 
-   {
-    console.log('removed member: ', roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1));
-    let members = roomList[roomID].userList.map(({name}) => name);
-    io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
+   /* Harry's code
+    console.log('name before removal ', name);
+    if (roomList[roomID]) 
+    {
+      console.log('removed member: ', roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1));
+      let members = roomList[roomID].userList.map(({name}) => name);
+      io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
+    }
+   */
+
+   
+   if (roomList[roomID]) {
+    switch (part) {
+      case 'waiting':
+        roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
+        let members = roomList[roomID].userList.map(({name}) => name);
+        io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
+      case 'questions':
+        roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
+        socket.emit('submitAnswer', {room: roomID, name: '', answer: '', disconnect: true});
+      case 'answers':
+        roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
+        socket.emit('chooseAnswer', {room: roomID, userID: '', disconnect: true});
+    }; 
    }
+
+
    // we need the type of user (creator or joiner) 
    // if a joiner leaves, then process normal, decrerase the num of players, 
    // and then use the page var to act accordingly

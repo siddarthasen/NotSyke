@@ -139,7 +139,7 @@ const Answers = (props) => {
   let history = useHistory();
 
   useEffect(() => {
-    socket.on('answers', (answerInfo) => {
+    socket.on('displayAnswers', (answerInfo) => {
       let answer = answerInfo.answerInfo.map(({answer}) => answer)
       let id = answerInfo.answerInfo.map(({id}) => id) 
       setAnswers(answer)
@@ -156,7 +156,7 @@ const Answers = (props) => {
   })
 
   useEffect(() => {
-    socket.on('choices', (choiceInfo) => {
+    socket.on('displayPoints', (choiceInfo) => {
       dispatch({type: 'PASS_SCREEN'})
       if(renderPoints === false)
       {
@@ -177,7 +177,7 @@ const Answers = (props) => {
     return array
   }
 
-  const sendChoice = (index) => {
+  const submitAnswer = (index) => {
     if(answers[index] === answer)
     {
       alert("Please choose a different option. This is your answer.")
@@ -185,7 +185,7 @@ const Answers = (props) => {
     else 
     {
       setOpen(true)
-      dispatch(actions.sendChoice(roomID, ID[index], socket))
+      dispatch(actions.submitAnswer(roomID, ID[index], socket))
       setChoice(true)
     }
   }
@@ -291,7 +291,7 @@ else
     <List key={i} style={{display: 'flex', flex: 1, justifyContent: 'center'}}>
                           <Slide direction="up" in={slide} mountOnEnter unmountOnExit timeout={1000}>                        
                           <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                          <AwesomeButton className={classes.text2} type="secondary" ripple onPress={() => sendChoice(i)}>{item}</AwesomeButton>
+                          <AwesomeButton className={classes.text2} type="secondary" ripple onPress={() => submitAnswer(i)}>{item}</AwesomeButton>
                         </Grid>
                         </Slide>
                     </List>    ))}

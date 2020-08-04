@@ -39,12 +39,12 @@ export const requestPrompt = (room, socket) => async dispatch => {
 }
 
 /* Answer written by the user. */
-export const sendAnswer = (room, name, answer, socket) => async dispatch => {
-    socket.emit('submitAnswer', {room: room, name: name, answer: answer})
+export const submitAnswer = (room, name, answer, socket) => async dispatch => {
+    socket.emit('submitAnswer', {room: room, name: name, answer: answer, disconnect: false})
 }
 
 /* Best choice answer chosen by the person. */
-export const sendChoice = (room, userID, socket) => async dispatch => {
-    dispatch({type: 'WAITING_PLAYERS'})
-    socket.emit('sendChoice', {room: room, userID: userID})
+export const chooseAnswer = (room, userID, socket) => async dispatch => {
+    dispatch({type: 'WAITING_PLAYERS'});
+    socket.emit('chooseAnswer', {room: room, userID: userID, disconnect: false})
 }

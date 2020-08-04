@@ -132,10 +132,10 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   const classes = useStyles();
 
   useEffect(() => {
-    socket.on('error', (response) => {
-      console.log(response)
-      alert(response)
-  })
+  //   socket.on('error', (response) => {
+  //     console.log(response)
+  //     alert(response)
+  // })
   })
   return (
   <Grid container
