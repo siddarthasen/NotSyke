@@ -26,6 +26,7 @@ import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
 import Box from '@material-ui/core/Box';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Beforeunload } from 'react-beforeunload';
 let socket;
 
 const useStyles = makeStyles((theme) => ({
@@ -138,6 +139,19 @@ const Answers = (props) => {
   const [player, setPlayers] = useState([]);
   let history = useHistory();
 
+  window.onbeforeunload = function() {
+    if(renderPoints)
+    {
+      socket.emit('remove_user', {roomID: roomID, name: name, part: 'points'})
+    }
+    else
+    {
+      socket.emit('remove_user', {roomID: roomID, name: name, part: 'answers'})
+    }
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
+}
+
   useEffect(() => {
     socket.on('displayAnswers', (answerInfo) => {
       let answer = answerInfo.answerInfo.map(({answer}) => answer)
@@ -177,7 +191,7 @@ const Answers = (props) => {
     return array
   }
 
-  const submitAnswer = (index) => {
+  const chooseAnswer = (index) => {
     if(answers[index] === answer)
     {
       alert("Please choose a different option. This is your answer.")
@@ -185,7 +199,7 @@ const Answers = (props) => {
     else 
     {
       setOpen(true)
-      dispatch(actions.submitAnswer(roomID, ID[index], socket))
+      dispatch(actions.chooseAnswer(roomID, ID[index], socket))
       setChoice(true)
     }
   }
@@ -291,7 +305,7 @@ else
     <List key={i} style={{display: 'flex', flex: 1, justifyContent: 'center'}}>
                           <Slide direction="up" in={slide} mountOnEnter unmountOnExit timeout={1000}>                        
                           <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                          <AwesomeButton className={classes.text2} type="secondary" ripple onPress={() => submitAnswer(i)}>{item}</AwesomeButton>
+                          <AwesomeButton className={classes.text2} type="secondary" ripple onPress={() => chooseAnswer(i)}>{item}</AwesomeButton>
                         </Grid>
                         </Slide>
                     </List>    ))}

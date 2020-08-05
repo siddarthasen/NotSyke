@@ -134,6 +134,7 @@ io.on('connection', function(socket) {
 
   socket.on('requestPrompt', function({room}) {
     //if(answer for each user is not empyy)-> clear it
+    console.log('');
     console.log(Math.floor(Math.random() * 10))
     // let user = roomList[room].userList[(Math.floor(Math.random() * 100) % (roomList[room].userList.length - 1))].name
     if (roomList[room].isNextQuestion()) {
@@ -147,54 +148,59 @@ io.on('connection', function(socket) {
     }
   });
 
- socket.on('submitAnswer' , function({room, name, answer, disconnect}) {
-   if (!disconnect) {
-    roomList[room].userList.find((user) => user.name === name).answer = answer;
-    roomList[room].answers++;
-   }
-   if (roomList[room].answers == roomList[room].userList.length) {
+ socket.on('submitAnswer' , ({room, name, answer, disconnect}) => {submitAnswer(room, name, answer, disconnect)});
 
-    /* @Sid */
-     answerInfo = Room.randomizeList(roomList[room].userList.map(user => ({id: user.id, answer: user.answer})));
-     io.in(room).emit('displayAnswers', { answerInfo: answerInfo});
-   };
- });
-
- socket.on('chooseAnswer', function({room, userID, disconnect}) {
+ function submitAnswer(room, name, answer, disconnect) {
+  console.log('');
+  console.log('in submitAnswer');
+  console.log('disconnect: ', disconnect);
   if (!disconnect) {
-    roomList[room].resetQuestionRequests();
-    roomList[room].userList.find((user) => user.id === userID).points++;
-    roomList[room].choices++;
+   roomList[room].userList.find((user) => user.name === name).answer = answer;
+   roomList[room].answers++;
   }
-  if (roomList[room].choices == roomList[room].userList.length) {
-    roomList[room].choices = 0
-    io.in(room).emit('displayPoints', {choiceInfo: roomList[room].userList.map(each => ({name: each.name, points: each.points}))});
-   };
- })
+  if (roomList[room].answers == roomList[room].userList.length) {
+    console.log('in submit if');
+    answerInfo = Room.randomizeList(roomList[room].userList.map(user => ({id: user.id, answer: user.answer})));
+    console.log('room, ', roomList);
+    io.in(room).emit('displayAnswers', { answerInfo: answerInfo});
+  };
+}
 
- socket.on('ready', function({room}) {
-   roomList[room].choices++
-   if(roomList[room].choices === roomList[room].userList.length)
-   {
-    roomList[room].choices = 0
-    if(roomList[room].waitingRoom.length){
-      roomList[room].userList.concat(roomList[room].waitingRoom)
-      roomList[room].waitingRoom = []
+ socket.on('chooseAnswer', ({room, userID, disconnect}) => {chooseAnswer(room, userID, disconnect)}); 
+ 
+ function chooseAnswer(room, userID, disconnect) {
+   console.log('');
+    if (!disconnect) {
+      console.log('chooseAnswerNotDisconnect');
+      roomList[room].resetQuestionRequests();
+      console.log('room, userID: ', room, ', ', userID);
+      console.log('name' , roomList[room].userList.find((user) => user.id === userID).name);
+      roomList[room].userList.find((user) => user.id === userID).points++;
+      roomList[room].choices++;
     }
-    io.in(room).emit('next_question', {start: true});
+    if (roomList[room].choices == roomList[room].userList.length) {
+      console.log('chooseAnswerIf: ', roomList[room].userList.length, roomList[room].choices);
+      roomList[room].choices = 0;
+      io.in(room).emit('displayPoints', {choiceInfo: roomList[room].userList.map(each => ({name: each.name, points: each.points}))});
+    };
+ };
+
+ socket.on('ready',({room}) => {favoriteAnswerChoice(room)});
+ 
+ function favoriteAnswerChoice(room) {
+  roomList[room].choices++
+  if(roomList[room].choices === roomList[room].userList.length)
+  {
+   roomList[room].choices = 0
+   if(roomList[room].waitingRoom.length){
+     roomList[room].userList.concat(roomList[room].waitingRoom)
+     roomList[room].waitingRoom = []
    }
- })
+   io.in(room).emit('next_question', {start: true});
+  }
+}
 
- /*  On PLAYER-DISCONNECT, we remove the NAME in the list of members 
-    from the particular room. Then we emit the updated member list. 
-    We are broadcasting to send the updated member list everyone except the 
-    disconnected user @Sid. */
-//  socket.on('disconnect' {
-//     //  temp.splice(temp.indexOf(name), 1);
-//     //  io.broadcast.emit('removal-update', {members: roomList[roomID]}); 
-//  })
-
- socket.on('remove_user', function({roomID, name}) {
+ socket.on('remove_user', function({roomID, name, part}) {
    /* Harry's code
     console.log('name before removal ', name);
     if (roomList[roomID]) 
@@ -204,41 +210,44 @@ io.on('connection', function(socket) {
       io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
     }
    */
-
    
    if (roomList[roomID]) {
+    console.log('someone is being deleted');
     switch (part) {
       case 'waiting':
         roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
         let members = roomList[roomID].userList.map(({name}) => name);
         io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
+        break;
       case 'questions':
+        console.log('');
+        console.log('in questions')
         roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
-        socket.emit('submitAnswer', {room: roomID, name: '', answer: '', disconnect: true});
+        console.log('user list: ', roomList[roomID].userList);
+        submitAnswer(roomID,'', '', true)
+        break;
       case 'answers':
+        console.log('in answers');
         roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
-        socket.emit('chooseAnswer', {room: roomID, userID: '', disconnect: true});
+        chooseAnswer(roomID, '', true);
+        break;
+      case 'points':
+        console.log('in points');
+        roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
+        favoriteAnswerChoice(roomID);
+        break;
     }; 
    }
-
-
-   // we need the type of user (creator or joiner) 
-   // if a joiner leaves, then process normal, decrerase the num of players, 
-   // and then use the page var to act accordingly
-        //check if they r on the waiting(user)page
-        //check if they r on waiting page for submitting answers
-        //or on the waiting page for best choice answer
-        // also on the page where they havr to submit an answer
-   //if a creator leaves, u have to set another user to be a creator
-  // let temp = roomList[roomID];
-  // roomList[roomID].userList.splice(roomList[room].userList.find((user) => user.name === name), 1)
-  // console.log(roomList[roomID].userList)
-  // let members = roomList[roomID].userList.map(({name}) => name);
-  //   io.in(room).emit('waiting-info', {roomID: room, members: members});
  })
 });
+/* 
+  4 people in a game
+  1 person has asnwered, and then after 1 person decides to leave
+  -> 3 people in the room
+  4 people in a game
+  3 have answer, and then the last person decides to leave
+*/
 
-//handle
 
 app.use(router);
 

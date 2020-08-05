@@ -28,6 +28,7 @@ import {
   AwesomeButtonProgress,
   AwesomeButtonSocial,
 } from 'react-awesome-button';
+import { Beforeunload } from 'react-beforeunload';
 let socket;
 
 
@@ -122,13 +123,25 @@ const [open, setOpen] = React.useState(false);
 
 },[]);
 
-const chooseAnswer = (event) => {
+const submitAnswer = (event) => {
   setOpen(true)
-  dispatch(actions.chooseAnswer(roomID, name, answer, socket))
+  dispatch(actions.submitAnswer(roomID, name, answer, socket))
   console.log(answer)
   history.push('/Answers', {name: name, room: room, answer: answer, question: question})
 }
 
+// function stop(event)
+// {
+//     socket.emit('remove_user', {roomID: roomID, name: name, part: 'questions'})
+//     dispatch({type: 'RESET_USER'})
+//     history.push('/')
+//   // }
+// } 
+window.onbeforeunload = function() {
+      socket.emit('remove_user', {roomID: roomID, name: name, part: 'questions'})
+    dispatch({type: 'RESET_USER'})
+    history.push('/')
+}
 
   return (
     <div>
@@ -161,7 +174,7 @@ const chooseAnswer = (event) => {
         />
         </Box>
         </Grid>
-        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={chooseAnswer}>Submit</AwesomeButton>
+        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={submitAnswer}>Submit</AwesomeButton>
         </Grid>
       </Card>
       </div>

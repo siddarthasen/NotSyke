@@ -160,9 +160,6 @@ const Waiting = (props) => {
     });
   };
 
-  /*  Once we get back the updated list from server, we rerender
-      the list @Sid. */
-
   //FIXME: @Harry make this into redux stuff like join room. 
   const disconnectRender = () => {
     
@@ -186,7 +183,7 @@ function stop(event)
 {
   console.log(event)
   event.preventDefault()
-  socket.emit('remove_user', {roomID: roomID, name: name})
+  socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
     dispatch({type: 'RESET_USER'})
     history.push('/')
     event.returnValue = '';
