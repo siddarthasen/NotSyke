@@ -2,13 +2,14 @@ const express = require('express');
 //express is being used for FrontEndServer
 const socketio = require('socket.io');
 const http = require('http');
-var questions = require('./questions/questions.json')
+var questionList = require('./questions/questions.json')
 
 const {addUser, removeUser, getUser, getUsersInRoom, generateRoomID} = require('./groups');
 const PORT = process.env.PORT || 5000;
 console.log(PORT)
 
 const router = require('./router');
+const { disconnect } = require('process');
 
 const app = express();
 
@@ -19,20 +20,32 @@ const io = socketio(server);
 var roomList = {};
 
 class Room {
+
   constructor() {
     this.userList = [];
-    this.choiceList = {};
     this.answers = 0;
     this.choices = 0;
+    this.player_ready = 0;
     this.player_num = -1;
     this.question_requests = 0;
     this.inGame = false;
     this.waitingRoom = [];
+    this.rounds;
+    this.questionList = questionList.questions;
   }
 
   isNextQuestion() {
     this.question_requests += 1;
     return this.question_requests == this.userList.length;
+  }
+
+  getRandomQuestion() {
+    if (this.questionList.length == 0) {
+      this.questionList = questionList;
+    }
+    let num = Math.floor(Math.random() * this.questionList.length);
+    let question = this.questionList.splice(num, 1);
+    return question[0];
   }
 
   getNextPlayer() {
@@ -133,15 +146,10 @@ io.on('connection', function(socket) {
   });
 
   socket.on('requestPrompt', function({room}) {
-    //if(answer for each user is not empyy)-> clear it
-    console.log('');
-    console.log(Math.floor(Math.random() * 10))
-    // let user = roomList[room].userList[(Math.floor(Math.random() * 100) % (roomList[room].userList.length - 1))].name
     if (roomList[room].isNextQuestion()) {
       let user = roomList[room].getNextPlayer().name;
-      let random = (Math.floor(Math.random() * 100) % 100) - 1
-      let phrase = questions.questions[38]
-      let question = phrase.first
+      let phrase = roomList[room].getRandomQuestion();
+      let question = phrase.first;
       question = question.concat(user, phrase.second)
       roomList[room].resetResponses();
       io.in(room).emit('sentPrompt', {question: question});
@@ -151,17 +159,12 @@ io.on('connection', function(socket) {
  socket.on('submitAnswer' , ({room, name, answer, disconnect}) => {submitAnswer(room, name, answer, disconnect)});
 
  function submitAnswer(room, name, answer, disconnect) {
-  console.log('');
-  console.log('in submitAnswer');
-  console.log('disconnect: ', disconnect);
   if (!disconnect) {
    roomList[room].userList.find((user) => user.name === name).answer = answer;
    roomList[room].answers++;
   }
   if (roomList[room].answers == roomList[room].userList.length) {
-    console.log('in submit if');
     answerInfo = Room.randomizeList(roomList[room].userList.map(user => ({id: user.id, answer: user.answer})));
-    console.log('room, ', roomList);
     io.in(room).emit('displayAnswers', { answerInfo: answerInfo});
   };
 }
@@ -169,50 +172,38 @@ io.on('connection', function(socket) {
  socket.on('chooseAnswer', ({room, userID, disconnect}) => {chooseAnswer(room, userID, disconnect)}); 
  
  function chooseAnswer(room, userID, disconnect) {
-   console.log('');
     if (!disconnect) {
-      console.log('chooseAnswerNotDisconnect');
       roomList[room].resetQuestionRequests();
-      console.log('room, userID: ', room, ', ', userID);
-      console.log('name' , roomList[room].userList.find((user) => user.id === userID).name);
       roomList[room].userList.find((user) => user.id === userID).points++;
       roomList[room].choices++;
     }
     if (roomList[room].choices == roomList[room].userList.length) {
-      console.log('chooseAnswerIf: ', roomList[room].userList.length, roomList[room].choices);
       roomList[room].choices = 0;
       io.in(room).emit('displayPoints', {choiceInfo: roomList[room].userList.map(each => ({name: each.name, points: each.points}))});
     };
  };
 
- socket.on('ready',({room}) => {favoriteAnswerChoice(room)});
+ socket.on('ready',({room, disconnect}) => {favoriteAnswerChoice(room, disconnect)});
  
- function favoriteAnswerChoice(room) {
-  roomList[room].choices++
-  if(roomList[room].choices === roomList[room].userList.length)
+ function favoriteAnswerChoice(room, disconnect) {
+  if (!disconnect) {
+    roomList[room].player_ready++;
+  }
+  if(roomList[room].player_ready === roomList[room].userList.length)
   {
-   roomList[room].choices = 0
+   roomList[room].player_ready = 0
    if(roomList[room].waitingRoom.length){
-     roomList[room].userList.concat(roomList[room].waitingRoom)
-     roomList[room].waitingRoom = []
+     roomList[room].userList.concat(roomList[room].waitingRoom);
+     roomList[room].waitingRoom = [];
    }
+   
    io.in(room).emit('next_question', {start: true});
   }
 }
 
- socket.on('remove_user', function({roomID, name, part}) {
-   /* Harry's code
-    console.log('name before removal ', name);
-    if (roomList[roomID]) 
-    {
-      console.log('removed member: ', roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1));
-      let members = roomList[roomID].userList.map(({name}) => name);
-      io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
-    }
-   */
-   
+ socket.on('remove_user', function({roomID, name, part}) {   
    if (roomList[roomID]) {
-    console.log('someone is being deleted');
+    
     switch (part) {
       case 'waiting':
         roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
@@ -220,34 +211,21 @@ io.on('connection', function(socket) {
         io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
         break;
       case 'questions':
-        console.log('');
-        console.log('in questions')
         roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
-        console.log('user list: ', roomList[roomID].userList);
         submitAnswer(roomID,'', '', true)
         break;
       case 'answers':
-        console.log('in answers');
         roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
         chooseAnswer(roomID, '', true);
         break;
       case 'points':
-        console.log('in points');
         roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
-        favoriteAnswerChoice(roomID);
+        favoriteAnswerChoice(roomID, true);
         break;
     }; 
    }
  })
 });
-/* 
-  4 people in a game
-  1 person has asnwered, and then after 1 person decides to leave
-  -> 3 people in the room
-  4 people in a game
-  3 have answer, and then the last person decides to leave
-*/
-
 
 app.use(router);
 
