@@ -1,9 +1,14 @@
-export const sendLogIn = (type, name, room, endpoint, socket, io) => async dispatch => {
+export const sendLogIn = (type, name, room, socket, history) => async dispatch => {
     const response = {}
     socket.emit('join', {type: type, name: name, room: room});
     socket.on('waiting-info', (response) => {
         console.log(response)
         dispatch({type: 'RET_LOGIN_INFO', payload: response})
+        history.push('/Waiting', {type: type, name: name, room: room})
+      })
+    socket.on('error1', (response) => {
+        console.log(response.error)
+        dispatch({type: 'ERROR_CRED', payload: response.error})
       })
       
 }

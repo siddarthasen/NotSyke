@@ -17,11 +17,15 @@ import './CardFormat.css'
 import { AwesomeButton } from "react-awesome-button";
 import Box from '@material-ui/core/Box';
 import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
-
+import { useSelector, useDispatch } from 'react-redux';
+import * as actions from './actions'
 let socket;
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles({  
+  html: {
+	background: 	   'black',
+  },
   card: {
     borderRadius: 40,
     height: 500,
@@ -70,21 +74,32 @@ const useStyles = makeStyles({
   }
 });
 
-const joinRoom = (buttonName, room, name, history) => {
-  const ENDPOINT = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-  // socket = io(ENDPOINT)
-  if(buttonName.localeCompare('Create Room') == 0)
-  {
+const joinRoom = (buttonName, room, name, history, dispatch) => {
+  // const ENDPOINT = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
+  const ENDPOINT = "localhost:5000"
+  socket = io(ENDPOINT)
+  if(buttonName.localeCompare('Create Room') == 0){
+    dispatch({type: 'SET_CREATOR', payload: true})
+    dispatch({type: 'SET_SOCKET', payload: socket})
+    dispatch(actions.sendLogIn('Create', name, room, socket, history))
+  }
+  else{
+    dispatch({type: 'SET_SOCKET', payload: socket})
+    dispatch(actions.sendLogIn('Join', name, room, socket, history))
+  }
+
+  // if(buttonName.localeCompare('Create Room') == 0)
+  // {
     
-    history.push('/Waiting', {type: "Create", name: name, room: room, endpoint: ENDPOINT})
-  }
-  else
-  {
-    history.push('/Waiting', {type: "Join", name: name, room: room, endpoint: ENDPOINT})
-  }
+  //   history.push('/Waiting', {type: "Create", name: name, room: room, endpoint: ENDPOINT})
+  // }
+  // else
+  // {
+  //   history.push('/Waiting', {type: "Join", name: name, room: room, endpoint: ENDPOINT})
+  // }
 }
 
-const RenderRoom = ({value, classes, name, setName, room, setRoom}) => {
+const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) => {
   if(value === 0)
   {
   return(
@@ -127,16 +142,25 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom}) => {
   }
 }
 
+
+
 const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRoom, sendRequest}) => {
+  const dispatch = useDispatch()
   let history = useHistory();
   const classes = useStyles();
+  let error = useSelector(state=> state.error)
+
+  function backgroundColor() {
+    let colors = ['#B297FF', '#82D9FF', '#E85050', '#04BF10', '#FFD967'];
+    let num = Math.floor((Math.random() + 0.2) * colors.length);
+    console.log('num ', num);
+    num = num == 5 ? 4 : num;
+    return colors[num];
+  }
 
   useEffect(() => {
-  //   socket.on('error', (response) => {
-  //     console.log(response)
-  //     alert(response)
-  // })
-  })
+  document.body.style.background = backgroundColor();
+  }, [])
   return (
   <Grid container
   spacing={0}
@@ -159,8 +183,9 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
           <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
         </CardContent>
         <CardActions>
-        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history)}>{buttonName}</AwesomeButton>
+        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}</AwesomeButton>
         </CardActions>
+        <Typography>{error}</Typography>
       </Card>
       </Box>
     </Grid>

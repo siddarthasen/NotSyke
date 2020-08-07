@@ -88,7 +88,8 @@ const Waiting = (props) => {
   let history = useHistory();
   //Access redux state tree:
   let members = useSelector(state=> state.members)
-  let socket1 = useSelector(state=> state.socket)
+  let socket = useSelector(state=> state.socket)
+  console.log(socket)
   let roomID = useSelector(state => state.roomID)
   let start = useSelector(state => state.start)
   let name = props.location.state.name
@@ -104,15 +105,15 @@ const Waiting = (props) => {
     // //setting an item into chrome cache
     // socket = localStorage.getItem('socket')
     // var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-    var endpoint = "localhost:5000"
-    socket = io(endpoint)
-    dispatch({type: 'SET_SOCKET', payload: socket})
-    //assume this stuff is in action.js file
-    if(type === 'Create')
-    {
-      dispatch({type: 'SET_CREATOR', payload: true})
-    }
-    dispatch(actions.sendLogIn(type, name, room, endpoint, socket, io))
+    // var endpoint = "localhost:5000"
+    // socket = io(endpoint)
+    // dispatch({type: 'SET_SOCKET', payload: socket})
+    // //assume this stuff is in action.js file
+    // if(type === 'Create')
+    // {
+    //   dispatch({type: 'SET_CREATOR', payload: true})
+    // }
+    // dispatch(actions.sendLogIn(type, name, room, endpoint, socket, io))
     setSlide(true)
       
   },[]);

@@ -12,7 +12,6 @@ import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 import CardFormat from './CardFormat'
 import { Spring } from 'react-spring/renderprops'
-import Particles from 'react-particles-js'
 
 let socket;
 
