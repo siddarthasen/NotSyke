@@ -10,7 +10,7 @@ class Room {
       this.question_requests = 0;
       this.inGame = false;
       this.waitingRoom = [];
-      this.rounds = 2;
+      this.rounds = 1;
       this.questionList = questionList.questions;
     }
   

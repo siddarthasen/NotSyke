@@ -139,13 +139,18 @@ io.on('connection', function(socket) {
  socket.on('remove_user', function({roomID, name, part}) {   
    if (roomList[roomID]) {
     roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
-    
+    // roomList[roomID].userList.length ? null : delete roomList[roomID];
+    if (roomList[roomID].userList.length) {
+      delete roomList[roomID];
+      console.log(roomList);
+      return;
+    }
+    console.log(roomList);
     switch (part) {
       case 'waiting':
         let members = roomList[roomID].userList.map(({name}) => name);
         io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
-        members.length ? null : delete roomList[roomID]
-        console.log(roomList) 
+         
         break;
       case 'questions':
         submitAnswer(roomID,'', '', true)
