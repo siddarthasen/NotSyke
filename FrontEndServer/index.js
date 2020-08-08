@@ -140,7 +140,7 @@ io.on('connection', function(socket) {
    if (roomList[roomID]) {
     roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
     // roomList[roomID].userList.length ? null : delete roomList[roomID];
-    if (roomList[roomID].userList.length) {
+    if (roomList[roomID].userList.length <= 0) {
       delete roomList[roomID];
       console.log(roomList);
       return;
@@ -150,7 +150,6 @@ io.on('connection', function(socket) {
       case 'waiting':
         let members = roomList[roomID].userList.map(({name}) => name);
         io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
-         
         break;
       case 'questions':
         submitAnswer(roomID,'', '', true)

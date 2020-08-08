@@ -119,15 +119,25 @@ const Waiting = (props) => {
   },[]);
 
   useEffect(() => {
+    try{
     socket.on('start', (start) => {
       history.push('/Game', {name: name, room: room})
     })
+    }
+    catch(err){
+      history.push('/')
+    }
   })
 
   useEffect(() => {
+    try{
     socket.on('next_question', () => {
       history.push('/Game', {name: name, room: room})
     })
+  }
+  catch(err){
+    history.push('/')
+  }
   })
 
 
@@ -161,13 +171,6 @@ const Waiting = (props) => {
     });
   };
 
-  //FIXME: @Harry make this into redux stuff like join room. 
-  const disconnectRender = () => {
-    
-      socket.on('removal-update', () => {
-        // rerender the components 
-      });
-  };
   var render = 0
   var count = 0;
 setInterval(function(){
@@ -180,19 +183,15 @@ setInterval(function(){
 }, 1000);
 
 
-function stop(event)
-{
-  console.log(event)
-  event.preventDefault()
-  socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
-    dispatch({type: 'RESET_USER'})
-    history.push('/')
-    event.returnValue = '';
+window.onbeforeunload = function() {
+
+    socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
 }
   return (
     <div>
       <Grid item direction="column">
-      <Beforeunload onBeforeunload={event => {stop(event)}} />
       <Grid container
   spacing={0}
   direction="column"

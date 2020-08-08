@@ -101,6 +101,10 @@ const useStyles = makeStyles((theme) => ({
 const Game = (props) => {
   let history = useHistory();
   //Access redux state tree:
+  if(props.location.state == undefined){
+    history.push('/')
+  }
+  console.log(props.match)
   let members = useSelector(state=> state.members)
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
@@ -119,7 +123,12 @@ const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch()
   
   useEffect(() => {
+    try{
     dispatch(actions.requestPrompt(roomID, socket))
+    }
+    catch(err){
+      history.push('/')
+    }
 
 },[]);
 

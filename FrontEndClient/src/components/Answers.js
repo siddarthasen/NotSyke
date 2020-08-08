@@ -157,23 +157,33 @@ const Answers = (props) => {
 }
 
   useEffect(() => {
+    try{
     socket.on('displayAnswers', (answerInfo) => {
       let answer = answerInfo.answerInfo.map(({answer}) => answer)
       let id = answerInfo.answerInfo.map(({id}) => id) 
       setAnswers(answer)
       setID(id)
-      console.log(answer, id)
       setSlide(true)
     })
+  }
+  catch(err){
+    history.push('/')
+  }
   })
 
   useEffect(() => {
+    try{
     socket.on('start', (start) => {
       history.push('/Game', {name: name, room: room})
     })
+    }
+    catch(err){
+      history.push('/')
+    }
   })
 
   useEffect(() => {
+    try{
     socket.on('displayPoints', (choiceInfo) => {
       dispatch({type: 'PASS_SCREEN'})
       if(renderPoints === false)
@@ -189,6 +199,10 @@ const Answers = (props) => {
       }
       // history.push('/Game', {name: name, room: room})
     })
+  }
+  catch(err){
+    history.push('/')
+  }
 
   })
 
