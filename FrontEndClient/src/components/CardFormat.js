@@ -1,6 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import queryString from 'query-string'
-import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,14 +7,12 @@ import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import './CardFormat.css'
 import { AwesomeButton } from "react-awesome-button";
 import Box from '@material-ui/core/Box';
-import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
+import {isBrowser,isMobile} from "react-device-detect";
 
 let socket;
 
@@ -24,8 +20,16 @@ let socket;
 const useStyles = makeStyles({
   card: {
     borderRadius: 40,
-    height: 500,
-    width: 400,
+    height: '70vh',
+    width: '40vw',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'black'
+  },
+  cardMobile: {
+    borderRadius: 40,
+    height: '70vh',
+    width: '90vw',
     alignItems: 'center',
     borderWidth: 2,
     borderColor: 'black'
@@ -137,34 +141,69 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   //     alert(response)
   // })
   })
-  return (
-  <Grid container
-  spacing={0}
-  direction="column"
-  alignItems="center"
-  justify="center"
-  style={{ minHeight: '100vh' }}>
-    <Box border={3} borderRadius={40}>
-    <Card className={classes.card}>
-    <Typography className = {classes.title}>
-    NotPsych!
-    </Typography>
-      <AppBar position="static" className={classes.test}>
-            <Tabs value={value} onChange={handleChange}  className={classes.bar}>
-              <Tab style={{fontFamily: 'Segoe Print'}}label="Join Room"  />
-              <Tab style={{fontFamily: 'Segoe Print'}} label="Create Room"  />
-            </Tabs>
-        </AppBar>
-        <CardContent>
-          <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
-        </CardContent>
-        <CardActions>
-        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history)}>{buttonName}</AwesomeButton>
-        </CardActions>
-      </Card>
-      </Box>
-    </Grid>
-  )
+
+  //insert if statement for mobile/desktop here
+  if (isMobile) {
+    console.log("mobile detected");
+    return (
+      <Grid container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}>
+        <Box border={3} borderRadius={40}>
+          <Card className={classes.cardMobile}>
+            <Typography className = {classes.title}>
+              NotPsych!
+            </Typography>
+            <AppBar position="static" className={classes.test}>
+              <Tabs value={value} onChange={handleChange}  className={classes.bar}>
+                <Tab style={{fontFamily: 'Segoe Print'}}label="Join Room"  />
+                <Tab style={{fontFamily: 'Segoe Print'}} label="Create Room"  />
+              </Tabs>
+            </AppBar>
+            <CardContent>
+              <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
+            </CardContent>
+            <CardActions>
+              <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history)}>{buttonName}</AwesomeButton>
+            </CardActions>
+          </Card>
+        </Box>
+      </Grid>
+    )
+  } else {
+    console.log("desktop detected");
+    return (
+      <Grid container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}>
+        <Box border={3} borderRadius={40}>
+          <Card className={classes.card}>
+            <Typography className = {classes.title}>
+              NotPsych!
+            </Typography>
+            <AppBar position="static" className={classes.test}>
+              <Tabs value={value} onChange={handleChange}  className={classes.bar}>
+                <Tab style={{fontFamily: 'Segoe Print'}}label="Join Room"  />
+                <Tab style={{fontFamily: 'Segoe Print'}} label="Create Room"  />
+              </Tabs>
+            </AppBar>
+            <CardContent>
+              <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
+            </CardContent>
+            <CardActions>
+              <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history)}>{buttonName}</AwesomeButton>
+            </CardActions>
+          </Card>
+        </Box>
+      </Grid>
+    )
+  }
 }
 
 export default CardFormat;

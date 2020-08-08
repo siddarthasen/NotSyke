@@ -28,7 +28,7 @@ import {
   AwesomeButtonProgress,
   AwesomeButtonSocial,
 } from 'react-awesome-button';
-import { Beforeunload } from 'react-beforeunload';
+// import { Beforeunload } from 'react-beforeunload';
 let socket;
 
 
