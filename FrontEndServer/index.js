@@ -45,16 +45,21 @@ io.on('connection', function(socket) {
     //socket.emit('error', {error: "Name is already taken"})
       if (roomList[room].uniqueName(name)) {
         socket.join(room);
-        if(roomList[room].inGame === false){
+        if (roomList[room].inGame === false) {
         const user = new User(name);
         roomList[room].userList.push(user);
         let members = roomList[room].userList.map(({name}) => name);
         io.in(room).emit('waiting-info', {roomID: room, members: members});
         }
-        else{
+        else {
           const user = new User(name);
-          roomList[room].waitingRoom.push(user)
+          roomList[room].waitingRoom.push(user);
           let members = roomList[room].userList.map(({name}) => name);
+          console.log('members ', members);
+          let temp = roomList[room].waitingRoom.map(({name}) => name);
+          console.log('temp ', temp);
+          members = members.concat(temp);
+          console.log("THE LIST OF ALL MEMBERS R: ", members);
           socket.emit('waiting-info', {roomID: room, members: members})
         }
       } else {
@@ -112,10 +117,16 @@ io.on('connection', function(socket) {
     if (roomList[room].choices == roomList[room].userList.length) {
       roomList[room].choices = 0;
       exit = roomList[room].rounds === 0 ? true: false;
-      console.log('exit ', exit);
-      io.in(room).emit('displayPoints', {choiceInfo: roomList[room].userList.map(each => ({name: each.name, points: each.points, exit: exit}))});
+      // let pointsList = Object.create(roomList[room].userList);
+      // pointsList.sort((x, y) => {
+      //   let keyA = x.points;
+      //   let keyB = y.points;
+      //   if (keyA < keyB) return -1;
+      //   if (keyA > keyB) return 1;
+      //   return 0;
+      // });
+      io.in(room).emit('displayPoints', {choiceInfo: roomList[room].sortByPoints().map(each => ({name: each.name, points: each.points, exit: exit}))});
       exit ? delete roomList[room] : null;
-      console.log(roomList)
     };
  };
 
@@ -129,9 +140,10 @@ io.on('connection', function(socket) {
   {
    roomList[room].player_ready = 0
    if(roomList[room].waitingRoom.length){
-     roomList[room].userList.concat(roomList[room].waitingRoom);
-     roomList[room].waitingRoom = [];
+    roomList[room].userList = roomList[room].userList.concat(roomList[room].waitingRoom);
+    roomList[room].waitingRoom = [];
    }
+   console.log('next question');
    io.in(room).emit('next_question', {start: true});
   }
 }

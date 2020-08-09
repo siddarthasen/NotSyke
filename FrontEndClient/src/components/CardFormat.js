@@ -151,8 +151,8 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   let error = useSelector(state=> state.error)
 
   function backgroundColor() {
-    let colors = ['#B297FF', '#82D9FF', '#E85050', '#04BF10', '#FFD967'];
-    let num = Math.floor((Math.random() + 0.2) * colors.length);
+    let colors = ['#B297FF', '#82D9FF', '#E85050', 'rgba(4, 191, 16, 0.6)', '#FFD967'];
+    let num = Math.floor(Math.random() * colors.length);
     console.log('num ', num);
     num = num == 5 ? 4 : num;
     return colors[num];

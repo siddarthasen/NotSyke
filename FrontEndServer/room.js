@@ -10,7 +10,7 @@ class Room {
       this.question_requests = 0;
       this.inGame = false;
       this.waitingRoom = [];
-      this.rounds = 1;
+      this.rounds = 3;
       this.questionList = questionList.questions;
     }
   
@@ -55,6 +55,18 @@ class Room {
         newList.push(temp.splice(Math.floor(Math.random() * Math.floor(temp.length)), 1)[0]);
       }
       return newList;
+    }
+
+    sortByPoints() {
+      let pointsList = Object.create(this.userList);
+      pointsList.sort((x, y) => {
+        let keyA = x.points;
+        let keyB = y.points;
+        if (keyA < keyB) return 1;
+        if (keyA > keyB) return -1;
+        return 0;
+      });
+      return pointsList;
     }
   }
 

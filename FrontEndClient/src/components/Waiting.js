@@ -25,9 +25,10 @@ import * as actions from './actions'
 import { useHistory } from "react-router-dom";
 import { AwesomeButton } from "react-awesome-button";
 import { Beforeunload } from 'react-beforeunload';
-import './CardFormat.css'
-let socket;
+import './CardFormat.css';
+import { FixedSizeList } from 'react-window';
 
+let socket;
 
 const useStyles = makeStyles({
   card: {
@@ -97,6 +98,7 @@ const Waiting = (props) => {
   const [slide, setSlide] = useState(false);
   // let endpoint = props.location.state.endpoint
   let type = props.location.state.type
+  console.log(type)
     
   const dispatch = useDispatch()
   
@@ -183,6 +185,19 @@ setInterval(function(){
 }, 1000);
 
 
+const Row = ({ index, style }) => (
+  <div style={style}>
+    <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+      <ListItem>
+    <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{members[index]}</Avatar>} label={members[index]} 
+                               style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
+    </Grid>
+    </ListItem>
+    </Slide>
+    </div>
+);
+
 window.onbeforeunload = function() {
 
     socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
@@ -208,13 +223,14 @@ window.onbeforeunload = function() {
     <Card className={classes.card}>
     <Typography id="loadingtext" className = {classes.title}>Waiting for People to Join</Typography>
     {members.map((item, i) => (
-                      <List key={i} style={{display: 'flex', justifyContent: 'center'}}>
+                        <ListItem key={i}>
                         <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
                           <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
+                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} 
+                               style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
                         </Grid>
                         </Slide>
-                    </List>
+                        </ListItem>
                     ))}
             {type==="Create" && members.length > 1? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={startGame}>Start Game</AwesomeButton> : null}
       </Card>
@@ -231,3 +247,16 @@ window.onbeforeunload = function() {
 }
 
 export default Waiting;
+
+/* 
+    {members.map((item, i) => (
+                        <ListItem key={i}>
+                        <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} 
+                               style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
+                        </Grid>
+                        </Slide>
+                        </ListItem>
+                    ))}
+*/
