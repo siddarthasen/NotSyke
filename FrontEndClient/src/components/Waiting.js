@@ -25,9 +25,10 @@ import * as actions from './actions'
 import { useHistory } from "react-router-dom";
 import { AwesomeButton } from "react-awesome-button";
 import { Beforeunload } from 'react-beforeunload';
-import './CardFormat.css'
-let socket;
+import './CardFormat.css';
+import { FixedSizeList } from 'react-window';
 
+let socket;
 
 const useStyles = makeStyles({
   card: {
@@ -88,7 +89,8 @@ const Waiting = (props) => {
   let history = useHistory();
   //Access redux state tree:
   let members = useSelector(state=> state.members)
-  let socket1 = useSelector(state=> state.socket)
+  let socket = useSelector(state=> state.socket)
+  console.log(socket)
   let roomID = useSelector(state => state.roomID)
   let start = useSelector(state => state.start)
   let name = props.location.state.name
@@ -96,6 +98,7 @@ const Waiting = (props) => {
   const [slide, setSlide] = useState(false);
   // let endpoint = props.location.state.endpoint
   let type = props.location.state.type
+  console.log(type)
     
   const dispatch = useDispatch()
   
@@ -104,29 +107,51 @@ const Waiting = (props) => {
     // //setting an item into chrome cache
     // socket = localStorage.getItem('socket')
     // var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-    var endpoint = "localhost:5000"
-    socket = io(endpoint)
-    dispatch({type: 'SET_SOCKET', payload: socket})
-    //assume this stuff is in action.js file
-    if(type === 'Create')
-    {
-      dispatch({type: 'SET_CREATOR', payload: true})
-    }
-    dispatch(actions.sendLogIn(type, name, room, endpoint, socket, io))
+    // var endpoint = "localhost:5000"
+    // socket = io(endpoint)
+    // dispatch({type: 'SET_SOCKET', payload: socket})
+    // //assume this stuff is in action.js file
+    // if(type === 'Create')
+    // {
+    //   dispatch({type: 'SET_CREATOR', payload: true})
+    // }
+    // dispatch(actions.sendLogIn(type, name, room, endpoint, socket, io))
     setSlide(true)
       
   },[]);
 
   useEffect(() => {
+    try{
     socket.on('start', (start) => {
       history.push('/Game', {name: name, room: room})
     })
+    }
+    catch(err){
+      history.push('/')
+    }
   })
 
   useEffect(() => {
+    try{
     socket.on('next_question', () => {
       history.push('/Game', {name: name, room: room})
     })
+  }
+  catch(err){
+    history.push('/')
+  }
+  })
+
+  useEffect(() => {
+    try{
+    socket.on('return_home', () => {
+      dispatch({type: 'RESET_USER'})
+      history.push('/')
+    })
+  }
+  catch(err){
+    history.push('/')
+  }
   })
 
 
@@ -160,13 +185,6 @@ const Waiting = (props) => {
     });
   };
 
-  //FIXME: @Harry make this into redux stuff like join room. 
-  const disconnectRender = () => {
-    
-      socket.on('removal-update', () => {
-        // rerender the components 
-      });
-  };
   var render = 0
   var count = 0;
 setInterval(function(){
@@ -179,19 +197,16 @@ setInterval(function(){
 }, 1000);
 
 
-function stop(event)
-{
-  console.log(event)
-  event.preventDefault()
-  socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
-    dispatch({type: 'RESET_USER'})
-    history.push('/')
-    event.returnValue = '';
+
+window.onbeforeunload = function() {
+
+    socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
 }
   return (
     <div>
       <Grid item direction="column">
-      <Beforeunload onBeforeunload={event => {stop(event)}} />
       <Grid container
   spacing={0}
   direction="column"
@@ -207,15 +222,20 @@ function stop(event)
     <Box border={3} borderRadius={40}>
     <Card className={classes.card}>
     <Typography id="loadingtext" className = {classes.title}>Waiting for People to Join</Typography>
-    {members.map((item, i) => (
-                      <List key={i} style={{display: 'flex', justifyContent: 'center'}}>
-                        <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
-                        </Grid>
-                        </Slide>
-                    </List>
-                    ))}
+    <div style={{overflowY: 'hidden'}}>
+      <List style={{overflow: 'auto', height: 100}}>
+        {members.map((item, i) => (
+                            <ListItem key={i}>
+                              <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                                <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                                  <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} 
+                                        style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
+                              </Grid>
+                              </Slide>
+                            </ListItem>
+                        ))}
+          </List>
+        </div>
             {type==="Create" && members.length > 1? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={startGame}>Start Game</AwesomeButton> : null}
       </Card>
       </Box>
@@ -231,3 +251,16 @@ function stop(event)
 }
 
 export default Waiting;
+
+/* 
+    {members.map((item, i) => (
+                        <ListItem key={i}>
+                        <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} 
+                               style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
+                        </Grid>
+                        </Slide>
+                        </ListItem>
+                    ))}
+*/

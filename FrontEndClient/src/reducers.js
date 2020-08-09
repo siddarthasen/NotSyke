@@ -8,13 +8,16 @@ const initalState = {
     roomID: '',
     start: false,
     creator: false,
-    loading: false
+    loading: false,
+    error: ''
 }
 
 function reducer(state=initalState, action) {
     switch(action.type){
         case 'RET_LOGIN_INFO':
             return{...state, members: action.payload.members, roomID: action.payload.roomID}
+        case 'ERROR_CRED':
+            return{...state, error: action.payload}
         case 'SET_SOCKET':
             return{...state, socket: action.payload}
         case 'START_GAME':

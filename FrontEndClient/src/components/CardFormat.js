@@ -11,13 +11,15 @@ import { Button } from "shards-react";
 import { isMobile } from "react-device-detect";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
-
-// const shards = require("shards-react");
-
+import { useSelector, useDispatch } from 'react-redux';
+import * as actions from './actions'
 let socket;
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles({  
+  html: {
+	background: 	   'black',
+  },
   card: {
     borderRadius: 40,
     height: '70vh',
@@ -80,21 +82,32 @@ const useStyles = makeStyles({
   }
 });
 
-const joinRoom = (buttonName, room, name, history) => {
-  const ENDPOINT = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-  // socket = io(ENDPOINT)
-  if(buttonName.localeCompare('Create Room') == 0)
-  {
+const joinRoom = (buttonName, room, name, history, dispatch) => {
+  // const ENDPOINT = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
+  const ENDPOINT = "localhost:5000"
+  socket = io(ENDPOINT)
+  if(buttonName.localeCompare('Create Room') == 0){
+    dispatch({type: 'SET_CREATOR', payload: true})
+    dispatch({type: 'SET_SOCKET', payload: socket})
+    dispatch(actions.sendLogIn('Create', name, room, socket, history))
+  }
+  else{
+    dispatch({type: 'SET_SOCKET', payload: socket})
+    dispatch(actions.sendLogIn('Join', name, room, socket, history))
+  }
+
+  // if(buttonName.localeCompare('Create Room') == 0)
+  // {
     
-    history.push('/Waiting', {type: "Create", name: name, room: room, endpoint: ENDPOINT})
-  }
-  else
-  {
-    history.push('/Waiting', {type: "Join", name: name, room: room, endpoint: ENDPOINT})
-  }
+  //   history.push('/Waiting', {type: "Create", name: name, room: room, endpoint: ENDPOINT})
+  // }
+  // else
+  // {
+  //   history.push('/Waiting', {type: "Join", name: name, room: room, endpoint: ENDPOINT})
+  // }
 }
 
-const RenderRoom = ({value, classes, name, setName, room, setRoom}) => {
+const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) => {
   if(value === 0)
   {
   return(
@@ -137,18 +150,25 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom}) => {
   }
 }
 
+
+
 const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRoom, sendRequest}) => {
+  const dispatch = useDispatch()
   let history = useHistory();
   const classes = useStyles();
+  let error = useSelector(state=> state.error)
+
+  function backgroundColor() {
+    let colors = ['#B297FF', '#82D9FF', '#E85050', 'rgba(4, 191, 16, 0.6)', '#FFD967'];
+    let num = Math.floor(Math.random() * colors.length);
+    console.log('num ', num);
+    num = num == 5 ? 4 : num;
+    return colors[num];
+  }
 
   useEffect(() => {
-  //   socket.on('error', (response) => {
-  //     console.log(response)
-  //     alert(response)
-  // })
-  })
-
-  //insert if statement for mobile/desktop here
+  document.body.style.background = backgroundColor();
+  }, [])
   if (isMobile) {
     console.log("mobile detected");
     return (

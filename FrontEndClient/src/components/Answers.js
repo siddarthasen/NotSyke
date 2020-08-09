@@ -118,11 +118,14 @@ const Answers = (props) => {
   var count = 0;
   const classes = useStyles();
   //Access redux state tree:
-  let members = useSelector(state=> state.members)
-  let creator = useSelector(state=> state.creator)
-  let socket = useSelector(state=> state.socket)
+  let members = useSelector(state => state.members)
+  let creator = useSelector(state => state.creator)
+  let socket = useSelector(state => state.socket)
   let roomID = useSelector(state => state.roomID)
   let loading = useSelector(state => state.loading)
+  if(!props.location.state.name){
+    history.push('/')
+  }
   let name = props.location.state.name
   let room = props.location.state.room
   let answer = props.location.state.answer
@@ -137,6 +140,7 @@ const Answers = (props) => {
   const [renderPoints, setrenderPoints] = useState(false)
   const [points, setPoints] = useState([])//place in redux so we can dd animation of number increasing
   const [player, setPlayers] = useState([]);
+  const [exit, setExit] = useState(false);
   let history = useHistory();
 
   window.onbeforeunload = function() {
@@ -153,36 +157,52 @@ const Answers = (props) => {
 }
 
   useEffect(() => {
+    try{
     socket.on('displayAnswers', (answerInfo) => {
       let answer = answerInfo.answerInfo.map(({answer}) => answer)
       let id = answerInfo.answerInfo.map(({id}) => id) 
       setAnswers(answer)
       setID(id)
-      console.log(answer, id)
       setSlide(true)
     })
+  }
+  catch(err){
+    history.push('/')
+  }
   })
 
   useEffect(() => {
+    try{
     socket.on('start', (start) => {
       history.push('/Game', {name: name, room: room})
     })
+    }
+    catch(err){
+      history.push('/')
+    }
   })
 
   useEffect(() => {
+    try{
     socket.on('displayPoints', (choiceInfo) => {
       dispatch({type: 'PASS_SCREEN'})
       if(renderPoints === false)
       {
         let players = choiceInfo.choiceInfo.map(({name}) => name)
         let points = choiceInfo.choiceInfo.map(({points}) => points) 
+        let exit = choiceInfo.choiceInfo[0].exit
+        console.log(choiceInfo)
         setPlayers(players)
         setPoints(points)
         setrenderPoints(true)
-        console.log(players)
+        setExit(exit)
       }
       // history.push('/Game', {name: name, room: room})
     })
+  }
+  catch(err){
+    history.push('/')
+  }
 
   })
 
@@ -192,24 +212,31 @@ const Answers = (props) => {
   }
 
   const chooseAnswer = (index) => {
-    if(answers[index] === answer)
-    {
-      alert("Please choose a different option. This is your answer.")
-    }
-    else 
-    {
       setOpen(true)
       dispatch(actions.chooseAnswer(roomID, ID[index], socket))
       setChoice(true)
+  }
+
+  const checkValidAnswer = (index) => {
+    if(answers[index] === answer){
+      return false
+    }
+    else{
+      return true
     }
   }
 
   const movePage = () => {
+    if(!exit){
     setOpen(true)
     dispatch(actions.nextQuestion(roomID, socket, (update) => {
       clearInterval(timer)
       history.push('/Game', {name: name, room: room})
     }))
+  }
+  else{
+    history.push('/')
+  }
   }
 
   const renderSentence = (player, points) => {
@@ -263,7 +290,7 @@ style={{ minHeight: '100vh' }}>
          <Divider />
      </List>
      ))}
-          <AwesomeButton className={classes.test1} type="secondary" ripple onPress={movePage}>Next question</AwesomeButton>
+          {exit ? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={movePage}>Exit</AwesomeButton> : <AwesomeButton className={classes.test1} type="secondary" ripple onPress={movePage}>Next question</AwesomeButton>}
     </Card>
     </Box>
     </div>
@@ -305,7 +332,7 @@ else
     <List key={i} style={{display: 'flex', flex: 1, justifyContent: 'center'}}>
                           <Slide direction="up" in={slide} mountOnEnter unmountOnExit timeout={1000}>                        
                           <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                          <AwesomeButton className={classes.text2} type="secondary" ripple onPress={() => chooseAnswer(i)}>{item}</AwesomeButton>
+                          {checkValidAnswer(i) ? <Button className={classes.text2} type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button className={classes.text2} type="secondary" disabled>{item}</Button>}
                         </Grid>
                         </Slide>
                     </List>    ))}

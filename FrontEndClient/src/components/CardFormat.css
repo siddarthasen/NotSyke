@@ -1,11 +1,9 @@
 html {
 	height: 100%;
-	background: rgba(143, 166, 161, 0.5);
-		background-size:     cover;                      /* <------ */
-		background-repeat:   no-repeat;
-		background-position: center center;      
+	background-size:     cover;                      
+	background-repeat:   no-repeat;
+	background-position: center center;      
 }
-
 
 .cards {
 	border-radius: 10px;
@@ -13,14 +11,6 @@ html {
 .test1 {
 	background: linear-gradient(90deg, rgba(249, 116, 21, 0.94) 16.88%, rgba(255, 255, 255, 0) 100%), rgba(255, 0, 0, 0.97);
 }
-.particles {
-	position: fixed;
-	right: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	z-index: -1;
-  }
   .title2 {
 	  font-size: 50
   }
