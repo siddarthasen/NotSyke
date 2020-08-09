@@ -4,15 +4,15 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import './CardFormat.css'
-import { AwesomeButton } from "react-awesome-button";
-import Box from '@material-ui/core/Box';
-import {isBrowser,isMobile} from "react-device-detect";
+import { Button } from "shards-react";
+import { isMobile } from "react-device-detect";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "shards-ui/dist/css/shards.min.css"
+
+// const shards = require("shards-react");
 
 let socket;
 
@@ -71,6 +71,12 @@ const useStyles = makeStyles({
     fontSize: 20,
     fontFamily: 'Segoe Print',
     fontColor: 'white'
+  },
+  buttonContainer: {
+    textAlign: 'center'
+  },
+  button: {
+    margin: 'auto'
   }
 });
 
@@ -152,25 +158,20 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
         alignItems="center"
         justify="center"
         style={{ minHeight: '100vh' }}>
-        <Box border={3} borderRadius={40}>
-          <Card className={classes.cardMobile}>
-            <Typography className = {classes.title}>
-              NotPsych!
-            </Typography>
-            <AppBar position="static" className={classes.test}>
-              <Tabs value={value} onChange={handleChange}  className={classes.bar}>
-                <Tab style={{fontFamily: 'Segoe Print'}}label="Join Room"  />
-                <Tab style={{fontFamily: 'Segoe Print'}} label="Create Room"  />
-              </Tabs>
-            </AppBar>
-            <CardContent>
-              <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
-            </CardContent>
-            <CardActions>
-              <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history)}>{buttonName}</AwesomeButton>
-            </CardActions>
-          </Card>
-        </Box>
+        <Card className={classes.cardMobile}>
+          <Typography className = {classes.title}>
+            NotPsych!
+          </Typography>
+
+          <CardContent>
+            <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
+          </CardContent>
+          <CardActions>
+          {/* <Fab variant="extended" className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history)}>
+            Navigate
+          </Fab> */}
+          </CardActions>
+        </Card>
       </Grid>
     )
   } else {
@@ -182,25 +183,19 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
         alignItems="center"
         justify="center"
         style={{ minHeight: '100vh' }}>
-        <Box border={3} borderRadius={40}>
-          <Card className={classes.card}>
-            <Typography className = {classes.title}>
-              NotPsych!
-            </Typography>
-            <AppBar position="static" className={classes.test}>
-              <Tabs value={value} onChange={handleChange}  className={classes.bar}>
-                <Tab style={{fontFamily: 'Segoe Print'}}label="Join Room"  />
-                <Tab style={{fontFamily: 'Segoe Print'}} label="Create Room"  />
-              </Tabs>
-            </AppBar>
-            <CardContent>
-              <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
-            </CardContent>
-            <CardActions>
-              <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history)}>{buttonName}</AwesomeButton>
-            </CardActions>
-          </Card>
-        </Box>
+        <Card className={classes.card}>
+          <Typography className = {classes.title}>
+            NotPsych!
+          </Typography>
+          <CardContent>
+            <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
+          </CardContent>
+          <CardActions classname={classes.buttonContainer}>
+            <Button pill>
+              Navigate
+            </Button>
+          </CardActions>
+        </Card>
       </Grid>
     )
   }
