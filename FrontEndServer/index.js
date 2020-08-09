@@ -55,11 +55,8 @@ io.on('connection', function(socket) {
           const user = new User(name);
           roomList[room].waitingRoom.push(user);
           let members = roomList[room].userList.map(({name}) => name);
-          console.log('members ', members);
           let temp = roomList[room].waitingRoom.map(({name}) => name);
-          console.log('temp ', temp);
           members = members.concat(temp);
-          console.log("THE LIST OF ALL MEMBERS R: ", members);
           socket.emit('waiting-info', {roomID: room, members: members})
         }
       } else {
@@ -143,38 +140,69 @@ io.on('connection', function(socket) {
     roomList[room].userList = roomList[room].userList.concat(roomList[room].waitingRoom);
     roomList[room].waitingRoom = [];
    }
-   console.log('next question');
    io.in(room).emit('next_question', {start: true});
   }
 }
 
  socket.on('remove_user', function({roomID, name, part}) {   
+   let removeIndex
    if (roomList[roomID]) {
-    roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
-    // roomList[roomID].userList.length ? null : delete roomList[roomID];
-    if (roomList[roomID].userList.length <= 0) {
-      delete roomList[roomID];
-      console.log(roomList);
-      return;
+    //  if(roomList[roomID].userList.findIndex((user) => user.name === name) != -1){
+    //   removeIndex = roomList[roomID].userList.findIndex((user) => user.name === name)
+    //   roomList[roomID].userList.splice(removeIndex, 1);
+    //  }
+    if(part !== 'waiting'){
+      //for the people who r in the wating room, emit who left
+      if (roomList[roomID])
+      roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
     }
-    console.log(roomList);
+    // roomList[roomID].userList.length ? null : delete roomList[roomID];
     switch (part) {
       case 'waiting':
-        let members = roomList[roomID].userList.map(({name}) => name);
-        io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
+        if (roomList[roomID].userList.findIndex((user) => user.name === name) >= 0) {
+          roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
+          let members = roomList[roomID].userList.map(({name}) => name);
+          io.in(roomID).emit('waiting-info', {roomID: roomID, members: members});
+        }
+        else {
+          roomList[roomID].waitingRoom.splice(roomList[roomID].waitingRoom.findIndex((user) => user.name === name), 1);
+          //2 people playing
+          //2 person in the wating room
+          //
+        }
+        //          let members = roomList[room].userList.map(({name}) => name);
+        // let temp = roomList[room].waitingRoom.map(({name}) => name);
+        // console.log('temp ', temp);
+        // members = members.concat(temp);
         break;
       case 'questions':
         submitAnswer(roomID,'', '', true)
+        
         break;
       case 'answers':
         chooseAnswer(roomID, '', true);
+        
         break;
       case 'points':
         favoriteAnswerChoice(roomID, true);
+        
         break;
       default:
         break;
-    }; 
+    };
+    console.log("REMOVING PERSON") 
+    console.log(roomList[roomID].userList.length)
+    if (roomList[roomID].userList.length <= 0) {
+      console.log("TEST1")
+      //check is people r in waiting room
+      if(roomList[roomID].waitingRoom.length > 0) {
+        console.log("TEST2")
+        io.in(roomID).emit('return_home');
+      }
+      //create endpoint for exiting
+      delete roomList[roomID];
+      return;
+    }
    }
  })
 });

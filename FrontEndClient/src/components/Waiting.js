@@ -142,6 +142,18 @@ const Waiting = (props) => {
   }
   })
 
+  useEffect(() => {
+    try{
+    socket.on('return_home', () => {
+      dispatch({type: 'RESET_USER'})
+      history.push('/')
+    })
+  }
+  catch(err){
+    history.push('/')
+  }
+  })
+
 
   /* add this to shared file.*/
   // window.addEventListener('beforeunload', function (e) {
@@ -185,18 +197,6 @@ setInterval(function(){
 }, 1000);
 
 
-const Row = ({ index, style }) => (
-  <div style={style}>
-    <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-      <ListItem>
-    <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{members[index]}</Avatar>} label={members[index]} 
-                               style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
-    </Grid>
-    </ListItem>
-    </Slide>
-    </div>
-);
 
 window.onbeforeunload = function() {
 
@@ -222,16 +222,20 @@ window.onbeforeunload = function() {
     <Box border={3} borderRadius={40}>
     <Card className={classes.card}>
     <Typography id="loadingtext" className = {classes.title}>Waiting for People to Join</Typography>
-    {members.map((item, i) => (
-                        <ListItem key={i}>
-                        <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} 
-                               style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
-                        </Grid>
-                        </Slide>
-                        </ListItem>
-                    ))}
+    <div style={{overflowY: 'hidden'}}>
+      <List style={{overflow: 'auto', height: 100}}>
+        {members.map((item, i) => (
+                            <ListItem key={i}>
+                              <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                                <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                                  <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} 
+                                        style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
+                              </Grid>
+                              </Slide>
+                            </ListItem>
+                        ))}
+          </List>
+        </div>
             {type==="Create" && members.length > 1? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={startGame}>Start Game</AwesomeButton> : null}
       </Card>
       </Box>

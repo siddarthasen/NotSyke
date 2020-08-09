@@ -175,16 +175,14 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
     </Typography>
       <AppBar position="static" className={classes.test}>
             <Tabs value={value} onChange={handleChange}  className={classes.bar}>
-              <Tab style={{fontFamily: 'Segoe Print'}}label="Join Room"  />
+              <Tab style={{fontFamily: 'Segoe Print'}} label="Join Room"  />
               <Tab style={{fontFamily: 'Segoe Print'}} label="Create Room"  />
             </Tabs>
         </AppBar>
         <CardContent>
           <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
         </CardContent>
-        <CardActions>
         <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}</AwesomeButton>
-        </CardActions>
         <Typography>{error}</Typography>
       </Card>
       </Box>
