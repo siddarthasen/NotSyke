@@ -81,11 +81,11 @@ const joinRoom = (buttonName, room, name, history, dispatch) => {
   if(buttonName.localeCompare('Create Room') == 0){
     dispatch({type: 'SET_CREATOR', payload: true})
     dispatch({type: 'SET_SOCKET', payload: socket})
-    dispatch(actions.sendLogIn('Create', name, room, socket, history))
+    dispatch(actions.sendLogIn('Create', name.trim(), room.trim(), socket, history))
   }
   else{
     dispatch({type: 'SET_SOCKET', payload: socket})
-    dispatch(actions.sendLogIn('Join', name, room, socket, history))
+    dispatch(actions.sendLogIn('Join', name.trim(), room.trim(), socket, history))
   }
 
   // if(buttonName.localeCompare('Create Room') == 0)
@@ -182,7 +182,9 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
         <CardContent>
           <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
         </CardContent>
-        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}</AwesomeButton>
+        <AwesomeButton className={classes.test1} type="secondary" 
+                       ripple onPress={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
+        </AwesomeButton>
         <Typography>{error}</Typography>
       </Card>
       </Box>
