@@ -90,15 +90,13 @@ const Waiting = (props) => {
   //Access redux state tree:
   let members = useSelector(state=> state.members)
   let socket = useSelector(state=> state.socket)
-  console.log(socket)
   let roomID = useSelector(state => state.roomID)
   let start = useSelector(state => state.start)
-  let name = props.location.state.name
-  let room = props.location.state.room
+  let name = useSelector(state => state.name)
+  let waiting = useSelector(state => state.waiting)
   const [slide, setSlide] = useState(false);
+  const [ready, setReady] = useState(false)
   // let endpoint = props.location.state.endpoint
-  let type = props.location.state.type
-  console.log(type)
     
   const dispatch = useDispatch()
   
@@ -123,7 +121,7 @@ const Waiting = (props) => {
   useEffect(() => {
     try{
     socket.on('start', (start) => {
-      history.push('/Game', {name: name, room: room})
+      history.push('/Game', {name: name, room: roomID})
     })
     }
     catch(err){
@@ -134,7 +132,7 @@ const Waiting = (props) => {
   useEffect(() => {
     try{
     socket.on('next_question', () => {
-      history.push('/Game', {name: name, room: room})
+      history.push('/Game', {name: name, room: roomID})
     })
   }
   catch(err){
@@ -172,9 +170,12 @@ const Waiting = (props) => {
   //   })
 
   const startGame = () => { //used for creator
-    dispatch(actions.startGame(roomID, socket, (update) => {
-      history.push('/Game', {name: name, room: room})
+    if(!ready){
+    setReady(true)
+    dispatch(actions.startGame(roomID, socket, history, (update) => {
+      history.push('/Game', {name: name, room: roomID})
     }))
+  }
   }
 
   /*  For this user disconnection. First call when a user disconnects. 
@@ -222,9 +223,10 @@ window.onbeforeunload = function() {
     <Box border={3} borderRadius={40}>
     <Card className={classes.card}>
     <Typography id="loadingtext" className = {classes.title}>Waiting for People to Join</Typography>
-    <div style={{overflowY: 'hidden'}}>
-      <List style={{overflow: 'auto', height: 100}}>
-        {members.map((item, i) => (
+    
+      <List style={{overflowY: 'hidden'}}>
+        <div style={{overflowY: 'auto', height: 100}}> 
+        {members ? members.map((item, i) => (
                             <ListItem key={i}>
                               <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
                                 <Grid contanier jusitfy="flex-start" alignItem="flex-start">
@@ -233,10 +235,11 @@ window.onbeforeunload = function() {
                               </Grid>
                               </Slide>
                             </ListItem>
-                        ))}
+                        )) : null}
+                        </div>
           </List>
-        </div>
-            {type==="Create" && members.length > 1? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={startGame}>Start Game</AwesomeButton> : null}
+        
+           {!ready && !waiting && members.length > 1 ? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={startGame}>Start Game</AwesomeButton>: null}
       </Card>
       </Box>
       </div>

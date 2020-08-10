@@ -123,13 +123,10 @@ const Answers = (props) => {
   let socket = useSelector(state => state.socket)
   let roomID = useSelector(state => state.roomID)
   let loading = useSelector(state => state.loading)
-  if(!props.location.state.name){
-    history.push('/')
-  }
-  let name = props.location.state.name
-  let room = props.location.state.room
-  let answer = props.location.state.answer
-  let question = props.location.state.question
+  let name = useSelector(state => state.name)
+  let question = useSelector(state => state.question)
+  let answer = useSelector(state => state.answer)
+
   const [slide, setSlide] = useState(false);
   const [open, setOpen] = React.useState(false);
   
@@ -174,7 +171,7 @@ const Answers = (props) => {
   useEffect(() => {
     try{
     socket.on('start', (start) => {
-      history.push('/Game', {name: name, room: room})
+      history.push('/Game', {name: name, room: roomID})
     })
     }
     catch(err){
@@ -197,7 +194,6 @@ const Answers = (props) => {
         setrenderPoints(true)
         setExit(exit)
       }
-      // history.push('/Game', {name: name, room: room})
     })
   }
   catch(err){
@@ -229,9 +225,10 @@ const Answers = (props) => {
   const movePage = () => {
     if(!exit){
     setOpen(true)
-    dispatch(actions.nextQuestion(roomID, socket, (update) => {
+    dispatch(actions.nextQuestion(roomID, socket, history, name, (update) => {
+      dispatch({type: 'CLEAR_ANSWER_QUESTION'})
       clearInterval(timer)
-      history.push('/Game', {name: name, room: room})
+      history.push('/Game', {name: name, room: roomID})
     }))
   }
   else{

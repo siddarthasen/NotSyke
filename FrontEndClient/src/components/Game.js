@@ -108,10 +108,7 @@ const Game = (props) => {
   let members = useSelector(state=> state.members)
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
-  let name = props.location.state.name
-  let room = props.location.state.room
-  let endpoint = props.location.state.endpoint
-  let type = props.location.state.type
+  let name = useSelector(state => state.name)
   const classes = useStyles();
 
 
@@ -124,9 +121,10 @@ const [open, setOpen] = React.useState(false);
   
   useEffect(() => {
     try{
-    dispatch(actions.requestPrompt(roomID, socket))
+    dispatch(actions.requestPrompt(roomID, socket, history))
     }
     catch(err){
+      dispatch({type: 'RESET_USER'})
       history.push('/')
     }
 
@@ -134,9 +132,8 @@ const [open, setOpen] = React.useState(false);
 
 const submitAnswer = (event) => {
   setOpen(true)
-  dispatch(actions.submitAnswer(roomID, name, answer, socket))
-  console.log(answer)
-  history.push('/Answers', {name: name, room: room, answer: answer, question: question})
+  dispatch(actions.submitAnswer(roomID, name, answer, socket, question))
+  history.push('/Answers', {name: name, room: roomID, answer: answer, question: question})
 }
 
 // function stop(event)

@@ -7,15 +7,20 @@ const initalState = {
     socket: {},
     roomID: '',
     start: false,
-    creator: false,
     loading: false,
-    error: ''
+    error: '',
+    name: '', 
+    waiting: false, 
+    question: null,
+    answer: null
 }
 
 function reducer(state=initalState, action) {
     switch(action.type){
         case 'RET_LOGIN_INFO':
-            return{...state, members: action.payload.members, roomID: action.payload.roomID}
+            return{...state, members: action.payload.members, roomID: action.payload.roomID, waiting: action.payload.waiting}
+        case 'SET_USER':
+            return{...state, name: action.payload}
         case 'ERROR_CRED':
             return{...state, error: action.payload}
         case 'SET_SOCKET':
@@ -25,13 +30,17 @@ function reducer(state=initalState, action) {
         case 'DISPLAY_QUESTION':
             return{...state, question: action.payload, loading: false}
         case 'SET_CREATOR':
-                return{...state, creator: action.payload}
+                return{...state}
         case 'RESET_USER':
                 return{initalState}
         case 'WAITING_PLAYERS':
                 return{...state, loading: true}
         case 'PASS_SCREEN':
                 return{...state, loading:false}
+        case 'SET_ANSWER_QUESTION':
+                return{...state, answer: action.payload.answer, question: action.payload.question}
+        case 'CLEAR_ANSWER_QUESTION':
+                return{...state, question: null, answer: null}
         default: 
             return{...state}
     }
