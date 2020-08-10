@@ -4,13 +4,15 @@ html {
 	background-repeat:   no-repeat;
 	background-position: center center;      
 }
-
 .cards {
 	border-radius: 10px;
 }
 .test1 {
 	background: linear-gradient(90deg, rgba(249, 116, 21, 0.94) 16.88%, rgba(255, 255, 255, 0) 100%), rgba(255, 0, 0, 0.97);
 }
-  .title2 {
-	  font-size: 50
+.title2 {
+	font-size: 50
+}
+#scroll::-webkit-scrollbar {
+	display: none;
   }
