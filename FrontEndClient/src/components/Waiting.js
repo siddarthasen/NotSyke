@@ -208,47 +208,45 @@ window.onbeforeunload = function() {
   return (
     <div>
       <Grid item direction="column">
-      <Grid container
-  spacing={0}
-  direction="column"
-  alignItems="center"
-  justify="center"
-  style={{ minHeight: '100vh' }}>
-    <Typography style={{fontSize: 40, marginBottom: 20, fontFamily: 'Segoe Print'}}>Room ID: {roomID}</Typography>
-    <Spring
-      from={{ transform: 'translate3d(0,0px,0)' }}
-      to={{ transform: 'translate3d(0,0px,0)' }}>
-      {props => (
-        <div style={props}>
-    <Box border={3} borderRadius={40}>
-    <Card className={classes.card}>
-    <Typography id="loadingtext" className = {classes.title}>Waiting for People to Join</Typography>
-    
-      <List style={{overflowY: 'hidden'}}>
-        <div style={{overflowY: 'auto', height: 100}}> 
-        {members ? members.map((item, i) => (
-                            <ListItem key={i}>
-                              <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-                                <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                                  <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} 
-                                        style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
-                              </Grid>
-                              </Slide>
-                            </ListItem>
-                        )) : null}
-                        </div>
-          </List>
-        
-           {!ready && !waiting && members.length > 1 ? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={startGame}>Start Game</AwesomeButton>: null}
-      </Card>
-      </Box>
-      </div>
-      )}
-      </Spring>
-    </Grid>
-
-
+        <Grid container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justify="center"
+          style={{ minHeight: '100vh' }}>
+          <Typography style={{fontSize: 40, marginBottom: 20, fontFamily: 'Segoe Print'}}>Room ID: {roomID}</Typography>
+          <Spring
+            from={{ transform: 'translate3d(0,0px,0)' }}
+            to={{ transform: 'translate3d(0,0px,0)' }}>
+            {props => (
+            <div style={props}>
+              <Box border={3} borderRadius={40}>
+              <Card className={classes.card}>
+              <Typography id="loadingtext" className = {classes.title}>Waiting for People to Join</Typography>
+              <List id="scroll" style={{overflow: 'auto', height: 300}}>
+                {members.map((item, i) => (
+                    <ListItem key={i}>
+                      <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                        <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                          <Chip avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, 
+                                                        width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>}  
+                                style={{display: 'flex', margin: 5, fontSize: 30, width: 300, 
+                                        paddingTop: 20, paddingBottom: 20, justifyContent: 'left', 
+                                        fontFamily: 'Segoe Print'}}
+                                label={item}/>
+                        </Grid>
+                      </Slide>
+                    </ListItem>
+                  ))}
+              </List>    
+              {!ready && !waiting && members.length > 1 ? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={startGame}>Start Game</AwesomeButton>: null}
+              </Card>
+              </Box>
+            </div>
+            )}
+          </Spring>
         </Grid>
+      </Grid>
     </div>
   );
 }

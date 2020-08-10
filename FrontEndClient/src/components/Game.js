@@ -32,6 +32,7 @@ import { Beforeunload } from 'react-beforeunload';
 let socket;
 
 
+
 const useStyles = makeStyles((theme) => ({
   title: {
     flex: 1,
@@ -155,38 +156,44 @@ window.onbeforeunload = function() {
         <CircularProgress color="inherit" />
       </Backdrop>
             <Grid container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justify="center"
-          style={{ minHeight: '100vh' }}>
-            <Spring
-      from={{ transform: 'translate3d(0,0px,0)' }}
-      to={{ transform: 'translate3d(0,0px,0)' }}>
-      {props => (
-        <div style={props}>
-      <Card className={classes.card}>
-        <Grid container direction="column" justify="space-between"  alignItems="center" className={classes.square}>
-            <Typography className={classes.question}>{question}</Typography>
-            <Grid item justify="center">
-              <Box border={3} borderRadius={40} className={classes.answerBox}>
-        <InputBase
-        placeholder="Enter Your Answer"
-        multiline
-        className={classes.answer}
-        rows={10}
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
-        />
-        </Box>
-        </Grid>
-        <AwesomeButton className={classes.test1} type="secondary" ripple onPress={submitAnswer}>Submit</AwesomeButton>
-        </Grid>
-      </Card>
-      </div>
-      )}
-      </Spring>
-      </Grid>
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              justify="center"
+              style={{ minHeight: '100vh' }}>
+              <Spring
+                from={{ transform: 'translate3d(0,0px,0)' }}
+                to={{ transform: 'translate3d(0,0px,0)' }}>
+                {props => (
+                  <div style={props}>
+                    <Card className={classes.card}>
+                      <Grid container direction="column" 
+                            justify="space-between"  
+                            alignItems="center" 
+                            className={classes.square}>
+                          <Typography className={classes.question}>{question}</Typography>
+                          <Grid item justify="center">
+                            <Box border={3} borderRadius={40} className={classes.answerBox}>
+                              <InputBase
+                              placeholder="Enter Your Answer"
+                              multiline
+                              className={classes.answer}
+                              rows={10}
+                              value={answer}
+                              onChange={(e) => setAnswer(e.target.value)}
+                              />
+                          </Box>
+                          </Grid>
+                          <AwesomeButton className={classes.test1} 
+                                        type="secondary" 
+                                        ripple onPress={submitAnswer}>Submit
+                          </AwesomeButton>
+                      </Grid>
+                    </Card>
+                </div>
+                )}
+                </Spring>
+            </Grid>
     </div>
   );
 }

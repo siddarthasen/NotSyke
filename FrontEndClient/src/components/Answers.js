@@ -261,41 +261,49 @@ if(renderPoints)
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-    <Grid item direction="column">
-    <Grid container
-spacing={0}
-direction="column"
-alignItems="center"
-justify="center"
-style={{ minHeight: '100vh' }}>
-  <Spring
-    from={{ transform: 'translate3d(0,0px,0)' }}
-    to={{ transform: 'translate3d(0,0px,0)' }}>
-    {props => (
-      <div style={props}>
-  <Box border={3} borderRadius={40}>
-  <Card className={classes.card}>
-  <Typography style={{fontSize: 30,
-    fontFamily: 'Segoe Print',
-    textAlign: 'center',
-    padding: 10}}>Scores</Typography>
-  {player.map((item, i) => (
-       <List key={i}>
-         <ListItem key={i} style={{margin: 2}}>
-  <Typography   style={{display: 'flex', margin: 5, fontSize: 25, padding: 3, justifyContent: 'left', fontFamily: 'Segoe Print'}}>{renderSentence(item, points[i])}</Typography>
-         </ListItem>
-         <Divider />
-     </List>
-     ))}
-          {exit ? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={movePage}>Exit</AwesomeButton> : <AwesomeButton className={classes.test1} type="secondary" ripple onPress={movePage}>Next question</AwesomeButton>}
-    </Card>
-    </Box>
-    </div>
-    )}
-    </Spring>
-  </Grid>
-
-
+      <Grid item direction="column">
+        <Grid container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justify="center"
+            style={{ minHeight: '100vh' }}>
+          <Spring
+            from={{ transform: 'translate3d(0,0px,0)' }}
+            to={{ transform: 'translate3d(0,0px,0)' }}>
+            {props => (
+              <div style={props}>
+            <Box border={3} borderRadius={40}>
+              <Card className={classes.card}>
+              <Typography style={{fontSize: 30,
+                fontFamily: 'Segoe Print',
+                textAlign: 'center',
+                padding: 10}}>
+                  Scores
+              </Typography>
+              <List id="scroll" style={{overflow: 'auto', height: 300}}>
+                {player.map((item, i) => (
+                    <ListItem key={i} style={{margin: 2}}>
+                      <Typography 
+                        style={{display: 'flex', margin: 5, fontSize: 25, 
+                              padding: 3, justifyContent: 'left', fontFamily: 'Segoe Print'}}>
+                        {renderSentence(item, points[i])}
+                      </Typography>
+                    </ListItem>
+                    ))}
+                    <Divider/>
+              </List>
+                
+                {exit ? <AwesomeButton className={classes.test1} type="secondary" 
+                                      ripple onPress={movePage}>Exit</AwesomeButton> : 
+                        <AwesomeButton className={classes.test1} type="secondary" 
+                                      ripple onPress={movePage}>Next question</AwesomeButton>}
+                </Card>
+              </Box>
+            </div>
+            )}
+          </Spring>
+        </Grid>
       </Grid>
   </div>
   );
@@ -306,40 +314,45 @@ else
   // setSlide(true)
   return(
     <div>
-      <Backdrop className={classes.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    <Grid item direction="column">
-    <Grid 
-    container
-  spacing={0}
-  direction="column"
-  alignItems="center"
-  justify="center"
-  style={{ minHeight: '100vh' }}>
-      <Spring
-    from={{ transform: 'translate3d(0,0px,0)' }}
-    to={{ transform: 'translate3d(0,0px,0)' }}>
-    {props => (
-      <div style={props}>
-    <Card className={classes.card}>
-  <Typography className={classes.question}>{question}</Typography>
+        <Backdrop className={classes.backdrop} open={loading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        <Grid item direction="column">
+          <Grid 
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justify="center"
+          style={{ minHeight: '100vh' }}>
+            <Spring
+              from={{ transform: 'translate3d(0,0px,0)' }}
+              to={{ transform: 'translate3d(0,0px,0)' }}>
+              {props => (
+                <div style={props}>
+              <Card className={classes.card}>
+                <Typography className={classes.question}>{question}</Typography>
+                  <List id="scroll" style={{overflow: 'auto', height: 300, display: 'flex', 
+                                            flex: 1, justifyContent: 'center'}}>
+                    {answers.map((item, i) => (
+                    <Slide direction="up" in={slide} mountOnEnter unmountOnExit timeout={1000}>                        
+                      <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                        {checkValidAnswer(i) ? <Button className={classes.text2}
+                                                type="secondary" onClick={() => chooseAnswer(i)}>{item}
+                                                </Button> : 
+                                                <Button className={classes.text2} type="secondary" disabled>{item}
+                                                </Button>}
+                      </Grid>
+                    </Slide>
+                    ))}
+                  </List>    
 
-  {answers.map((item, i) => (
-    <List key={i} style={{display: 'flex', flex: 1, justifyContent: 'center'}}>
-                          <Slide direction="up" in={slide} mountOnEnter unmountOnExit timeout={1000}>                        
-                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                          {checkValidAnswer(i) ? <Button className={classes.text2} type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button className={classes.text2} type="secondary" disabled>{item}</Button>}
-                        </Grid>
-                        </Slide>
-                    </List>    ))}
-
-  </Card>
-  </div>
-    )}
-    </Spring>
-    </Grid>
-    </Grid>
+            </Card>
+            </div>
+              )}
+            </Spring>
+          </Grid>
+        </Grid>
     </div>
   )
 }
