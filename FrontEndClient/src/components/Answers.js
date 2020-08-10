@@ -123,10 +123,13 @@ const Answers = (props) => {
   let socket = useSelector(state => state.socket)
   let roomID = useSelector(state => state.roomID)
   let loading = useSelector(state => state.loading)
-  let name = useSelector(state => state.name)
-  let question = useSelector(state => state.question)
-  let answer = useSelector(state => state.answer)
-
+  if(!props.location.state.name){
+    history.push('/')
+  }
+  let name = props.location.state.name
+  let room = props.location.state.room
+  let answer = props.location.state.answer
+  let question = props.location.state.question
   const [slide, setSlide] = useState(false);
   const [open, setOpen] = React.useState(false);
   
@@ -171,7 +174,7 @@ const Answers = (props) => {
   useEffect(() => {
     try{
     socket.on('start', (start) => {
-      history.push('/Game', {name: name, room: roomID})
+      history.push('/Game', {name: name, room: room})
     })
     }
     catch(err){
@@ -194,6 +197,7 @@ const Answers = (props) => {
         setrenderPoints(true)
         setExit(exit)
       }
+      // history.push('/Game', {name: name, room: room})
     })
   }
   catch(err){
@@ -225,10 +229,9 @@ const Answers = (props) => {
   const movePage = () => {
     if(!exit){
     setOpen(true)
-    dispatch(actions.nextQuestion(roomID, socket, history, name, (update) => {
-      dispatch({type: 'CLEAR_ANSWER_QUESTION'})
+    dispatch(actions.nextQuestion(roomID, socket, (update) => {
       clearInterval(timer)
-      history.push('/Game', {name: name, room: roomID})
+      history.push('/Game', {name: name, room: room})
     }))
   }
   else{
@@ -332,20 +335,18 @@ else
                 <div style={props}>
               <Card className={classes.card}>
                 <Typography className={classes.question}>{question}</Typography>
-                  <List id="scroll" style={{overflow: 'auto', height: 300, display: 'flex', 
-                                            flex: 1, justifyContent: 'center'}}>
-                    {answers.map((item, i) => (
-                    <Slide direction="up" in={slide} mountOnEnter unmountOnExit timeout={1000}>                        
-                      <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                        {checkValidAnswer(i) ? <Button className={classes.text2}
-                                                type="secondary" onClick={() => chooseAnswer(i)}>{item}
-                                                </Button> : 
-                                                <Button className={classes.text2} type="secondary" disabled>{item}
-                                                </Button>}
-                      </Grid>
-                    </Slide>
-                    ))}
-                  </List>    
+                <div id="scroll" style={{overflow: 'auto', height: 300}}>
+                {answers.map((item, i) => (
+                <List key={i} style={{display: 'flex', 
+                                      flex: 1, justifyContent: 'center'}}>
+                          <Slide direction="up" in={slide} 
+                                 mountOnEnter unmountOnExit timeout={1000}>                        
+                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                          {checkValidAnswer(i) ? <Button className={classes.text2} 
+                                                 type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button className={classes.text2} type="secondary" disabled>{item}</Button>}
+                        </Grid>
+                        </Slide>
+                    </List>    ))}  </div>
 
             </Card>
             </div>
