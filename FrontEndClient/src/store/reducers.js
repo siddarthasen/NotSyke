@@ -12,7 +12,8 @@ const initalState = {
     name: '', 
     waiting: false, 
     question: null,
-    answer: null
+    answer: null,
+    color: ''
 }
 
 function reducer(state=initalState, action) {
@@ -41,6 +42,8 @@ function reducer(state=initalState, action) {
                 return{...state, answer: action.payload.answer, question: action.payload.question}
         case 'CLEAR_ANSWER_QUESTION':
                 return{...state, question: null, answer: null}
+        case 'PICK_COLOR':
+                return{...state, color: action.payload}
         default: 
             return{...state}
     }

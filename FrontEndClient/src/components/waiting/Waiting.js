@@ -12,20 +12,18 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
-import CardFormat from './CardFormat'
+import CardFormat from '../home/card-format/CardFormat'
 import Chip from '@material-ui/core/Chip';
 import Slide from '@material-ui/core/Slide';
-import '../fonts/Chewy-Regular.ttf'
 import {
   withStyles, Avatar, Divider, CardHeader, List, ListItemText, ListItem
 } from '@material-ui/core';
  import { Spring } from 'react-spring/renderprops'
  import { useSelector, useDispatch } from 'react-redux';
-import * as actions from './actions'
+import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
 import { AwesomeButton } from "react-awesome-button";
 import { Beforeunload } from 'react-beforeunload';
-import './CardFormat.css';
 import { FixedSizeList } from 'react-window';
 
 let socket;
@@ -121,7 +119,7 @@ const Waiting = (props) => {
   useEffect(() => {
     try{
     socket.on('start', (start) => {
-      history.push('/Game', {name: name, room: roomID})
+      history.push('/Question', {name: name, room: roomID})
     })
     }
     catch(err){
@@ -132,7 +130,7 @@ const Waiting = (props) => {
   useEffect(() => {
     try{
     socket.on('next_question', () => {
-      history.push('/Game', {name: name, room: roomID})
+      history.push('/Question', {name: name, room: roomID})
     })
   }
   catch(err){
@@ -173,7 +171,7 @@ const Waiting = (props) => {
     if(!ready){
     setReady(true)
     dispatch(actions.startGame(roomID, socket, history, (update) => {
-      history.push('/Game', {name: name, room: roomID})
+      history.push('/Question', {name: name, room: roomID})
     }))
   }
   }

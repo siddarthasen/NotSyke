@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import queryString from 'query-string'
 import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -9,7 +8,6 @@ import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,7 +16,8 @@ import { AwesomeButton } from "react-awesome-button";
 import Box from '@material-ui/core/Box';
 import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
 import { useSelector, useDispatch } from 'react-redux';
-import * as actions from './actions'
+import * as actions from '../../../store/actions';
+import { Button } from '@material-ui/core';
 let socket;
 
 
@@ -149,12 +148,14 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   let history = useHistory();
   const classes = useStyles();
   let error = useSelector(state=> state.error)
+  
 
   function backgroundColor() {
     let colors = ['#B297FF', '#82D9FF', '#E85050', 'rgba(4, 191, 16, 0.6)', '#FFD967'];
     let num = Math.floor(Math.random() * colors.length);
     console.log('num ', num);
     num = num == 5 ? 4 : num;
+    dispatch({type: 'PICK_COLOR', payload: colors[num]})
     return colors[num];
   }
 
@@ -178,14 +179,12 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
               <Tab style={{fontFamily: 'Segoe Print'}} label="Join Room"  />
               <Tab style={{fontFamily: 'Segoe Print'}} label="Create Room"  />
             </Tabs>
-        </AppBar>
-        <CardContent>
-          <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
-        </CardContent>
-        <AwesomeButton className={classes.test1} type="secondary" 
-                       ripple onPress={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
-        </AwesomeButton>
-        <Typography>{error}</Typography>
+      </AppBar>
+      <CardContent>
+        <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
+      </CardContent>
+      <Button className={classes.test1} onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}</Button>
+      <Typography>{error}</Typography>
       </Card>
       </Box>
     </Grid>

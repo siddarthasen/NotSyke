@@ -12,13 +12,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
-import CardFormat from './CardFormat'
+import CardFormat from '../home/card-format/CardFormat'
 import {
   withStyles, Avatar, Divider, CardHeader, List, ListItemText, ListItem
 } from '@material-ui/core';
  import { Spring } from 'react-spring/renderprops'
  import { useSelector, useDispatch } from 'react-redux';
-import * as actions from './actions'
+import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
 import Box from '@material-ui/core/Box';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -29,9 +29,8 @@ import {
   AwesomeButtonSocial,
 } from 'react-awesome-button';
 import { Beforeunload } from 'react-beforeunload';
+import './Question.css';
 let socket;
-
-
 
 const useStyles = makeStyles((theme) => ({
   title: {

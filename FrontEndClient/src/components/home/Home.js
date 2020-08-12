@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import queryString from 'query-string'
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -10,7 +9,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
-import CardFormat from './CardFormat'
+import CardFormat from './card-format/CardFormat'
 import { Spring } from 'react-spring/renderprops'
 
 let socket;
@@ -24,7 +23,7 @@ const useStyles = makeStyles({
   }
 });
 
-const Chat = ({location}) => {
+const Home = ({location}) => {
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
   const [messages, setMessages] = useState([])
@@ -106,17 +105,17 @@ const sendRequest = () => {
 
   return (
     <div>
-            <Spring
+      <Spring
       from={{ transform: 'translate3d(0,-800px,0)' }}
       to={{ transform: 'translate3d(0,0px,0)' }}>
       {props => (
         <div style={props}>
         {displayPrompt(value)}
       </div>
-    )}
+      )}
       </Spring>
     </div>
   );
 }
 
-export default Chat;
+export default Home;
