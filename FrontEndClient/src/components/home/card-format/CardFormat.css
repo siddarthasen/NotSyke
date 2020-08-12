@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
 html {
 	height: 100%;
 	background-size:     cover;                      
@@ -11,6 +12,42 @@ html {
 .title2 {
 	font-size: 50
 }
+
+.textboxes {
+	margin: 5%;
+}
 #scroll::-webkit-scrollbar {
 	display: none;
   }
+#card {
+	background: #FFFFFF;
+	mix-blend-mode: normal;
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+	border-radius: 16px;
+	border-radius: 40;
+    height: 450px;
+    width: 400px;
+    align-items: 'center';
+}
+#submit-button-div {
+	margin-bottom: 100%;
+}
+#submit-button {
+	align-items: 'center';
+}
+#title-spacing {
+	margin: 15px;
+}
+#title {
+	font-size: 45px;
+	text-align: center;
+    font-family: 'Chilanka', cursive;
+	text-align: 'center';
+    padding: 15;
+}
+#tab-title {
+	font-family: 'Chilanka', cursive;
+}
+.MuiTabs-indicator {
+	color: 'black'
+}

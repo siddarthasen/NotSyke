@@ -21,24 +21,14 @@ import { Button } from '@material-ui/core';
 let socket;
 
 
-const useStyles = makeStyles({  
-  html: {
-	background: 	   'black',
-  },
-  card: {
-    borderRadius: 40,
-    height: 500,
-    width: 400,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'black'
-  },
-  title: {
-    fontSize: 30,
-    fontFamily: 'Segoe Print',
-    textAlign: 'center',
-    padding: 15
-  },
+const useStyles = makeStyles({
+  button: {
+    display: 'flex',
+    flex: 1,
+    alignContent: 'center',
+    alignSelf: 'center',
+    bottomPadding: 20
+  }, 
   bar: {
     alignSelf: 'center',
     fontColor: 'black',
@@ -60,16 +50,8 @@ const useStyles = makeStyles({
     marginTop: 15,
     alignSelf: 'center'
   },
-  test1: {
-    color: 'black',
-    flex: 1,
-    marginLeft: 30,
-    marginRight: 30,
-    height: 45,
-    alignItems: 'center',
-    fontSize: 20,
-    fontFamily: 'Segoe Print',
-    fontColor: 'white'
+  appBarBorder: {
+    backgroundColor: 'black'
   }
 });
 
@@ -86,37 +68,31 @@ const joinRoom = (buttonName, room, name, history, dispatch) => {
     dispatch({type: 'SET_SOCKET', payload: socket})
     dispatch(actions.sendLogIn('Join', name.trim(), room.trim(), socket, history))
   }
-
-  // if(buttonName.localeCompare('Create Room') == 0)
-  // {
-    
-  //   history.push('/Waiting', {type: "Create", name: name, room: room, endpoint: ENDPOINT})
-  // }
-  // else
-  // {
-  //   history.push('/Waiting', {type: "Join", name: name, room: room, endpoint: ENDPOINT})
-  // }
 }
 
 const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) => {
   if(value === 0)
   {
   return(
-    <Grid container direction="column">
-    <input
-    className={classes.text}
-    type="text"
-    value={name}
-    placeholder="Username"
-    onChange={(e) => setName(e.target.value)}
-    />
-    <input
-    className={classes.text}
-    type="text"
-    placeholder="Room Code"
-    value={room}
-    onChange={(e) => setRoom(e.target.value)}
-    />
+    <Grid container item
+    direction="column"
+    justify="center"
+    alignItems="center"
+    style={{ minHeight: '25vh' }}>
+      <div className="textboxes">
+        <TextField
+          id="username"
+          placeholder="Username"
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div className="textboxes">
+        <TextField
+          id="password"
+          placeholder="Password"
+          onChange={(e) => setRoom(e.target.value)}
+        />
+      </div>
     </Grid>
     )
   }
@@ -129,13 +105,13 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) =>
       justify="center"
       alignItems="center"
       style={{ minHeight: '25vh' }}>
-        <input
-        className={classes.text}
-        type="text"
-        value={name}
-        placeholder="Username"
-        onChange={(e) => setName(e.target.value)}
-        />
+        <div className="textboxes">
+          <TextField
+            id="username"
+            placeholder="Username"
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
       </Grid>
       )
   }
@@ -148,6 +124,7 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   let history = useHistory();
   const classes = useStyles();
   let error = useSelector(state=> state.error)
+  const color = useSelector(state => state.color)
   
 
   function backgroundColor() {
@@ -159,6 +136,11 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
     return colors[num];
   }
 
+const appBar = {
+  backgroundColor: color,
+  alignItems: 'center'
+}
+
   useEffect(() => {
   document.body.style.background = backgroundColor();
   }, [])
@@ -169,25 +151,35 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   alignItems="center"
   justify="center"
   style={{ minHeight: '100vh' }}>
-    <Box border={3} borderRadius={40}>
-    <Card className={classes.card}>
-    <Typography className = {classes.title}>
-    NotPsych!
-    </Typography>
-      <AppBar position="static" className={classes.test}>
-            <Tabs value={value} onChange={handleChange}  className={classes.bar}>
-              <Tab style={{fontFamily: 'Segoe Print'}} label="Join Room"  />
-              <Tab style={{fontFamily: 'Segoe Print'}} label="Create Room"  />
-            </Tabs>
-      </AppBar>
-      <CardContent>
-        <RenderRoom value={value} classes={classes} name={name} setName={setName} setRoom={setRoom} room={room}/>
-      </CardContent>
-      <Button className={classes.test1} onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}</Button>
-      <Typography>{error}</Typography>
+    <Box>
+      <Card id="card">
+        <div id="title-spacing">
+          <Typography id="title">
+            NotSyke!
+          </Typography>
+        </div>
+        <AppBar position="static" style={appBar} elevation={0}>
+              <Tabs value={value} onChange={handleChange} classes={{ indicator: classes.appBarBorder }} >
+                <Tab id="tab-title" label="Join Room"/>
+                <Tab id="tab-title" label="Create Room"/>
+              </Tabs>
+        </AppBar>
+        <CardContent>
+          <RenderRoom value={value} classes={classes} 
+                      name={name} setName={setName} 
+                      setRoom={setRoom} room={room}/>
+        </CardContent>
+        <Grid container alignItems="center" direction="column">
+          <div id="submit-button-div">
+            <Button id="submit-button" className={classes.button} 
+              onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
+            </Button>
+          </div>
+        </Grid>
+        <Typography>{error}</Typography>
       </Card>
-      </Box>
-    </Grid>
+    </Box>
+  </Grid>
   )
 }
 

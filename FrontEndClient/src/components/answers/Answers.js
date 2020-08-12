@@ -359,13 +359,3 @@ else
 }
 
 export default Answers;
-
-
-
-//@HArry:
-//TO DO LIST:
-//fix answr.js for conditional rendering
-//routing back to promtp screen on screen press
-//need to add the "waiting on people"
-//error checking for begginging
-//have some sort of end game button so game can end on comand
