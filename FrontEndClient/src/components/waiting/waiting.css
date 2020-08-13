@@ -35,7 +35,15 @@
     font-family: 'Chilanka', cursive;
     margin-bottom: 15px;
 }
-
+#member-wrap {
+    width: 300px;
+    background: #FFFFFF;
+    border: 1.5px solid #000000;
+    box-sizing: border-box;
+    border-radius: 20px;
+    height: 40px;
+    justify-content: 'left'
+}
 #members {
     font-family: 'Chilanka', cursive;
     font-style: normal;
@@ -46,21 +54,25 @@
     background-color: 'white';
     border: 0px;
 }
-#member-wrap {
-    width: 300px;
-    background: #FFFFFF;
-    border: 1.5px solid #000000;
-    box-sizing: border-box;
-    border-radius: 20px;
-    height: 40px;
-    justify-content: 'left'
-}
-
 #avatar {
     height: 38px;
     width: 38px;
     margin: 0px;
     padding: 0px;
     margin-top: 5px;
-
+}
+@media screen and (max-width: 950px) {
+    #room {
+        font-size: 38px;
+    }
+    #waiting {
+        font-size: 19px;
+    }
+    #member-wrap {
+        width: 200px;
+        height: 35px;
+    }
+    #members {
+        font-size: 20px;
+    }
 }

@@ -61,8 +61,6 @@ html {
 }
 
 @media screen and (max-width: 950px) {
-	html {
-	}
 	#title {
 		font-size: 30px;
 	}

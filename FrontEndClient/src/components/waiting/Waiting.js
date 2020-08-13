@@ -25,7 +25,8 @@ import { useHistory } from "react-router-dom";
 import { AwesomeButton } from "react-awesome-button";
 import { Beforeunload } from 'react-beforeunload';
 import { FixedSizeList } from 'react-window';
-import './waiting.css'
+import './waiting.css';
+import '../home/card-format/CardFormat.css';
 
 let socket;
 let color;
@@ -198,7 +199,7 @@ window.onbeforeunload = function() {
   justify="center"
   style={{ minHeight: '90vh' }}>
     <Typography id="room">RoomID: {roomID}</Typography>
-      <Card id="card-waiting">
+      <Card id="card">
       <Grid container alignItems="center" direction="column">
         <CardContent >
               <Typography id="waiting">Waiting for People to Join...</Typography>
@@ -207,7 +208,7 @@ window.onbeforeunload = function() {
                     <ListItem key={i}>
                       <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
                         <Grid contanier jusitfy="flex-start" alignItem="flex-start" id="member-wrap">
-                        <Chip id="members" variant="outlined" avatar={<Avatar style={{backgroundColor: 'black', color: 'white', fontSize: 20}}id="avatar">{item[0]}</Avatar>} 
+                        <Chip size="small" id="members" variant="outlined" avatar={<Avatar style={{backgroundColor: 'black', color: 'white', fontSize: 20}}id="avatar">{item[0]}</Avatar>} 
                                 label={item}/>
                         </Grid>
                       </Slide>
@@ -215,7 +216,7 @@ window.onbeforeunload = function() {
                   )) : null}
               </List>
         </CardContent>
-        <div id="submit-button-div">
+        <div id="submit-button">
           {!ready && !waiting && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Start Game</Button>: null}
           </div>
         </Grid>
