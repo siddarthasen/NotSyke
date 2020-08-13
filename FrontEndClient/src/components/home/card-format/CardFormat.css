@@ -5,36 +5,27 @@ html {
 	background-repeat:   no-repeat;
 	background-position: center center;      
 }
-.cards {
-	border-radius: 10px;
-}
 
 .title2 {
 	font-size: 50
 }
 
-.textboxes {
-	margin: 5%;
-}
+
 #scroll::-webkit-scrollbar {
 	display: none;
   }
-#card {
+  #card {
 	background: #FFFFFF;
 	mix-blend-mode: normal;
 	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 	border-radius: 16px;
 	border-radius: 40;
-    height: 450px;
-    width: 400px;
-    align-items: 'center';
-}
-#submit-button-div {
-	margin-bottom: 100%;
-}
-#submit-button {
+    height: 350px;
+    width: 360px;
 	align-items: 'center';
+	padding: 0;
 }
+
 #title-spacing {
 	margin: 15px;
 }
@@ -47,7 +38,48 @@ html {
 }
 #tab-title {
 	font-family: 'Chilanka', cursive;
+	font-size: small;
 }
 .MuiTabs-indicator {
 	color: 'black'
+}
+.textboxes {
+	margin: 5%;
+}
+#username,
+#password {
+	font-size: medium;
+}
+#submit-button-div {
+	margin-bottom: 100%;
+}
+#submit-button {
+	align-items: 'center';
+	background-color: 'black';
+	font-family: 'Chilanka', cursive;
+}
+
+@media screen and (max-width: 950px) {
+	html {
+	}
+	#title {
+		font-size: 30px;
+	}
+	#card {
+		height: 300px;
+		width: 300px;
+	}
+	#tab-title {
+		font-size: 10px;
+	}
+	.textboxes {
+		font-size: 1px;
+	}
+	#username,
+	#password {
+		font-size: small;
+	}
+	#submit-button {
+		font-size: 1x;
+	}
 }

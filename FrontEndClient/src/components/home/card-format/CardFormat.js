@@ -19,15 +19,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../../store/actions';
 import { Button } from '@material-ui/core';
 let socket;
-
+let color;
 
 const useStyles = makeStyles({
-  button: {
+  Button: {
     display: 'flex',
     flex: 1,
     alignContent: 'center',
     alignSelf: 'center',
-    bottomPadding: 20
+    backgroundColor: ({color}) => `${(color - 0x000223).toString(16)}`,
+    "&:hover": {
+      backgroundColor: ({ color}) => `${color}`
+    },
+    borderRadius: 25,
+    width: 140,
   }, 
   bar: {
     alignSelf: 'center',
@@ -77,19 +82,18 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) =>
     <Grid container item
     direction="column"
     justify="center"
-    alignItems="center"
-    style={{ minHeight: '25vh' }}>
+    alignItems="center">
       <div className="textboxes">
         <TextField
           id="username"
-          placeholder="Username"
+          placeholder="Name"
           onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div className="textboxes">
         <TextField
           id="password"
-          placeholder="Password"
+          placeholder="Room Code"
           onChange={(e) => setRoom(e.target.value)}
         />
       </div>
@@ -103,8 +107,7 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) =>
       item
       direction="column"
       justify="center"
-      alignItems="center"
-      style={{ minHeight: '25vh' }}>
+      alignItems="center">
         <div className="textboxes">
           <TextField
             id="username"
@@ -122,10 +125,9 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) =>
 const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRoom, sendRequest}) => {
   const dispatch = useDispatch()
   let history = useHistory();
-  const classes = useStyles();
+  color = useSelector(state => state.color)
+  const classes = useStyles({color});
   let error = useSelector(state=> state.error)
-  const color = useSelector(state => state.color)
-  
 
   function backgroundColor() {
     let colors = ['#B297FF', '#82D9FF', '#E85050', 'rgba(4, 191, 16, 0.6)', '#FFD967'];
@@ -140,18 +142,27 @@ const appBar = {
   backgroundColor: color,
   alignItems: 'center'
 }
+// const ButtonStyle = {
+//     display: 'flex',
+//     flex: 1,
+//     alignContent: 'center',
+//     alignSelf: 'center',
+//     backgroundColor: 'black',
+//     "&:hover": {
+//       color: color
+// }
+// }
 
   useEffect(() => {
   document.body.style.background = backgroundColor();
   }, [])
+
   return (
-  <Grid container
-  spacing={0}
-  direction="column"
+  <Grid 
+  container
   alignItems="center"
   justify="center"
-  style={{ minHeight: '100vh' }}>
-    <Box>
+  style={{ minHeight: '90vh' }}>
       <Card id="card">
         <div id="title-spacing">
           <Typography id="title">
@@ -164,21 +175,20 @@ const appBar = {
                 <Tab id="tab-title" label="Create Room"/>
               </Tabs>
         </AppBar>
-        <CardContent>
+        <Grid container alignItems="center" direction="column">
+        <CardContent >
           <RenderRoom value={value} classes={classes} 
                       name={name} setName={setName} 
                       setRoom={setRoom} room={room}/>
         </CardContent>
-        <Grid container alignItems="center" direction="column">
           <div id="submit-button-div">
-            <Button id="submit-button" className={classes.button} 
+            <Button id="submit-button" className={classes.Button}
               onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
             </Button>
           </div>
         </Grid>
         <Typography>{error}</Typography>
       </Card>
-    </Box>
   </Grid>
   )
 }
