@@ -25,10 +25,28 @@ import { useHistory } from "react-router-dom";
 import { AwesomeButton } from "react-awesome-button";
 import { Beforeunload } from 'react-beforeunload';
 import { FixedSizeList } from 'react-window';
+import './waiting.css'
 
 let socket;
+let color;
 
 const useStyles = makeStyles({
+  Button: {
+    display: 'flex',
+    flex: 1,
+    alignContent: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    backgroundColor: ({color}) => `${(color - 0x000223).toString(16)}`,
+    "&:hover": {
+      backgroundColor: ({ color}) => `${color}`
+    },
+    borderRadius: 7,
+    width: 120,
+    borderWidth: 1,
+    fontSize: 10,
+    borderColor: ({color}) => `${(color)}`
+  }, 
   card: {
     borderRadius: 40,
     height: 500,
@@ -37,12 +55,6 @@ const useStyles = makeStyles({
     borderWidth: 2,
     borderColor: 'black',
     zIndex: 300
-  },
-  title: {
-    fontSize: 30,
-    fontFamily: 'Segoe Print',
-    textAlign: 'center',
-    padding: 15
   },
   bar: {
     alignSelf: 'center',
@@ -83,18 +95,18 @@ const useStyles = makeStyles({
 });
 
 const Waiting = (props) => {
-  const classes = useStyles();
+  const classes = useStyles({color});
   let history = useHistory();
   //Access redux state tree:
   let members = useSelector(state=> state.members)
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
+  color = useSelector(state => state.color)
   let start = useSelector(state => state.start)
   let name = useSelector(state => state.name)
   let waiting = useSelector(state => state.waiting)
   const [slide, setSlide] = useState(false);
   const [ready, setReady] = useState(false)
-  // let endpoint = props.location.state.endpoint
     
   const dispatch = useDispatch()
   
@@ -151,21 +163,6 @@ const Waiting = (props) => {
   })
 
 
-  /* add this to shared file.*/
-  // window.addEventListener('beforeunload', function (e) {
-  //   alert(e)
-  //   e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-  //   // Chrome requires returnValue to be set
-  //   console.log(roomID, name)
-  //   socket.emit('remove_user', {roomID: roomID, name: name})
-  //   dispatch({type: 'RESET_USER'})
-  //   history.push('/')
-  //   e.returnValue = '';
-  // });
-  // window.addEventListener('backbutton', function(){
-  //   alert("test")
-  //   return false;
-  //   })
 
   const startGame = () => { //used for creator
     if(!ready){
@@ -178,22 +175,12 @@ const Waiting = (props) => {
 
   /*  For this user disconnection. First call when a user disconnects. 
       Emit to the server. Take out the DISCONNECT variable @Sid. */
-  const disconnectUser = () => {
-    socket.on('disconnect', () => {
-      socket.emit('player-disconnect', {roomID: roomID, name: name});
-    });
-  };
+  // const disconnectUser = () => {
+  //   socket.on('disconnect', () => {
+  //     socket.emit('player-disconnect', {roomID: roomID, name: name});
+  //   });
+  // };
 
-  var render = 0
-  var count = 0;
-setInterval(function(){
-  count++;
-  if(document.getElementById('loadingtext'))
-  {
-  document.getElementById('loadingtext').innerHTML = "Waiting for People to Join" + new Array(count % 5).join('.');
-  }
-  render = 1
-}, 1000);
 
 
 
@@ -204,62 +191,37 @@ window.onbeforeunload = function() {
   history.push('/')
 }
   return (
-    <div>
-      <Grid item direction="column">
-        <Grid container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justify="center"
-          style={{ minHeight: '100vh' }}>
-          <Typography style={{fontSize: 40, marginBottom: 20, fontFamily: 'Segoe Print'}}>Room ID: {roomID}</Typography>
-          <Spring
-            from={{ transform: 'translate3d(0,0px,0)' }}
-            to={{ transform: 'translate3d(0,0px,0)' }}>
-            {props => (
-            <div style={props}>
-              <Box border={3} borderRadius={40}>
-              <Card className={classes.card}>
-              <Typography id="loadingtext" className = {classes.title}>Waiting for People to Join</Typography>
+<Grid 
+  container
+  direction="column"
+  alignItems="center"
+  justify="center"
+  style={{ minHeight: '90vh' }}>
+    <Typography id="room">RoomID: {roomID}</Typography>
+      <Card id="card-waiting">
+      <Grid container alignItems="center" direction="column">
+        <CardContent >
+              <Typography id="waiting">Waiting for People to Join...</Typography>
               <List id="scroll" style={{overflow: 'auto', height: 300}}>
-                {members.map((item, i) => (
+                {members != undefined ? members.map((item, i) => (
                     <ListItem key={i}>
                       <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-                        <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                          <Chip avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, 
-                                                        width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>}  
-                                style={{display: 'flex', margin: 5, fontSize: 30, width: 300, 
-                                        paddingTop: 20, paddingBottom: 20, justifyContent: 'left', 
-                                        fontFamily: 'Segoe Print'}}
+                        <Grid contanier jusitfy="flex-start" alignItem="flex-start" id="member-wrap">
+                        <Chip id="members" variant="outlined" avatar={<Avatar style={{backgroundColor: 'black', color: 'white', fontSize: 20}}id="avatar">{item[0]}</Avatar>} 
                                 label={item}/>
                         </Grid>
                       </Slide>
                     </ListItem>
-                  ))}
-              </List>    
-              {!ready && !waiting && members.length > 1 ? <AwesomeButton className={classes.test1} type="secondary" ripple onPress={startGame}>Start Game</AwesomeButton>: null}
-              </Card>
-              </Box>
-            </div>
-            )}
-          </Spring>
+                  )) : null}
+              </List>
+        </CardContent>
+        <div id="submit-button-div">
+          {!ready && !waiting && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Start Game</Button>: null}
+          </div>
         </Grid>
-      </Grid>
-    </div>
+      </Card>
+  </Grid>
   );
 }
 
 export default Waiting;
-
-/* 
-    {members.map((item, i) => (
-                        <ListItem key={i}>
-                        <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                        <Chip  avatar={<Avatar style={{display: 'flex', fontSize: 25, height: 40, width: 40, justifyContent: 'center'}}>{item[0]}</Avatar>} label={item} 
-                               style={{display: 'flex', margin: 5, fontSize: 30, width: 300, paddingTop: 20, paddingBottom: 20, justifyContent: 'left', fontFamily: 'Segoe Print'}}/>
-                        </Grid>
-                        </Slide>
-                        </ListItem>
-                    ))}
-*/

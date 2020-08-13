@@ -31,8 +31,11 @@ const useStyles = makeStyles({
     "&:hover": {
       backgroundColor: ({ color}) => `${color}`
     },
-    borderRadius: 25,
-    width: 140,
+    borderRadius: 7,
+    width: 120,
+    borderWidth: 1,
+    fontSize: 10,
+    borderColor: ({color}) => `${(color)}`,
   }, 
   bar: {
     alignSelf: 'center',
@@ -182,7 +185,7 @@ const appBar = {
                       setRoom={setRoom} room={room}/>
         </CardContent>
           <div id="submit-button-div">
-            <Button id="submit-button" className={classes.Button}
+            <Button id="submit-button" variant="outlined" className={classes.Button}
               onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
             </Button>
           </div>
