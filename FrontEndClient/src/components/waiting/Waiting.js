@@ -25,13 +25,8 @@ import { useHistory } from "react-router-dom";
 import { AwesomeButton } from "react-awesome-button";
 import { Beforeunload } from 'react-beforeunload';
 import { FixedSizeList } from 'react-window';
-<<<<<<< HEAD
-import './waiting.css';
-import '../home/card-format/CardFormat.css';
-=======
 import Zoom from '@material-ui/core/Zoom';
 import './waiting.css'
->>>>>>> temp
 
 let socket;
 let color;
