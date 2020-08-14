@@ -219,7 +219,7 @@ window.onbeforeunload = function() {
               </List>
         </CardContent>
         <div id="submit-button-div">
-          {!ready && !waiting && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Start Game</Button>: null}
+          {!ready && !waiting && members && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Start Game</Button>: null}
           </div>
         </Grid>
       </Card>

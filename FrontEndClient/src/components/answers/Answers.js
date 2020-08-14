@@ -25,7 +25,7 @@ import Box from '@material-ui/core/Box';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Beforeunload } from 'react-beforeunload';
-let socket;
+let socket, color;
 
 const useStyles = makeStyles((theme) => ({
   question: {
@@ -109,25 +109,38 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
-  }
+  },
+  answerButtons: {
+    display: 'flex',
+    flex: 1,
+    alignContent: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    backgroundColor: ({color}) => `${(color - 0x000223).toString(16)}`,
+    "&:hover": {
+      backgroundColor: ({ color}) => `${color}`
+    },
+    borderRadius: 10,
+    width: 120,
+    borderWidth: 4,
+    fontSize: 10,
+    borderColor: ({color}) => `${(color)}`,
+  }, 
 }));
 
 const Answers = (props) => {
   var count = 0;
-  const classes = useStyles();
+  color = useSelector(state => state.color)
+  const classes = useStyles({color});
   //Access redux state tree:
   let members = useSelector(state => state.members)
   let creator = useSelector(state => state.creator)
   let socket = useSelector(state => state.socket)
   let roomID = useSelector(state => state.roomID)
   let loading = useSelector(state => state.loading)
-  if(!props.location.state.name){
-    history.push('/')
-  }
-  let name = props.location.state.name
-  let room = props.location.state.room
-  let answer = props.location.state.answer
-  let question = props.location.state.question
+  let name = useSelector(state => state.name)
+  let answer = useSelector(state => state.answer)
+  let question = useSelector(state => state.question)
   const [slide, setSlide] = useState(false);
   const [open, setOpen] = React.useState(false);
   
@@ -172,7 +185,7 @@ const Answers = (props) => {
   useEffect(() => {
     try{
     socket.on('start', (start) => {
-      history.push('/Game', {name: name, room: room})
+      history.push('/Game', {name: name, room: roomID})
     })
     }
     catch(err){
@@ -229,7 +242,7 @@ const Answers = (props) => {
     setOpen(true)
     dispatch(actions.nextQuestion(roomID, socket, (update) => {
       clearInterval(timer)
-      history.push('/Game', {name: name, room: room})
+      history.push('/Game', {name: name, room: roomID})
     }))
   }
   else{
@@ -340,8 +353,8 @@ else
                           <Slide direction="up" in={slide} 
                                  mountOnEnter unmountOnExit timeout={1000}>                        
                           <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                          {checkValidAnswer(i) ? <Button className={classes.text2} 
-                                                 type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button className={classes.text2} type="secondary" disabled>{item}</Button>}
+                          {checkValidAnswer(i) ? <Button className={classes.answerButtons} id="answer-buttons" variant="outlined"
+                                                 type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button id="answer-buttons" className={classes.answerButtons} type="secondary" disabled>{item}</Button>}
                         </Grid>
                         </Slide>
                     </List>    ))}  </div>
