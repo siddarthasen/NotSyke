@@ -70,8 +70,7 @@ const sendRequest = () => {
       name={name}
       setName={setName}
       room={room}
-      setRoom={setRoom}
-      sendRequest={sendRequest}/>
+      setRoom={setRoom}/>
     )
   }
   else
@@ -84,8 +83,7 @@ const sendRequest = () => {
       name={name}
       setName={setName}
       room={room}
-      setRoom={setRoom}
-      sendRequest/>
+      setRoom={setRoom}/>
     )
   }
   }

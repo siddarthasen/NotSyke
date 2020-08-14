@@ -1,38 +1,40 @@
 import React, {useState, useEffect} from 'react';
-import queryString from 'query-string'
-import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
-import CardFormat from '../home/card-format/CardFormat'
-import {
-  withStyles, Avatar, Divider, CardHeader, List, ListItemText, ListItem
+import   {withStyles, Avatar, Divider, CardHeader, List, ListItemText, ListItem
 } from '@material-ui/core';
- import { Spring } from 'react-spring/renderprops'
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
-import Box from '@material-ui/core/Box';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {
-  AwesomeButton,
-  AwesomeButtonProgress,
-  AwesomeButtonSocial,
-} from 'react-awesome-button';
-import { Beforeunload } from 'react-beforeunload';
 import './Question.css';
+
+
+let color
 let socket;
 
 const useStyles = makeStyles((theme) => ({
+  Button: {
+    display: 'flex',
+    flex: 1,
+    alignContent: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    backgroundColor: ({color}) => `${(color - 0x000223).toString(16)}`,
+    "&:hover": {
+      backgroundColor: ({ color}) => `${color}`
+    },
+    borderRadius: 7,
+    width: 140,
+    height: 40,
+    borderWidth: 1,
+    fontSize: 10,
+    borderColor: ({color}) => `${(color)}`
+  }, 
   title: {
     flex: 1,
     flexDirection: 'row',
@@ -109,7 +111,8 @@ const Game = (props) => {
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
   let name = useSelector(state => state.name)
-  const classes = useStyles();
+  color = useSelector(state => state.color)
+  const classes = useStyles({color});
 
 
 let question = useSelector(state=> state.question)
@@ -150,51 +153,39 @@ window.onbeforeunload = function() {
 }
 
   return (
-    <div>
-      <Backdrop className={classes.backdrop} open={open}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-            <Grid container
-              spacing={0}
-              direction="column"
-              alignItems="center"
-              justify="center"
-              style={{ minHeight: '100vh' }}>
-              <Spring
-                from={{ transform: 'translate3d(0,0px,0)' }}
-                to={{ transform: 'translate3d(0,0px,0)' }}>
-                {props => (
-                  <div style={props}>
-                    <Card className={classes.card}>
-                      <Grid container direction="column" 
-                            justify="space-between"  
-                            alignItems="center" 
-                            className={classes.square}>
-                          <Typography className={classes.question}>{question}</Typography>
-                          <Grid item justify="center">
-                            <Box border={3} borderRadius={40} className={classes.answerBox}>
-                              <InputBase
-                              placeholder="Enter Your Answer"
-                              multiline
-                              className={classes.answer}
-                              rows={10}
-                              value={answer}
-                              onChange={(e) => setAnswer(e.target.value)}
-                              />
-                          </Box>
-                          </Grid>
-                          <AwesomeButton className={classes.test1} 
-                                        type="secondary" 
-                                        ripple onPress={submitAnswer}>Submit
-                          </AwesomeButton>
-                      </Grid>
-                    </Card>
-                </div>
-                )}
-                </Spring>
-            </Grid>
-    </div>
+<Grid 
+  container
+  direction="column"
+  alignItems="center"
+  justify="center"
+  style={{ minHeight: '90vh' }}>
+    <Typography id="room">RoomID: {roomID}</Typography>
+      <Card id="card-question">
+      <Grid container alignItems="center" direction="column">
+        <CardContent>
+              <Typography id="waiting">{question}</Typography>
+              <Grid item justify="center">
+                    <InputBase
+                      multiline
+                      className={classes.answer}
+                      rows={10}
+                      value={answer}
+                      onChange={(e) => setAnswer(e.target.value)}
+                      id="answer-box"
+                      />
+              </Grid>
+        </CardContent>
+        <div id="submit-button-div">
+          <Button id="submit-button" variant="outlined" className={classes.Button} onClick={submitAnswer}>Submit</Button>
+          </div>
+        </Grid>
+      </Card>
+  </Grid>
   );
 }
 
 export default Game;
+
+
+
+

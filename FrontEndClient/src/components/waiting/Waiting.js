@@ -25,8 +25,13 @@ import { useHistory } from "react-router-dom";
 import { AwesomeButton } from "react-awesome-button";
 import { Beforeunload } from 'react-beforeunload';
 import { FixedSizeList } from 'react-window';
+<<<<<<< HEAD
 import './waiting.css';
 import '../home/card-format/CardFormat.css';
+=======
+import Zoom from '@material-ui/core/Zoom';
+import './waiting.css'
+>>>>>>> temp
 
 let socket;
 let color;
@@ -168,6 +173,7 @@ const Waiting = (props) => {
   const startGame = () => { //used for creator
     if(!ready){
     setReady(true)
+    setSlide(false)
     dispatch(actions.startGame(roomID, socket, history, (update) => {
       history.push('/Question', {name: name, room: roomID})
     }))
@@ -199,7 +205,8 @@ window.onbeforeunload = function() {
   justify="center"
   style={{ minHeight: '90vh' }}>
     <Typography id="room">RoomID: {roomID}</Typography>
-      <Card id="card">
+    <Zoom in={slide} out={slide}>
+      <Card id="card-waiting">
       <Grid container alignItems="center" direction="column">
         <CardContent >
               <Typography id="waiting">Waiting for People to Join...</Typography>
@@ -217,10 +224,11 @@ window.onbeforeunload = function() {
               </List>
         </CardContent>
         <div id="submit-button">
-          {!ready && !waiting && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Start Game</Button>: null}
+          {!ready && !waiting && members && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Start Game</Button>: null}
           </div>
         </Grid>
       </Card>
+      </Zoom>
   </Grid>
   );
 }
