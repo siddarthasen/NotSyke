@@ -25,6 +25,7 @@ import { useHistory } from "react-router-dom";
 import { AwesomeButton } from "react-awesome-button";
 import { Beforeunload } from 'react-beforeunload';
 import { FixedSizeList } from 'react-window';
+import Zoom from '@material-ui/core/Zoom';
 import './waiting.css'
 
 let socket;
@@ -167,6 +168,7 @@ const Waiting = (props) => {
   const startGame = () => { //used for creator
     if(!ready){
     setReady(true)
+    setSlide(false)
     dispatch(actions.startGame(roomID, socket, history, (update) => {
       history.push('/Question', {name: name, room: roomID})
     }))
@@ -198,6 +200,7 @@ window.onbeforeunload = function() {
   justify="center"
   style={{ minHeight: '90vh' }}>
     <Typography id="room">RoomID: {roomID}</Typography>
+    <Zoom in={slide} out={slide}>
       <Card id="card-waiting">
       <Grid container alignItems="center" direction="column">
         <CardContent >
@@ -220,6 +223,7 @@ window.onbeforeunload = function() {
           </div>
         </Grid>
       </Card>
+      </Zoom>
   </Grid>
   );
 }

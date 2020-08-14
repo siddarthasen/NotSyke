@@ -150,51 +150,41 @@ window.onbeforeunload = function() {
 }
 
   return (
-    <div>
-      <Backdrop className={classes.backdrop} open={open}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-            <Grid container
-              spacing={0}
-              direction="column"
-              alignItems="center"
-              justify="center"
-              style={{ minHeight: '100vh' }}>
-              <Spring
-                from={{ transform: 'translate3d(0,0px,0)' }}
-                to={{ transform: 'translate3d(0,0px,0)' }}>
-                {props => (
-                  <div style={props}>
-                    <Card className={classes.card}>
-                      <Grid container direction="column" 
-                            justify="space-between"  
-                            alignItems="center" 
-                            className={classes.square}>
-                          <Typography className={classes.question}>{question}</Typography>
-                          <Grid item justify="center">
-                            <Box border={3} borderRadius={40} className={classes.answerBox}>
-                              <InputBase
-                              placeholder="Enter Your Answer"
-                              multiline
-                              className={classes.answer}
-                              rows={10}
-                              value={answer}
-                              onChange={(e) => setAnswer(e.target.value)}
-                              />
-                          </Box>
-                          </Grid>
-                          <AwesomeButton className={classes.test1} 
-                                        type="secondary" 
-                                        ripple onPress={submitAnswer}>Submit
-                          </AwesomeButton>
-                      </Grid>
-                    </Card>
-                </div>
-                )}
-                </Spring>
-            </Grid>
-    </div>
+<Grid 
+  container
+  direction="column"
+  alignItems="center"
+  justify="center"
+  style={{ minHeight: '90vh' }}>
+    <Typography id="room">RoomID: {roomID}</Typography>
+      <Card id="card-waiting">
+      <Grid container alignItems="center" direction="column">
+        <CardContent >
+              <Typography id="waiting">{question}</Typography>
+              <Grid item justify="center">
+                  <Box border={3} borderRadius={40} className={classes.answerBox}>
+                    <InputBase
+                      placeholder="Enter Your Answer"
+                      multiline
+                      className={classes.answer}
+                      rows={10}
+                      value={answer}
+                      onChange={(e) => setAnswer(e.target.value)}
+                      />
+                  </Box>
+              </Grid>
+        </CardContent>
+        <div id="submit-button-div">
+          <Button id="submit-button" variant="outlined" className={classes.Button} onClick={submitAnswer}>Submit</Button>
+          </div>
+        </Grid>
+      </Card>
+  </Grid>
   );
 }
 
 export default Game;
+
+
+
+

@@ -18,6 +18,7 @@ import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../../store/actions';
 import { Button } from '@material-ui/core';
+import Grow from '@material-ui/core/Grow';
 let socket;
 let color;
 
@@ -125,10 +126,12 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) =>
 
 
 
-const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRoom, sendRequest}) => {
+const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRoom}) => {
+  color = useSelector(state => state.out)
   const dispatch = useDispatch()
   let history = useHistory();
   color = useSelector(state => state.color)
+  let out = useSelector(state => state.out)
   const classes = useStyles({color});
   let error = useSelector(state=> state.error)
 
@@ -166,6 +169,8 @@ const appBar = {
   alignItems="center"
   justify="center"
   style={{ minHeight: '90vh' }}>
+    <Grow in={true} out={out} style={{ transformOrigin: '0 0 0' }}
+          {...(out? { timeout: 1000 } : {})}>
       <Card id="card">
         <div id="title-spacing">
           <Typography id="title">
@@ -192,6 +197,7 @@ const appBar = {
         </Grid>
         <Typography>{error}</Typography>
       </Card>
+      </Grow>
   </Grid>
   )
 }
