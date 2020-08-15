@@ -163,17 +163,19 @@ window.onbeforeunload = function() {
       <Card id="card-question">
       <Grid container alignItems="center" direction="column">
         <CardContent>
-              <Typography id="waiting">{question}</Typography>
-              <Grid item justify="center">
-                    <InputBase
-                      multiline
-                      className={classes.answer}
-                      rows={10}
-                      value={answer}
-                      onChange={(e) => setAnswer(e.target.value)}
-                      id="answer-box"
-                      />
-              </Grid>
+          <div id="question-div">
+            <Typography id="question">{question}</Typography>
+          </div> 
+          <Grid item justify="center">
+            <InputBase
+              multiline
+              id="answer-box"
+              className={classes.answer}
+              rows={10}
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              />
+           </Grid>
         </CardContent>
         <div id="submit-button-div">
           <Button id="submit-button" variant="outlined" className={classes.Button} onClick={submitAnswer}>Submit</Button>
