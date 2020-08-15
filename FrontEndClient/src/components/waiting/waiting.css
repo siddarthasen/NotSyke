@@ -25,8 +25,8 @@
 #waiting {
     font-size: 24px;
     font-family: 'Chilanka', cursive;
-    line-height: 15px;
-    margin-bottom: 10px;
+    line-height: 28px;
+    margin-bottom: 20px;
 }
 #room {
     font-size: 30px;
@@ -61,10 +61,10 @@
 }
 @media screen and (max-width: 600px) {
     #room {
-        font-size: 38px;
+        font-size: 25px;
     }
     #waiting {
-        font-size: 1px;
+        font-size: 22px;
     }
     #member-wrap {
         width: 200px;

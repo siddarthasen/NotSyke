@@ -25,6 +25,7 @@ import Box from '@material-ui/core/Box';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Zoom from '@material-ui/core/Zoom';
+import './Answer.css';
 let socket, color;
 
 const useStyles = makeStyles((theme) => ({
@@ -260,7 +261,7 @@ else
       <Card id="card-waiting">
       <Grid container alignItems="center" direction="column">
         <CardContent >
-            <Typography id="waiting">{question}</Typography>
+            <Typography id="question">{question}</Typography>
               <List id="scroll" style={{overflow: 'auto', height: 300}}>
                 {answers.map((item, i) => (
                     <ListItem key={i}>

@@ -1,3 +1,9 @@
+#question {
+    line-height: 150%;
+    font-size: large;
+    word-wrap: break-word;
+    display: inline;
+}
 #card-question{
 	mix-blend-mode: normal;
 	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
@@ -22,14 +28,6 @@
     margin-top: 10px;
     width: 450px;
 }
-#question {
-    line-height: 150%;
-    font-size: large;
-    word-wrap: break-word;
-    
-    display: inline;
-    
-}
 #submit-button {
     margin-top: 10px;
     display: 'flex';
@@ -44,9 +42,10 @@
     width: 120;
     height: 40;
 }
+
 @media screen and (max-width: 600px) {
-    #waiting {
-        font-size: 15px;
+    #room {
+        font-size: 25px;
     }
     #card-question {
         height: 450px;
