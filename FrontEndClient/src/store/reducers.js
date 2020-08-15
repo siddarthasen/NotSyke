@@ -14,13 +14,14 @@ const initalState = {
     question: null,
     answer: null,
     color: '',
-    out: false
+    out: false,
+    userID: null
 }
 
 function reducer(state=initalState, action) {
     switch(action.type){
         case 'RET_LOGIN_INFO':
-            return{...state, members: action.payload.members, roomID: action.payload.roomID, waiting: action.payload.waiting, out: true}
+            return{...state, members: action.payload.members, roomID: action.payload.roomID, waiting: action.payload.waiting}
         case 'SET_USER':
             return{...state, name: action.payload}
         case 'ERROR_CRED':
@@ -45,6 +46,8 @@ function reducer(state=initalState, action) {
                 return{...state, question: null, answer: null}
         case 'PICK_COLOR':
                 return{...state, color: action.payload}
+        case 'SET_USER_INFO':
+                return{...state, members: action.payload.members, roomID: action.payload.roomID, waiting: action.payload.waiting, out: true, userID: action.payload.userID}
         default: 
             return{...state}
     }

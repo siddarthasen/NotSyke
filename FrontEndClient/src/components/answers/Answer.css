@@ -1,15 +1,34 @@
-.buttons2 {
-width: 100px;
-border-width: 2px;
-background-color: 'red';
-color: 'red';
+#card-answers {
+    border-radius: 40;
+    height: 550;
+    width: 700;
+    align-items: center;
+    border-width: 2;
+    border-color: 'black';
 }
-.MuiButton-root {
-    color: 'red';
-    background-color: 'red'
+
+#choice-buttons {
+    display: flex;
+    flex: 1;
+    align-content: center;
+    align-self: center;
+    justify-content: center;
+    font-size: 15px;
+    height: 40px;
+    border-radius: 10;
+    width: 280px;
 }
-.MuiButtonBase-root {
-    color: 'red';
-    background-color: 'red';
-    width: 300px;
+
+#bottom-buttons {
+    color: 'black';
+    flex: 1;
+    margin-left: 200;
+    margin-right: 200;
+    height: 49;
+    width: 300;
+    align-items: center;
+    font-size: 25;
+    font-family: 'Segoe Print';
+    color: 'white';
+    justify-content: center;
 }

@@ -28,105 +28,18 @@ import Zoom from '@material-ui/core/Zoom';
 let socket, color;
 
 const useStyles = makeStyles((theme) => ({
-  question: {
-    display: 'flex',
-    flex: 1,
-    justifyContent: 'center',
-    fontSize: 25,
-    padding: 15,
-    paddingLeft: 25,
-    margin: 10,
-    fontFamily: 'Segoe Print'
-  },
-  card: {
-    borderRadius: 40,
-    height: 550,
-    width: 700,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'black'
-  },
-  title: {
-    display: 'flex',
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 45,
-    fontFamily: 'Segoe Print',
-    alignContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center'
-  },
-  bar: {
-    alignSelf: 'center',
-    fontColor: 'black',
-    background: 'transparent'
-  },
-  test: {
-    color: 'white',
-    fontColor: 'black',
-    background: 'black'
-  },
-  text: {
-    padding: 5,
-    width: 300,
-    height: 50,
-    fontSize: 25,
-    borderColor: 'black',
-    borderRadius: 10,
-    borderWidth: 3,
-    fontFamily: 'Segoe Print',
-    backgroundColor: '#black',
-    marginTop: 15,
-    alignSelf: 'center',
-    color: 'white'
-  },
-  test1: {
-    color: 'black',
-    flex: 1,
-    marginLeft: 200,
-    marginRight: 200,
-    height: 49,
-    width: 300,
-    alignItems: 'center',
-    fontSize: 25,
-    fontFamily: 'Segoe Print',
-    fontColor: 'white',
-    jusitfyContent: 'center'
-  },
-  text2: {
-    color: 'black',
-    flex: 1,
-    alignItems: 'center',
-    fontSize: 25,
-    fontFamily: 'Segoe Print',
-    fontColor: 'white',
-    jusitfyContent: 'center',
-    margin: 3,
-    height: 40
-  },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
   Button: {
-    display: 'flex',
-    flex: 1,
-    alignContent: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    backgroundColor: ({color}) => `${(color - 0x000223).toString(16)}`,
     "&:hover": {
       backgroundColor: ({ color}) => `${color}`
     },
-    borderRadius: 10,
-    width: 120,
-    borderWidth: 4,
-    fontSize: 10,
+
     borderColor: ({color}) => `${(color)}`,
-    width: 30,
-    fontSize: 15
+
+
   }, 
 }));
 
@@ -135,6 +48,8 @@ const Answers = (props) => {
   color = useSelector(state => state.color)
   const classes = useStyles({color});
   //Access redux state tree:
+  let test = useSelector(state => state)
+  console.log(test)
   let members = useSelector(state => state.members)
   let creator = useSelector(state => state.creator)
   let socket = useSelector(state => state.socket)
@@ -143,6 +58,7 @@ const Answers = (props) => {
   let name = useSelector(state => state.name)
   let answer = useSelector(state => state.answer)
   let question = useSelector(state => state.question)
+  let userID = useSelector(state => state.userID)
   const [slide, setSlide] = useState(false);
   const [open, setOpen] = React.useState(false);
   
@@ -231,7 +147,8 @@ const Answers = (props) => {
   }
 
   const checkValidAnswer = (index) => {
-    if(answers[index] === answer){
+    if(ID[index] === userID){
+      console.log(userID, ID[index])
       return false
     }
     else{
@@ -248,6 +165,9 @@ const Answers = (props) => {
     }))
   }
   else{
+    //CHECK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+    dispatch({type: 'RESET_USER'})
     history.push('/')
   }
   }
@@ -290,7 +210,7 @@ if(renderPoints)
             {props => (
               <div style={props}>
             <Box border={3} borderRadius={40}>
-              <Card className={classes.card}>
+              <Card id="card-answers">
               <Typography style={{fontSize: 30,
                 fontFamily: 'Segoe Print',
                 textAlign: 'center',
@@ -310,9 +230,9 @@ if(renderPoints)
                     <Divider/>
               </List>
                 
-                {exit ? <AwesomeButton className={classes.test1} type="secondary" 
+                {exit ? <AwesomeButton id="bottom-buttons" type="secondary" 
                                       ripple onPress={movePage}>Exit</AwesomeButton> : 
-                        <AwesomeButton className={classes.test1} type="secondary" 
+                        <AwesomeButton id="bottom-buttons" type="secondary" 
                                       ripple onPress={movePage}>Next question</AwesomeButton>}
                 </Card>
               </Box>
@@ -346,8 +266,8 @@ else
                     <ListItem key={i}>
                       <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
                         <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                        {checkValidAnswer(i) ? <Button className={classes.Button} id="buttons2" variant="outlined"
-                                                 type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button id="buttons2" variant="outlined" type="secondary" className={classes.Button} disabled>{item}</Button>}
+                        {checkValidAnswer(i) ? <Button className={classes.Button} id="choice-buttons" variant="outlined"
+                                                 type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button id="choice-buttons" variant="outlined" type="secondary" className={classes.Button} disabled>{item}</Button>}
                         </Grid>
                       </Slide>
                     </ListItem>

@@ -59,12 +59,12 @@
     padding: 0px;
     margin-top: 5px;
 }
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 600px) {
     #room {
         font-size: 38px;
     }
     #waiting {
-        font-size: 19px;
+        font-size: 1px;
     }
     #member-wrap {
         width: 200px;

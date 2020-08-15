@@ -1,5 +1,4 @@
 #card-question{
-	background: grey;
 	mix-blend-mode: normal;
 	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 	border-radius: 16px;
@@ -20,13 +19,8 @@
     font-family: cursive;
     margin-left: 10px;
     margin-right: 10px;
-}
-/* what is this? */
-#title {
-    flex: 1;
-    flex-direction: 'row'; 
-    align-items: 'center'; 
-    justify-content: 'center'; 
+    margin-top: 10px;
+    width: 450px;
 }
 #question {
     line-height: 150%;
@@ -38,17 +32,25 @@
 }
 #submit-button {
     margin-top: 10px;
+    display: 'flex';
+    flex: 1px;
+    align-content: 'center';
+    align-self: 'center';
+    justify-content: 'center';
+    border-radius: 7px;
+    border-width: 1px;
+    font-size: 10px;
+    margin-bottom: 20px;
+    width: 120;
+    height: 40;
 }
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 600px) {
     #waiting {
         font-size: 15px;
     }
     #card-question {
-        height: 500px;
-        width: 330px;
-    }
-    #question-div {
-        background-color: indigo;
+        height: 450px;
+        width: 300px;
     }
     #question {
         word-wrap: break-word;
@@ -57,11 +59,8 @@
     #answer-box {
         width: 220px;
         height: 200px;
-        background-color: hotpink;
-        padding: 0px;
-        margin: 0px;
+
         position: relative ;
-        display: none;
         top:0px;
     }
     #submit-button {

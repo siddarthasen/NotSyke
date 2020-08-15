@@ -38,7 +38,6 @@ const useStyles = makeStyles({
     alignContent: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
-    backgroundColor: ({color}) => `${(color - 0x000223).toString(16)}`,
     "&:hover": {
       backgroundColor: ({ color}) => `${color}`
     },
@@ -167,8 +166,7 @@ const Waiting = (props) => {
 
   const startGame = () => { //used for creator
     if(!ready){
-    setReady(true)
-    setSlide(false)
+    setReady(true);
     dispatch(actions.startGame(roomID, socket, history, (update) => {
       history.push('/Question', {name: name, room: roomID})
     }))
@@ -192,6 +190,11 @@ window.onbeforeunload = function() {
   dispatch({type: 'RESET_USER'})
   history.push('/')
 }
+window.onpopstate = function() {
+  socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
+}
   return (
 <Grid 
   container
@@ -200,7 +203,7 @@ window.onbeforeunload = function() {
   justify="center"
   style={{ minHeight: '90vh' }}>
     <Typography id="room">RoomID: {roomID}</Typography>
-    <Zoom in={slide} out={slide}>
+    <Zoom in={slide}>
       <Card id="card-waiting">
       <Grid container alignItems="center" direction="column">
         <CardContent >
@@ -219,7 +222,8 @@ window.onbeforeunload = function() {
               </List>
         </CardContent>
         <div id="submit-button">
-          {!ready && !waiting && members && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Start Game</Button>: null}
+          {!ready && !waiting && members && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Ready!</Button> 
+                                                       : <Button id="submit-button" variant="outlined" disabled className={classes.Button} onClick={startGame}>Ready!</Button>}
           </div>
         </Grid>
       </Card>

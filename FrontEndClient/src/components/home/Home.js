@@ -32,30 +32,7 @@ const Home = ({location}) => {
 
   const classes = useStyles();
   const ENDPOINT = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-  // useEffect(() => {
-  //   const {name, room} = queryString.parse(location.search)
-  //   socket = io(ENDPOINT);
-  //   setName(name);
-  //   setRoom(room);
-  //   console.log(room, name)
-  //   socket.emit('join', {name, room}, (error) => {
-  //     // alert(error)
-  //   });
-  //   return() => {
-  //     socket.emit('disconnect');
-  //
-  //     socket.off();
-  //   }
-  // }, [ENDPOINT, location.search])
 
-
-const sendRequest = () => {
-  // console.log(name, room)
-  // socket = io(ENDPOINT);
-  //   socket.emit('join', {name, room}, (error) => {
-  //     // alert(error)
-  //   });
-}
 
   //used for displaying the UI for the homepage depending on the create/join
   const displayPrompt = (value) =>
@@ -89,7 +66,6 @@ const sendRequest = () => {
   }
 
   const handleChange = (event, newValue) => {
-    console.log(newValue)
     setValue(newValue);
   };
 

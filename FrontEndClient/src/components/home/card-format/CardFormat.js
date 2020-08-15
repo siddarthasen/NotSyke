@@ -28,7 +28,6 @@ const useStyles = makeStyles({
     flex: 1,
     alignContent: 'center',
     alignSelf: 'center',
-    backgroundColor: ({color}) => `${(color - 0x000223).toString(16)}`,
     "&:hover": {
       backgroundColor: ({ color}) => `${color}`
     },
@@ -130,7 +129,7 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   color = useSelector(state => state.out)
   const dispatch = useDispatch()
   let history = useHistory();
-  color = useSelector(state => state.color)
+  color = window.localStorage.getItem('color');
   let out = useSelector(state => state.out)
   const classes = useStyles({color});
   let error = useSelector(state=> state.error)
@@ -140,7 +139,8 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
     let num = Math.floor(Math.random() * colors.length);
     console.log('num ', num);
     num = num == 5 ? 4 : num;
-    dispatch({type: 'PICK_COLOR', payload: colors[num]})
+    window.localStorage.setItem('color', colors[num]);
+    dispatch({type: 'PICK_COLOR', payload: colors[num]});
     return colors[num];
   }
 

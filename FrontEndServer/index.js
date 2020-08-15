@@ -35,9 +35,11 @@ io.on('connection', function(socket) {
       socket.join(room);
       const roomObj = new Room(); //contains info about the room; the key is still room id
       roomList[room] = roomObj
-      roomObj.userList.push(new User(name));
+      const user = new User(name)
+      console.log(user.id)
+      roomObj.userList.push(user);
       let members = roomList[room].userList.map(({name}) => name);
-      socket.emit('waiting-info', {roomID: room, members: members, waiting: false});
+      socket.emit('user-info', {roomID: room, members: members, waiting: false, userID: user.id});
 
     }
     else if (roomList.hasOwnProperty(room)) {
@@ -47,8 +49,11 @@ io.on('connection', function(socket) {
         socket.join(room);
         if (roomList[room].inGame === false) {
         const user = new User(name);
+        console.log(user.id)
         roomList[room].userList.push(user);
         let members = roomList[room].userList.map(({name}) => name);
+        socket.emit('userID', {userID: user.id})
+        socket.emit('user-info', {roomID: room, members: members, waiting: true, userID: user.id})
         io.in(room).emit('waiting-info', {roomID: room, members: members, waiting: false});
         }
         else {
@@ -57,7 +62,7 @@ io.on('connection', function(socket) {
           let members = roomList[room].userList.map(({name}) => name);
           let temp = roomList[room].waitingRoom.map(({name}) => name);
           members = members.concat(temp);
-          socket.emit('waiting-info', {roomID: room, members: members, waiting: true})
+          socket.emit('user-info', {roomID: room, members: members, waiting: true, userID: user.id})
         }
       } else {
         socket.emit('error1', {error: "Name is already taken"});
@@ -208,9 +213,11 @@ io.on('connection', function(socket) {
       default:
         break;
     };
-    if (roomList[roomID].userList.length <= 1) {
+    if (roomList[roomID] && roomList[roomID].userList.length <= 1) {
+      console.log("her1")
 
       if(roomList[roomID].waitingRoom.length >= 0) {
+        console.log("here2")
         io.in(roomID).emit('return_home');
       }
       //create endpoint for exiting

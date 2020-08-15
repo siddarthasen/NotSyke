@@ -19,85 +19,12 @@ let socket;
 
 const useStyles = makeStyles((theme) => ({
   Button: {
-    display: 'flex',
-    flex: 1,
-    alignContent: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    backgroundColor: ({color}) => `${(color - 0x000223).toString(16)}`,
     "&:hover": {
       backgroundColor: ({ color}) => `${color}`
     },
-    borderRadius: 7,
-    width: 140,
-    height: 40,
-    borderWidth: 1,
-    fontSize: 10,
-    borderColor: ({color}) => `${(color)}`
+    borderColor: ({color}) => `${(color)}`,
   }, 
-  title: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  card: {
-    borderRadius: 40,
-    height: 550,
-    width: 700,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'black'
-  },
-  button: {
-    justifyContent: 'center',
-    fontSize: 30,
-    margin: 20
-  },
-  square: {
-    justifyContent: 'space-between'
-  },
-  answer: {
-    width: 540,
-    height: 300,
-    fontSize: 25,
-    flex: 1,
-    flexWrap: 'wrap',
-    padding: 20,
-    fontFamily: 'Segoe Print'
-    
-  },
-  question: {
-    display: 'flex',
-    flex: 1,
-    justifyContent: 'center',
-    fontSize: 25,
-    padding: 15,
-    paddingLeft: 25,
-    margin: 10,
-    fontFamily: 'Segoe Print'
-  },
-  answerBox: {
-    width: 550,
-    height: 325
-  },
-  test1: {
-    color: 'black',
-    flex: 1,
-    marginLeft: 30,
-    marginRight: 30,
-    height: 45,
-    alignItems: 'center',
-    fontSize: 20,
-    fontFamily: 'Segoe Print',
-    fontColor: 'white',
-    width: 200,
-    marginTop: 30
-  },
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
-  }
+
 }));
 
 const Game = (props) => {
@@ -170,7 +97,6 @@ window.onbeforeunload = function() {
             <InputBase
               multiline
               id="answer-box"
-              className={classes.answer}
               rows={10}
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}

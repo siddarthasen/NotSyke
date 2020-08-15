@@ -62,7 +62,7 @@ html {
 	font-weight: bold;
 }
 
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 600px) {
 	#title {
 		font-size: 30px;
 	}
