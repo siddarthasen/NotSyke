@@ -1,4 +1,15 @@
-#answer-buttons {
-width: 1000px;
+.buttons2 {
+width: 100px;
 border-width: 2px;
+background-color: 'red';
+color: 'red';
+}
+.MuiButton-root {
+    color: 'red';
+    background-color: 'red'
+}
+.MuiButtonBase-root {
+    color: 'red';
+    background-color: 'red';
+    width: 300px;
 }

@@ -24,7 +24,7 @@ import { AwesomeButton } from "react-awesome-button";
 import Box from '@material-ui/core/Box';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Beforeunload } from 'react-beforeunload';
+import Zoom from '@material-ui/core/Zoom';
 let socket, color;
 
 const useStyles = makeStyles((theme) => ({
@@ -110,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
-  answerButtons: {
+  Button: {
     display: 'flex',
     flex: 1,
     alignContent: 'center',
@@ -125,6 +125,8 @@ const useStyles = makeStyles((theme) => ({
     borderWidth: 4,
     fontSize: 10,
     borderColor: ({color}) => `${(color)}`,
+    width: 30,
+    fontSize: 15
   }, 
 }));
 
@@ -327,45 +329,35 @@ else
   clearInterval(timer)
   // setSlide(true)
   return(
-    <div>
-        <Backdrop className={classes.backdrop} open={loading}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-        <Grid item direction="column">
-          <Grid 
-          container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justify="center"
-          style={{ minHeight: '100vh' }}>
-            <Spring
-              from={{ transform: 'translate3d(0,0px,0)' }}
-              to={{ transform: 'translate3d(0,0px,0)' }}>
-              {props => (
-                <div style={props}>
-              <Card className={classes.card}>
-                <Typography className={classes.question}>{question}</Typography>
-                <div id="scroll" style={{overflow: 'auto', height: 300}}>
+    <Grid 
+  container
+  direction="column"
+  alignItems="center"
+  justify="center"
+  style={{ minHeight: '90vh' }}>
+    <Typography id="room">RoomID: {roomID}</Typography>
+    <Zoom in={slide} out={slide}>
+      <Card id="card-waiting">
+      <Grid container alignItems="center" direction="column">
+        <CardContent >
+            <Typography id="waiting">{question}</Typography>
+              <List id="scroll" style={{overflow: 'auto', height: 300}}>
                 {answers.map((item, i) => (
-                <List key={i} style={{display: 'flex', 
-                                      flex: 1, justifyContent: 'center'}}>
-                          <Slide direction="up" in={slide} 
-                                 mountOnEnter unmountOnExit timeout={1000}>                        
-                          <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                          {checkValidAnswer(i) ? <Button className={classes.answerButtons} id="answer-buttons" variant="outlined"
-                                                 type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button id="answer-buttons" className={classes.answerButtons} type="secondary" disabled>{item}</Button>}
+                    <ListItem key={i}>
+                      <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                        <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                        {checkValidAnswer(i) ? <Button className={classes.Button} id="buttons2" variant="outlined"
+                                                 type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button id="buttons2" variant="outlined" type="secondary" className={classes.Button} disabled>{item}</Button>}
                         </Grid>
-                        </Slide>
-                    </List>    ))}  </div>
-
-            </Card>
-            </div>
-              )}
-            </Spring>
-          </Grid>
+                      </Slide>
+                    </ListItem>
+                  ))}
+              </List>
+        </CardContent>
         </Grid>
-    </div>
+      </Card>
+      </Zoom>
+  </Grid>
   )
 }
 
