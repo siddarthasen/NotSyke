@@ -14,7 +14,7 @@ import { useHistory } from "react-router-dom";
 import './Question.css';
 
 
-let color
+let color;
 let socket;
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +44,7 @@ const Game = (props) => {
 let question = useSelector(state=> state.question)
 
 const [answer, setAnswer] = useState('')
-const [open, setOpen] = React.useState(false);
+const [open, setOpen] = useState(false);
   
   const dispatch = useDispatch()
   
@@ -60,7 +60,6 @@ const [open, setOpen] = React.useState(false);
 },[]);
 
 const submitAnswer = (event) => {
-  setOpen(true)
   dispatch(actions.submitAnswer(roomID, name, answer, socket, question))
   history.push('/Answers', {name: name, room: roomID, answer: answer, question: question})
 }
@@ -100,7 +99,7 @@ window.onbeforeunload = function() {
               rows={10}
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              />
+            />
            </Grid>
         </CardContent>
         <div id="submit-button-div">
