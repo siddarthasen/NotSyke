@@ -22,7 +22,7 @@ html {
 	border-radius: 40;
     height: 350px;
     width: 360px;
-	align-items: 'center';
+	align-items: center;
 	padding: 0;
 }
 
@@ -33,7 +33,7 @@ html {
 	font-size: 45px;
 	text-align: center;
 	font-family: 'Comic Sans MS', 'Comic Sans', 'cursive';
-	text-align: 'center';
+	text-align: center;
     padding: 15;
 }
 #tab-title {
@@ -55,10 +55,10 @@ html {
 	margin-bottom: 100%;
 }
 #submit-button {
-	align-items: 'center';
+	align-items: center;
 	background-color: 'black';
-	font-family: 'Chilanka', cursive;
-	justify-content: 'center';
+	font-family: 'Chilanka', 'Comic Sans MS', cursive;
+	justify-content: center;
 	font-weight: bold;
 }
 

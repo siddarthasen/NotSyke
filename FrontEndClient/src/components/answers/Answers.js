@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: ({ color}) => `${color}`
     },
 
-    borderColor: ({color}) => `${(color)}`,
+    // borderColor: ({color}) => `${(color)}`,
 
 
   }, 
@@ -73,18 +73,18 @@ const Answers = (props) => {
   const [exit, setExit] = useState(false);
   let history = useHistory();
 
-  window.onbeforeunload = function() {
-    if(renderPoints)
-    {
-      socket.emit('remove_user', {roomID: roomID, name: name, part: 'points'})
-    }
-    else
-    {
-      socket.emit('remove_user', {roomID: roomID, name: name, part: 'answers'})
-    }
-  dispatch({type: 'RESET_USER'})
-  history.push('/')
-}
+//   window.onbeforeunload = function() {
+//     if(renderPoints)
+//     {
+//       socket.emit('remove_user', {roomID: roomID, name: name, part: 'points'})
+//     }
+//     else
+//     {
+//       socket.emit('remove_user', {roomID: roomID, name: name, part: 'answers'})
+//     }
+//   dispatch({type: 'RESET_USER'})
+//   history.push('/')
+// }
 
   useEffect(() => {
     try{
@@ -160,94 +160,77 @@ const Answers = (props) => {
   const movePage = () => {
     if(!exit){
     setOpen(true)
-    dispatch(actions.nextQuestion(roomID, socket, (update) => {
-      clearInterval(timer)
+    dispatch(actions.nextQuestion(roomID, socket, () => {
       history.push('/Game', {name: name, room: roomID})
     }))
   }
   else{
     //CHECK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
-    dispatch({type: 'RESET_USER'})
-    history.push('/')
+    // socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+    // dispatch({type: 'RESET_USER'})
+    history.push('/Final')
   }
   }
 
-  const renderSentence = (player, points) => {
-    return(
-      `${player} has ${points} points`
-    )
-  }
+  // const renderSentence = (player, points) => {
+  //   return(
+  //     `${player} has ${points} points`
+  //   )
+  // }
 
-  const timer = setInterval(function(){
-    count++;
-    if(document.getElementById('loadingtext1'))
-    {
-    document.getElementById('loadingtext1').innerHTML = "Waiting for People to Answer" + new Array(count % 5).join('.');
-    }
-  }, 1000);
+
+
 
 if(renderPoints)
 {
-  clearInterval(timer)
-
-
-
   return (
-    <div>
-      <Backdrop className={classes.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-      <Grid item direction="column">
-        <Grid container
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justify="center"
-            style={{ minHeight: '100vh' }}>
-          <Spring
-            from={{ transform: 'translate3d(0,0px,0)' }}
-            to={{ transform: 'translate3d(0,0px,0)' }}>
-            {props => (
-              <div style={props}>
-            <Box border={3} borderRadius={40}>
-              <Card id="card-answers">
-              <Typography style={{fontSize: 30,
-                fontFamily: 'Segoe Print',
-                textAlign: 'center',
-                padding: 10}}>
-                  Scores
-              </Typography>
-              <List id="scroll" style={{overflow: 'auto', height: 300}}>
-                {player.map((item, i) => (
-                    <ListItem key={i} style={{margin: 2}}>
-                      <Typography 
-                        style={{display: 'flex', margin: 5, fontSize: 25, 
-                              padding: 3, justifyContent: 'left', fontFamily: 'Segoe Print'}}>
-                        {renderSentence(item, points[i])}
-                      </Typography>
+    <Grid 
+    container
+    direction="column"
+    alignItems="center"
+    justify="center"
+    style={{ minHeight: '90vh' }}>
+      <Typography id="room">RoomID: {roomID}</Typography>
+      <Zoom in={slide} out={slide}>
+        <Card id="card-waiting">
+        <Grid container alignItems="center" direction="column">
+          <CardContent >
+              <Typography id="question">Scores</Typography>
+                <List id="scroll" style={{overflow: 'auto', height: 300}}>
+                  {player.map((item, i) => (
+                    <Grid container direction="column">
+                      <ListItem key={i}>
+                      <Grid container direction="row" alignItems="center" justify="center" xs={12}>
+                        <Grid container item direction="column" xs={6}>
+                          <Grid item>
+                            <Typography>{item}</Typography>
+                          </Grid>
+                          <Grid>
+                            <Typography>HAHAHA THIS ANSWER IS FUNNY</Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Typography>{points[i]}</Typography>
+                        </Grid>
+                      </Grid>
                     </ListItem>
+                    <Divider component="li" variant="inset" />
+                    </Grid>
                     ))}
-                    <Divider/>
-              </List>
-                
-                {exit ? <AwesomeButton id="bottom-buttons" type="secondary" 
-                                      ripple onPress={movePage}>Exit</AwesomeButton> : 
-                        <AwesomeButton id="bottom-buttons" type="secondary" 
-                                      ripple onPress={movePage}>Next question</AwesomeButton>}
-                </Card>
-              </Box>
-            </div>
-            )}
-          </Spring>
-        </Grid>
-      </Grid>
-  </div>
+                </List>
+          </CardContent>
+          {exit ? <Button id="bottom-buttons" type="secondary" 
+                                         onClick={movePage}>Exit</Button> : 
+                          <Button id="bottom-buttons" type="secondary" 
+                                         onClick={movePage}>Next question</Button>}
+          </Grid>
+        </Card>
+        </Zoom>
+    </Grid>
   );
 }
 else
 {
-  clearInterval(timer)
   // setSlide(true)
   return(
     <Grid 

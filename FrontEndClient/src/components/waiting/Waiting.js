@@ -205,21 +205,18 @@ window.onpopstate = function() {
     <Typography id="room">RoomID: {roomID}</Typography>
     <Zoom in={slide}>
       <Card id="card-waiting">
-      <Grid container alignItems="center" direction="column">
+      <Grid container alignItems="center" justify="center" direction="column">
         <CardContent >
               <Typography id="waiting">Waiting for People to Join...</Typography>
-              <List id="scroll" style={{overflow: 'auto', height: 300}}>
-                {members != undefined ? members.map((item, i) => (
-                    <ListItem key={i}>
-                      <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-                        <Grid contanier jusitfy="flex-start" alignItem="flex-start" id="member-wrap">
-                        <Chip size="small" id="members" variant="outlined" avatar={<Avatar style={{backgroundColor: 'black', color: 'white', fontSize: 20}}id="avatar">{item[0]}</Avatar>} 
-                                label={item}/>
-                        </Grid>
-                      </Slide>
-                    </ListItem>
+                <List id="scroll" style={{overflow: 'auto', height: 300}}>
+                  {members != undefined ? members.map((item, i) => (
+                    <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                      <Grid container alignItems="center" justify="center" >
+                            <Typography>{item}</Typography>
+                      </Grid>
+                    </Slide>
                   )) : null}
-              </List>
+                </List>
         </CardContent>
         <div id="submit-button">
           {!ready && !waiting && members && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Ready!</Button> 
