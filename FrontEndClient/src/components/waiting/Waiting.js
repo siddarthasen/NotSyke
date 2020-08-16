@@ -206,17 +206,17 @@ window.onpopstate = function() {
     <Zoom in={slide}>
       <Card id="card-waiting">
       <Grid container alignItems="center" justify="center" direction="column">
-        <CardContent >
-              <Typography id="waiting">Waiting for People to Join...</Typography>
-                <List id="scroll" style={{overflow: 'auto', height: 300}}>
-                  {members != undefined ? members.map((item, i) => (
-                    <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-                      <Grid container alignItems="center" justify="center" >
-                            <Typography>{item}</Typography>
-                      </Grid>
-                    </Slide>
-                  )) : null}
-                </List>
+        <CardContent>
+          <Typography id="waiting">Waiting for People to Join...</Typography>
+          <List id="scroll" style={{overflow: 'auto', height: 300}}>
+            {members != undefined ? members.map((item, i) => (
+              <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                <Grid container alignItems="center" justify="center" >
+                  <Typography id="person">{item}</Typography>
+                </Grid>
+              </Slide>
+            )) : null}
+          </List>
         </CardContent>
         <div id="submit-button">
           {!ready && !waiting && members && members.length > 1 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={startGame}>Ready!</Button> 

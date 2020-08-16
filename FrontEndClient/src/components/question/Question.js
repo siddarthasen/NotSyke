@@ -33,7 +33,6 @@ const Game = (props) => {
   if(props.location.state == undefined){
     history.push('/')
   }
-  console.log(props.match)
   let members = useSelector(state=> state.members)
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
@@ -73,6 +72,7 @@ const submitAnswer = (event) => {
 //     history.push('/')
 //   // }
 // } 
+
 window.onbeforeunload = function() {
       socket.emit('remove_user', {roomID: roomID, name: name, part: 'questions'})
     dispatch({type: 'RESET_USER'})

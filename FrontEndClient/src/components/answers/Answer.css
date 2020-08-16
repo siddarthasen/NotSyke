@@ -1,4 +1,4 @@
-#question {
+#score-title {
     line-height: 150%;
     font-size: large;
     word-wrap: break-word;
@@ -13,7 +13,14 @@
     height: 450px;
     width: 560px;
 	align-items: center;
-	padding: 0;
+    padding: 0;
+    position: relative;
+}
+#player {
+    font-weight: bold;
+}
+#line {
+    
 }
 
 #choice-buttons {

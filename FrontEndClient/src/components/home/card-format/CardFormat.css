@@ -52,7 +52,7 @@ html {
 	font-size: medium;
 }
 #submit-button-div {
-	margin-bottom: 100%;
+	margin-bottom: 0px;
 }
 #submit-button {
 	align-items: center;
@@ -60,6 +60,11 @@ html {
 	font-family: 'Chilanka', 'Comic Sans MS', cursive;
 	justify-content: center;
 	font-weight: bold;
+}
+#error{
+	margin-top: 12px;
+	color: red;
+	font-size:12px;
 }
 
 @media screen and (max-width: 600px) {
@@ -82,5 +87,10 @@ html {
 	}
 	#submit-button {
 		font-size: 1x;
+		margin-bottom: 0px;
 	}
+	#error {
+		margin-top: 8px;
+	}
+	
 }

@@ -15,7 +15,9 @@ const initalState = {
     answer: null,
     color: '',
     out: false,
-    userID: null
+    userID: null,
+    members: [],
+    points: []
 }
 
 function reducer(state=initalState, action) {
@@ -48,6 +50,8 @@ function reducer(state=initalState, action) {
                 return{...state, color: action.payload}
         case 'SET_USER_INFO':
                 return{...state, members: action.payload.members, roomID: action.payload.roomID, waiting: action.payload.waiting, out: true, userID: action.payload.userID}
+        case 'SET_FINAL_SCORES':
+                return{...state, members: action.payload.player, points: action.payload.points}
         default: 
             return{...state}
     }

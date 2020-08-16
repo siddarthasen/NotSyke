@@ -7,7 +7,6 @@ const http = require('http');
 
 const {addUser, removeUser, getUser, getUsersInRoom, generateRoomID} = require('./groups');
 const PORT = process.env.PORT || 5000;
-console.log(PORT)
 
 const router = require('./router');
 const { disconnect } = require('process');
@@ -36,7 +35,6 @@ io.on('connection', function(socket) {
       const roomObj = new Room(); //contains info about the room; the key is still room id
       roomList[room] = roomObj
       const user = new User(name)
-      console.log(user.id)
       roomObj.userList.push(user);
       let members = roomList[room].userList.map(({name}) => name);
       socket.emit('user-info', {roomID: room, members: members, waiting: false, userID: user.id});
@@ -49,7 +47,6 @@ io.on('connection', function(socket) {
         socket.join(room);
         if (roomList[room].inGame === false) {
         const user = new User(name);
-        console.log(user.id)
         roomList[room].userList.push(user);
         let members = roomList[room].userList.map(({name}) => name);
         socket.emit('userID', {userID: user.id})
@@ -103,7 +100,6 @@ io.on('connection', function(socket) {
     }
     }
     catch(err){
-      console.log(err)
     }
   });
 
@@ -142,8 +138,11 @@ io.on('connection', function(socket) {
       //   if (keyA > keyB) return 1;
       //   return 0;
       // });
-      io.in(room).emit('displayPoints', {choiceInfo: roomList[room].sortByPoints().map(each => ({name: each.name, points: each.points, exit: exit}))});
-      exit ? delete roomList[room] : null;
+      io.in(room).emit('displayPoints', {choiceInfo: roomList[room].sortByPoints().map(each => ({name: each.name, points: each.points, answer: each.answer, exit: exit}))});
+      // if(roomList[room].waitingRoom.length >= 0) {
+      //   io.in(room).emit('return_home');
+      // }
+      // exit ? delete roomList[room] : null;
     };
  };
 
@@ -168,24 +167,26 @@ io.on('connection', function(socket) {
   }
 }
 
- socket.on('remove_user', function({roomID, name, part}) {   
+ socket.on('remove_user', function({roomID, name, part}) {  
    let removeIndex
    if (roomList[roomID]) {
     //  if(roomList[roomID].userList.findIndex((user) => user.name === name) != -1){
     //   removeIndex = roomList[roomID].userList.findIndex((user) => user.name === name)
     //   roomList[roomID].userList.splice(removeIndex, 1);
     //  }
+    console.log(part !== 'waiting')
     if(part !== 'waiting'){
       //for the people who r in the wating room, emit who left
       if(roomList[roomID].userList[roomList[roomID].userList.findIndex((user) => user.name === name)].answers !== null && part === 'answers'){
         roomList[roomID].answers--;
       }
-      if(roomList[roomID].userList[roomList[roomID].userList.findIndex((user) => user.name === name)].player_ready === true && part === 'points'){
+      else if(roomList[roomID].userList[roomList[roomID].userList.findIndex((user) => user.name === name)].player_ready === true && part === 'points'){
         roomList[roomID].player_ready--;
       }
       roomList[roomID].userList.splice(roomList[roomID].userList.findIndex((user) => user.name === name), 1);
+      console.log(roomList)
     }
-    // roomList[roomID].userList.length ? null : delete roomList[roomID];
+    roomList[roomID].userList.length || roomList[roomID].waitingRoom.length ? null : delete roomList[roomID];
     switch (part) {
       case 'waiting':
         if (roomList[roomID].userList.findIndex((user) => user.name === name) >= 0) {
@@ -213,11 +214,9 @@ io.on('connection', function(socket) {
       default:
         break;
     };
-    if (roomList[roomID] && roomList[roomID].userList.length <= 1) {
-      console.log("her1")
-
+    if ((roomList[roomID] && roomList[roomID].userList.length <= 1 && part !== 'end') || (roomList[roomID] && roomList[roomID].userList.length < 1 && part === 'end')) {
+      console.log("REMOVING A WAITING ROOM PLAYER")
       if(roomList[roomID].waitingRoom.length >= 0) {
-        console.log("here2")
         io.in(roomID).emit('return_home');
       }
       //create endpoint for exiting

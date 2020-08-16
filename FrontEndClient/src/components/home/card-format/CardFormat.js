@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -12,9 +11,6 @@ import TextField from '@material-ui/core/TextField';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import './CardFormat.css'
-import { AwesomeButton } from "react-awesome-button";
-import Box from '@material-ui/core/Box';
-import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../../store/actions';
 import { Button } from '@material-ui/core';
@@ -36,6 +32,7 @@ const useStyles = makeStyles({
     borderWidth: 1,
     fontSize: 10,
     borderColor: ({color}) => `${(color)}`,
+    marginBottom: '0 !important'
   }, 
   bar: {
     alignSelf: 'center',
@@ -78,7 +75,15 @@ const joinRoom = (buttonName, room, name, history, dispatch) => {
   }
 }
 
-const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) => {
+function handleKeyPress(event, buttonName, room, name, history, dispatch) {
+  if(event.key === 'Enter'){
+    joinRoom(buttonName, room, name, history, dispatch)
+  }
+}
+
+const RenderRoom = ({value, classes, name, setName, room, setRoom, history, dispatch}) => {
+
+  
   if(value === 0)
   {
   return(
@@ -91,6 +96,7 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) =>
           id="username"
           placeholder="Name"
           onChange={(e) => setName(e.target.value)}
+          onKeyPress={(e) => {handleKeyPress(e, 'Join', room, name, history, dispatch)}}
         />
       </div>
       <div className="textboxes">
@@ -98,6 +104,7 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) =>
           id="password"
           placeholder="Room Code"
           onChange={(e) => setRoom(e.target.value)}
+          onKeyPress={(e) => {handleKeyPress(e, 'Join', room, name, history, dispatch)}}
         />
       </div>
     </Grid>
@@ -116,12 +123,14 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, dispatch}) =>
             id="username"
             placeholder="Username"
             onChange={(e) => setName(e.target.value)}
+            onKeyPress={(e) => {handleKeyPress(e, 'Create Room', room, name, history, dispatch)}}
           />
         </div>
       </Grid>
       )
   }
 }
+
 
 
 
@@ -137,7 +146,6 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   function backgroundColor() {
     let colors = ['#B297FF', '#82D9FF', '#E85050', 'rgba(4, 191, 16, 0.6)', '#FFD967'];
     let num = Math.floor(Math.random() * colors.length);
-    console.log('num ', num);
     num = num == 5 ? 4 : num;
     window.localStorage.setItem('color', colors[num]);
     dispatch({type: 'PICK_COLOR', payload: colors[num]});
@@ -163,6 +171,7 @@ const appBar = {
   document.body.style.background = backgroundColor();
   }, [])
 
+
   return (
   <Grid 
   container
@@ -187,15 +196,15 @@ const appBar = {
         <CardContent >
           <RenderRoom value={value} classes={classes} 
                       name={name} setName={setName} 
-                      setRoom={setRoom} room={room}/>
+                      setRoom={setRoom} room={room} history={history} dispatch={dispatch}/>
         </CardContent>
           <div id="submit-button-div">
             <Button id="submit-button" variant="outlined" className={classes.Button}
               onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
             </Button>
           </div>
+          {!value ? <Typography id="error">{error}</Typography> : null }
         </Grid>
-        <Typography>{error}</Typography>
       </Card>
       </Grow>
   </Grid>

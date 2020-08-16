@@ -52,8 +52,9 @@
     background-color: 'white';
     border: 0px;
 }
-#people-list {
-    align-content: center;
+#person {
+    font-size: 30px;
+    margin-bottom: 10px;
 }
 @media screen and (max-width: 600px) {
     #room {
@@ -68,5 +69,9 @@
     }
     #members {
         font-size: 20px;
+    }
+    #person {
+        font-size: 25px;
+        
     }
 }

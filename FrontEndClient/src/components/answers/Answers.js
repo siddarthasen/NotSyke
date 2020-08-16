@@ -37,10 +37,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: ({ color}) => `${color}`
     },
-
     // borderColor: ({color}) => `${(color)}`,
-
-
   }, 
 }));
 
@@ -50,19 +47,18 @@ const Answers = (props) => {
   const classes = useStyles({color});
   //Access redux state tree:
   let test = useSelector(state => state)
-  console.log(test)
   let members = useSelector(state => state.members)
   let creator = useSelector(state => state.creator)
   let socket = useSelector(state => state.socket)
   let roomID = useSelector(state => state.roomID)
   let loading = useSelector(state => state.loading)
   let name = useSelector(state => state.name)
-  let answer = useSelector(state => state.answer)
   let question = useSelector(state => state.question)
   let userID = useSelector(state => state.userID)
+  let temp = useSelector(state => state)
+  const [display, setDisplay] = useState(false);
   const [slide, setSlide] = useState(false);
   const [open, setOpen] = React.useState(false);
-  
   const dispatch = useDispatch()
   const [ID, setID] = useState([]);
   const [answers, setAnswers] = useState([])
@@ -70,21 +66,22 @@ const Answers = (props) => {
   const [renderPoints, setrenderPoints] = useState(false)
   const [points, setPoints] = useState([])//place in redux so we can dd animation of number increasing
   const [player, setPlayers] = useState([]);
+  const [useranswer, setuserAnswers] = useState([]);
   const [exit, setExit] = useState(false);
   let history = useHistory();
 
-//   window.onbeforeunload = function() {
-//     if(renderPoints)
-//     {
-//       socket.emit('remove_user', {roomID: roomID, name: name, part: 'points'})
-//     }
-//     else
-//     {
-//       socket.emit('remove_user', {roomID: roomID, name: name, part: 'answers'})
-//     }
-//   dispatch({type: 'RESET_USER'})
-//   history.push('/')
-// }
+  window.onbeforeunload = function() {
+    if(renderPoints)
+    {
+      socket.emit('remove_user', {roomID: roomID, name: name, part: 'points'})
+    }
+    else
+    {
+      socket.emit('remove_user', {roomID: roomID, name: name, part: 'answers'})
+    }
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
+}
 
   useEffect(() => {
     try{
@@ -93,6 +90,7 @@ const Answers = (props) => {
       let id = answerInfo.answerInfo.map(({id}) => id) 
       setAnswers(answer)
       setID(id)
+      setDisplay(true)
       setSlide(true)
     })
   }
@@ -116,14 +114,17 @@ const Answers = (props) => {
     try{
     socket.on('displayPoints', (choiceInfo) => {
       dispatch({type: 'PASS_SCREEN'})
+      console.log(choiceInfo)
       if(renderPoints === false)
       {
         let players = choiceInfo.choiceInfo.map(({name}) => name)
         let points = choiceInfo.choiceInfo.map(({points}) => points) 
+        let answer = choiceInfo.choiceInfo.map(({answer}) => answer) 
         let exit = choiceInfo.choiceInfo[0].exit
-        console.log(choiceInfo)
         setPlayers(players)
         setPoints(points)
+        setuserAnswers(answer)
+        dispatch({type: 'SET_FINAL_SCORES', payload: {player: players, points: points}})
         setrenderPoints(true)
         setExit(exit)
       }
@@ -133,13 +134,9 @@ const Answers = (props) => {
   catch(err){
     history.push('/')
   }
-
   })
 
-  function shuffle(array) {
-    array.sort(() => Math.random() - 0.5);
-    return array
-  }
+
 
   const chooseAnswer = (index) => {
       setOpen(true)
@@ -149,7 +146,6 @@ const Answers = (props) => {
 
   const checkValidAnswer = (index) => {
     if(ID[index] === userID){
-      console.log(userID, ID[index])
       return false
     }
     else{
@@ -178,9 +174,6 @@ const Answers = (props) => {
   //   )
   // }
 
-
-
-
 if(renderPoints)
 {
   return (
@@ -194,33 +187,35 @@ if(renderPoints)
       <Zoom in={slide} out={slide}>
         <Card id="card-waiting">
         <Grid container alignItems="center" direction="column">
-          <CardContent >
-              <Typography id="question">Scores</Typography>
-                <List id="scroll" style={{overflow: 'auto', height: 300}}>
-                  {player.map((item, i) => (
-                    <Grid container direction="column">
-                      <ListItem key={i}>
-                      <Grid container direction="row" alignItems="center" justify="center" xs={12}>
-                        <Grid container item direction="column" xs={6}>
-                          <Grid item>
-                            <Typography>{item}</Typography>
-                          </Grid>
-                          <Grid>
-                            <Typography>HAHAHA THIS ANSWER IS FUNNY</Typography>
-                          </Grid>
+          <CardContent>
+            <Typography id="score-title">Scores</Typography>
+            <List id="scroll" style={{overflow: 'auto', height: 300}}>
+              {player.map((item, i) => (
+                <Grid container direction="column">
+                  <ListItem key={i}>
+                    <Grid container direction="row" alignItems="center" 
+                          justify="space-around" xs={12}>
+                      <Grid container item direction="column" 
+                                      jusitfy="center" xs={6}>
+                        <Grid item>
+                          <Typography id="player">{item}</Typography>
                         </Grid>
-                        <Grid item xs={6}>
-                          <Typography>{points[i]}</Typography>
+                        <Grid>
+                          <Typography>{useranswer[i]}</Typography>
                         </Grid>
                       </Grid>
-                    </ListItem>
-                    <Divider component="li" variant="inset" />
+                      <Grid item xs={6} justify="center">
+                        <Typography>{points[i]}</Typography>
+                      </Grid>
                     </Grid>
-                    ))}
-                </List>
+                </ListItem>
+                <Divider component="li" variant="inset" id="line" />
+                </Grid>
+                ))}
+            </List>
           </CardContent>
           {exit ? <Button id="bottom-buttons" type="secondary" 
-                                         onClick={movePage}>Exit</Button> : 
+                                         onClick={movePage}>Who won???</Button> : 
                           <Button id="bottom-buttons" type="secondary" 
                                          onClick={movePage}>Next question</Button>}
           </Grid>
@@ -240,27 +235,33 @@ else
   justify="center"
   style={{ minHeight: '90vh' }}>
     <Typography id="room">RoomID: {roomID}</Typography>
-    <Zoom in={slide} out={slide}>
-      <Card id="card-waiting">
-      <Grid container alignItems="center" direction="column">
-        <CardContent >
-            <Typography id="question">{question}</Typography>
-              <List id="scroll" style={{overflow: 'auto', height: 300}}>
-                {answers.map((item, i) => (
-                    <ListItem key={i}>
-                      <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-                        <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                        {checkValidAnswer(i) ? <Button className={classes.Button} id="choice-buttons" variant="outlined"
-                                                 type="secondary" onClick={() => chooseAnswer(i)}>{item}</Button> : <Button id="choice-buttons" variant="outlined" type="secondary" className={classes.Button} disabled>{item}</Button>}
-                        </Grid>
-                      </Slide>
-                    </ListItem>
-                  ))}
-              </List>
-        </CardContent>
+    <Card id="card-waiting">
+    {display ? <Grid container alignItems="center" direction="column">
+      <CardContent>
+        <Typography id="question">{question}</Typography>
+        <List id="scroll" style={{overflow: 'auto', height: 300}}>
+          {answers.map((item, i) => (
+              <ListItem key={i}>
+                <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                  <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                  {!choice && checkValidAnswer(i) ? <Button className={classes.Button} onClick={() => chooseAnswer(i)} id="choice-buttons" variant="outlined"
+                                           type="secondary" >{item}</Button> 
+                                       : <Button id="choice-buttons" variant="outlined" type="secondary" disabled
+                                                 className={classes.Button} >{item}</Button>}
+                  </Grid>
+                </Slide>
+              </ListItem>
+            ))}
+        </List>
+      </CardContent>
+      </Grid> :
+      <CardContent>
+        <Grid container>
+          <Typography>Waiting for People</Typography>
         </Grid>
-      </Card>
-      </Zoom>
+      </CardContent>
+      }
+    </Card>
   </Grid>
   )
 }

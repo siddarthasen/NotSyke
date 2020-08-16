@@ -32,7 +32,6 @@ const addUser = ({id, name, room}) =>
   }
 
   const user = new User(id, name, room);
-  console.log(user)
   users.push(user)
   return {user}
 }
