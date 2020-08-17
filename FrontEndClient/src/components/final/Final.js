@@ -136,38 +136,35 @@ const Final = (props) => {
             <Card id="card-final">
             <Grid container alignItems="center" direction="column">
               <CardContent >
-                  <Typography id="question">The Winner is... </Typography>
-                    <List id="scroll" style={{overflow: 'auto', height: 300}}>
-                    <Typography 
-                            style={{display: 'flex', margin: 5, fontSize: 25, 
-                                  padding: 3, justifyContent: 'left', fontFamily: 'Segoe Print'}}>
-                            The winner is...
-                    </Typography>
-                    {winners ? winners.map((item, i) => (
+                  <Typography id="winner">The Winner is... </Typography>
+                  <List id="scroll" style={{overflow: 'auto', height: 300}}>
+                  {winners ? winners.map((item, i) => (
+                      <ListItem key={i}>
+                        <Typography>{item}</Typography>
+                        <Typography>{points[i]}</Typography>
+                        <Grid direction="row">
+                          <Grid item xs={6}>
+                            <Typography>{item}</Typography>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Typography>{points[i]}</Typography>
+                          </Grid>
+                        </Grid>
+                      </ListItem>
+                      )): null}
+                    {players ? players.map((item, i) => (
                         <ListItem key={i}>
-                          <Grid direction="row">
-                            <Grid item xs={6}>
-                              <Typography>{item}</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography>{points[i]}</Typography>
-                            </Grid>
+                        <Grid direction="row">
+                          <Grid item xs={6}>
+                            <Typography>{item}</Typography>
                           </Grid>
-                        </ListItem>
-                        )): null}
-                      {players ? players.map((item, i) => (
-                          <ListItem key={i}>
-                          <Grid direction="row">
-                            <Grid item xs={6}>
-                              <Typography>{item}</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography>{points[i]}</Typography>
-                            </Grid>
+                          <Grid item xs={6}>
+                            <Typography>{points[i]}</Typography>
                           </Grid>
-                        </ListItem>
-                        )): null}
-                    </List>
+                        </Grid>
+                      </ListItem>
+                      )): null}
+                  </List>
               </CardContent>
               <Button id="bottom-buttons" type="secondary" onClick={movePage}>Exit</Button>
               </Grid>

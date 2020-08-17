@@ -1,3 +1,8 @@
+#room {
+    font-size: 30px;
+    font-family: 'Chilanka', cursive;
+    margin-bottom: 15px;
+}
 #question {
     line-height: 150%;
     font-size: large;

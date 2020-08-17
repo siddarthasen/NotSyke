@@ -34,18 +34,9 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
   },
   Button: {
-    display: 'flex',
-    flex: 1,
-    alignContent: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
     "&:hover": {
       backgroundColor: ({ color}) => `${color}`
     },
-    borderRadius: 7,
-    width: 120,
-    borderWidth: 1,
-    fontSize: 10,
     borderColor: ({color}) => `${(color)}`
   }, 
 }));
@@ -77,6 +68,7 @@ const Answers = (props) => {
   const [player, setPlayers] = useState([]);
   const [useranswer, setuserAnswers] = useState([]);
   const [exit, setExit] = useState(false);
+  const [clicked, setClicked] = useState(false)
   let history = useHistory();
 
   window.onbeforeunload = function() {
@@ -111,7 +103,7 @@ const Answers = (props) => {
   useEffect(() => {
     try{
     socket.on('start', (start) => {
-      history.push('/Game', {name: name, room: roomID})
+      history.push('/Question', {name: name, room: roomID})
     })
     }
     catch(err){
@@ -163,10 +155,12 @@ const Answers = (props) => {
   }
 
   const movePage = () => {
+    console.log(exit)
     if(!exit){
     setOpen(true)
-    dispatch(actions.nextQuestion(roomID, socket, () => {
-      history.push('/Game', {name: name, room: roomID})
+    setClicked(true)
+    dispatch(actions.nextQuestion(roomID, socket, name, history, () => {
+      history.push('/Question')
     }))
   }
   else{
@@ -194,7 +188,7 @@ if(renderPoints)
     style={{ minHeight: '90vh' }}>
       <Typography id="room">RoomID: {roomID}</Typography>
       <Zoom in={slide} out={slide}>
-        <Card id="card-waiting">
+        <Card id="card-answer">
         <Grid container alignItems="center" direction="column"></Grid>
           <CardContent>
             <Typography id="score-title">Scores</Typography>
@@ -219,10 +213,9 @@ if(renderPoints)
             </List>
           </CardContent>
           {exit ? <Button id="bottom-buttons" type="secondary" className={classes.Button}
-                                         onClick={movePage}>Who won???</Button> : 
-                          <Button id="bottom-buttons" type="secondary" className={classes.Button}
-                                         onClick={movePage}>Next question</Button>}
-          
+                          onClick={movePage} >Who won???</Button> : 
+                  <Button id="bottom-buttons" type="secondary" className={classes.Button}
+                          onClick={movePage} disabled={clicked} >Next question</Button>}
         </Card>
         </Zoom>
     </Grid>
@@ -239,7 +232,7 @@ else
   justify="center"
   style={{ minHeight: '90vh' }}>
     <Typography id="room">RoomID: {roomID}</Typography>
-    <Card id="card-waiting">
+    <Card id="card-answer">
     {display ? <Grid container alignItems="center" direction="column">
       <CardContent>
         <Typography id="question">{question}</Typography>

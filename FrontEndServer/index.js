@@ -113,6 +113,7 @@ io.on('connection', function(socket) {
  function submitAnswer(room, name, answer, disconnect) {
    try{
         if (!disconnect) {
+          console.log(room, name, answer)
         roomList[room].userList.find((user) => user.name === name).answer = answer;
         roomList[room].answers++;
         }
@@ -155,6 +156,7 @@ io.on('connection', function(socket) {
  function favoriteAnswerChoice(room, disconnect, name) {
    try{
       if (!disconnect) {
+        console.log(room, disconnect, name)
         roomList[room].player_ready++;
         roomList[room].userList[roomList[room].userList.findIndex((user) => user.name === name)].done = true
       }

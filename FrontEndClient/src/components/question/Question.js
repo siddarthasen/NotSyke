@@ -30,9 +30,6 @@ const useStyles = makeStyles((theme) => ({
 const Game = (props) => {
   let history = useHistory();
   //Access redux state tree:
-  if(props.location.state == undefined){
-    history.push('/')
-  }
   let members = useSelector(state=> state.members)
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
@@ -60,6 +57,7 @@ const [open, setOpen] = useState(false);
 },[]);
 
 const submitAnswer = (event) => {
+  console.log(name)
   dispatch(actions.submitAnswer(roomID, name, answer, socket, question))
   history.push('/Answers', {name: name, room: roomID, answer: answer, question: question})
 }

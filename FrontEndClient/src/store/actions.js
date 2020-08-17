@@ -3,12 +3,11 @@ export const sendLogIn = (type, name, room, socket, history) => async dispatch =
     const response = {}
     socket.emit('join', {type: type, name: name, room: room});
     socket.on('user-info', (response) => {
-        console.log(response)
         dispatch({type: 'SET_USER_INFO', payload: response})
+        dispatch({type: 'SET_USER', payload: name})
         history.push('/Waiting', {type: type, name: name, room: room})
     })
     socket.on('waiting-info', (response) => {
-        console.log(response)
         dispatch({type: 'RET_LOGIN_INFO', payload: response})
         dispatch({type: 'SET_USER', payload: name})
       })
@@ -39,7 +38,7 @@ export const startGame = (room, socket, history, callback) => async dispatch => 
     }
 }
 
-export const nextQuestion = (room, socket, history, name, callback) => async dispatch => {
+export const nextQuestion = (room, socket, name, history, callback) => async dispatch => {
     try{
     socket.emit('ready', {room: room, disconnect: false, name: name});
     dispatch({type: 'WAITING_PLAYERS'});
