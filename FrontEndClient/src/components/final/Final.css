@@ -3,7 +3,7 @@
     font-family: 'Chilanka', cursive;
     margin-bottom: 15px;
 }
-#winner {
+#winner-title {
     line-height: 150%;
     font-size: 22px;
     word-wrap: break-word;
@@ -23,9 +23,32 @@
 	mix-blend-mode: normal;
 	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 	border-radius: 16px;
-	border-radius: 40px;
     height: 450px;
     width: 360px;
 	align-items: center;
 	padding: 0px;
+}
+#winner-info-final {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
+    margin-top: 2.5%; 
+    width: 275px;
+}
+#loser-info-final {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
+    margin-top: 2.5%; 
+    width: 275px;
+}
+
+#winner-final {
+    font-size: large;
+    color: green;
+
+}
+#loser-final {
+    font-size: 13px;
+    color: red;
 }

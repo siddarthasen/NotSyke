@@ -64,7 +64,7 @@ io.on('connection', function(socket) {
         socket.emit('error1', {error: "Name is already taken"});
       }
     } else {
-        socket.emit('error1', {error: 'no room found'});
+        socket.emit('error1', {error: 'No room found'});
       }
     
   });

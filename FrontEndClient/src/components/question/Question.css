@@ -42,10 +42,11 @@
     justify-content: center;
     border-radius: 7px;
     border-width: 1px;
-    font-size: 10px;
+    font-size: 15px;
     margin-bottom: 20px;
-    width: 120;
-    height: 40;
+    width: 120px;
+    height: 40px;
+    
 }
 
 @media screen and (max-width: 600px) {

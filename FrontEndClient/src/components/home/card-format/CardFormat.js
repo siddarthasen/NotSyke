@@ -148,10 +148,11 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
 
   function backgroundColor() {
     let colors = ['#B297FF', '#82D9FF', '#E85050', 'rgba(4, 191, 16, 0.6)', '#FFD967'];
+    let secondaryColors = ['#DED2FF', '#C5EDFF', '#E78686', '#BCE4BE', '#FFF3CE'];
     let num = Math.floor(Math.random() * colors.length);
     num = num == 5 ? 4 : num;
     window.localStorage.setItem('color', colors[num]);
-    dispatch({type: 'PICK_COLOR', payload: colors[num]});
+    dispatch({type: 'PICK_COLOR', payload: {primary: colors[num], secondary: secondaryColors[num]}});
     return colors[num];
   }
 
@@ -202,7 +203,7 @@ const appBar = {
                       setRoom={setRoom} room={room} history={history} dispatch={dispatch}/>
         </CardContent>
           <div id="submit-button-div">
-            <Button id="submit-button" variant="outlined" className={classes.Button}
+            <Button id="submit-button-home" variant="outlined" className={classes.Button}
               onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
             </Button>
           </div>

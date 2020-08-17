@@ -51,7 +51,7 @@ html {
 #submit-button-div {
 	margin-bottom: 0px;
 }
-#submit-button {
+#submit-button-home {
 	align-items: center;
 	background-color: 'black';
 	font-family: 'Chilanka', 'Comic Sans MS', cursive;
@@ -61,7 +61,7 @@ html {
 #error{
 	margin-top: 12px;
 	color: red;
-	font-size:12px;
+	font-size:13px;
 }
 
 @media screen and (max-width: 600px) {

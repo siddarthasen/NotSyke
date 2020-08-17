@@ -26,7 +26,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Zoom from '@material-ui/core/Zoom';
 import './Answer.css';
-let socket, color;
+import Modal from '@material-ui/core/Modal';
+let socket, color, secondaryColor;
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -38,13 +39,17 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: ({ color}) => `${color}`
     },
     borderColor: ({color}) => `${(color)}`
-  }, 
+  },
+  modal: {
+    backgroundColor: ({ secondaryColor}) => `${secondaryColor}`
+  } 
 }));
 
 const Answers = (props) => {
   var count = 0;
   color = useSelector(state => state.color)
-  const classes = useStyles({color});
+  secondaryColor = useSelector(state => state.secondaryColor)
+  const classes = useStyles({color,secondaryColor});
   //Access redux state tree:
   let test = useSelector(state => state)
   let members = useSelector(state => state.members)
@@ -69,6 +74,7 @@ const Answers = (props) => {
   const [useranswer, setuserAnswers] = useState([]);
   const [exit, setExit] = useState(false);
   const [clicked, setClicked] = useState(false)
+  const rootRef = useRef(null);
   let history = useHistory();
 
   window.onbeforeunload = function() {
@@ -212,10 +218,12 @@ if(renderPoints)
                 ))}
             </List>
           </CardContent>
-          {exit ? <Button id="bottom-buttons" type="secondary" className={classes.Button}
+          <div id="button-div">
+          {exit ? <Button id="bottom-buttons" type="secondary" variant="outlined" className={classes.Button}
                           onClick={movePage} >Who won???</Button> : 
-                  <Button id="bottom-buttons" type="secondary" className={classes.Button}
+                  <Button id="bottom-buttons" type="secondary" variant="outlined" className={classes.Button}
                           onClick={movePage} disabled={clicked} >Next question</Button>}
+                          </div>
         </Card>
         </Zoom>
     </Grid>
@@ -254,13 +262,26 @@ else
         </List>
       </CardContent>
       </Grid> :
-      <CardContent>
-        <Grid container>
-          <Typography>Waiting for People</Typography>
+      <Grid container alignItems="center" direction="column">
+        <CardContent>
+          <div id="question-div">
+            <Typography id="question">{question}</Typography>
+          </div> 
+          <div id="waiting-question" ref={rootRef}>
+            <Modal
+              open
+              aria-labelledby="server-modal-title"
+              aria-describedby="server-modal-description"
+              className={classes.modal}
+              container={() => rootRef.current}
+              >
+                <Typography>Waiting For Answers...</Typography>
+              </Modal>
+           </div>
+        </CardContent>
         </Grid>
-      </CardContent>
       }
-    </Card>
+      </Card>
   </Grid>
   )
 }

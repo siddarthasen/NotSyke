@@ -89,7 +89,7 @@ const Final = (props) => {
       obj.points = points.shift();
       winners.push(obj);
       while (players) {
-        if (points[0] < retArray[0].points) {
+        if (points[0] < winners[0].points) {
           while (players) {
             let obj = {};
             obj.player = players.shift();
@@ -136,32 +136,22 @@ const Final = (props) => {
             <Card id="card-final">
             <Grid container alignItems="center" direction="column">
               <CardContent >
-                  <Typography id="winner">The Winner is... </Typography>
+                  <Typography id="winner-title">The Winner is... </Typography>
                   <List id="scroll" style={{overflow: 'auto', height: 300}}>
                   {winners ? winners.map((item, i) => (
                       <ListItem key={i}>
-                        <Typography>{item}</Typography>
-                        <Typography>{points[i]}</Typography>
-                        <Grid direction="row">
-                          <Grid item xs={6}>
-                            <Typography>{item}</Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography>{points[i]}</Typography>
-                          </Grid>
-                        </Grid>
+                        <div id="winner-info-final">
+                          <Typography id="winner-final">{item}</Typography>
+                          <Typography id="winner-final">{points[i]}</Typography>
+                        </div>
                       </ListItem>
                       )): null}
                     {players ? players.map((item, i) => (
                         <ListItem key={i}>
-                        <Grid direction="row">
-                          <Grid item xs={6}>
-                            <Typography>{item}</Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography>{points[i]}</Typography>
-                          </Grid>
-                        </Grid>
+                          <div id="loser-info-final">
+                            <Typography id="loser-final">{item}</Typography>
+                            <Typography id="loser-final">{points[i]}</Typography>
+                          </div>
                       </ListItem>
                       )): null}
                   </List>
