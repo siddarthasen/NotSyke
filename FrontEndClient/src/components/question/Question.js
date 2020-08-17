@@ -99,6 +99,7 @@ window.onbeforeunload = function() {
               rows={10}
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
+              inputProps={{maxLength :120}}
             />
            </Grid>
         </CardContent>

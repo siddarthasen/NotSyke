@@ -34,10 +34,19 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
   },
   Button: {
+    display: 'flex',
+    flex: 1,
+    alignContent: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
     "&:hover": {
       backgroundColor: ({ color}) => `${color}`
     },
-    // borderColor: ({color}) => `${(color)}`,
+    borderRadius: 7,
+    width: 120,
+    borderWidth: 1,
+    fontSize: 10,
+    borderColor: ({color}) => `${(color)}`
   }, 
 }));
 
@@ -186,39 +195,34 @@ if(renderPoints)
       <Typography id="room">RoomID: {roomID}</Typography>
       <Zoom in={slide} out={slide}>
         <Card id="card-waiting">
-        <Grid container alignItems="center" direction="column">
+        <Grid container alignItems="center" direction="column"></Grid>
           <CardContent>
             <Typography id="score-title">Scores</Typography>
             <List id="scroll" style={{overflow: 'auto', height: 300}}>
               {player.map((item, i) => (
                 <Grid container direction="column">
                   <ListItem key={i}>
-                    <Grid container direction="row" alignItems="center" 
-                          justify="space-around" xs={12}>
-                      <Grid container item direction="column" 
-                                      jusitfy="center" xs={6}>
-                        <Grid item>
-                          <Typography id="player">{item}</Typography>
-                        </Grid>
-                        <Grid>
-                          <Typography>{useranswer[i]}</Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={6} justify="center">
-                        <Typography>{points[i]}</Typography>
-                      </Grid>
-                    </Grid>
+                    <div id="all-info">
+                      <div id="player-info">
+                        <Typography id="player">{item}</Typography>
+                        <Typography id="answer">{useranswer[i]}</Typography>
+                      </div>
+                      <div id="points-div">
+                        <Typography id="points">{points[i]}</Typography>
+                      </div>
+                    </div>
+                    
                 </ListItem>
-                <Divider component="li" variant="inset" id="line" />
+                <Divider component="li" variant="middle" className="line"/>
                 </Grid>
                 ))}
             </List>
           </CardContent>
-          {exit ? <Button id="bottom-buttons" type="secondary" 
+          {exit ? <Button id="bottom-buttons" type="secondary" className={classes.Button}
                                          onClick={movePage}>Who won???</Button> : 
-                          <Button id="bottom-buttons" type="secondary" 
+                          <Button id="bottom-buttons" type="secondary" className={classes.Button}
                                          onClick={movePage}>Next question</Button>}
-          </Grid>
+          
         </Card>
         </Zoom>
     </Grid>
@@ -244,10 +248,12 @@ else
               <ListItem key={i}>
                 <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
                   <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                  {!choice && checkValidAnswer(i) ? <Button className={classes.Button} onClick={() => chooseAnswer(i)} id="choice-buttons" variant="outlined"
-                                           type="secondary" >{item}</Button> 
-                                       : <Button id="choice-buttons" variant="outlined" type="secondary" disabled
-                                                 className={classes.Button} >{item}</Button>}
+                  {!choice && checkValidAnswer(i) ? 
+                    <Button className={classes.Button} onClick={() => chooseAnswer(i)} 
+                            id="choice-buttons" variant="outlined"
+                            type="secondary" >{item}</Button> 
+                  : <Button id="choice-buttons" variant="outlined" type="secondary" disabled
+                            className={classes.Button}>{item}</Button>}
                   </Grid>
                 </Slide>
               </ListItem>
@@ -269,3 +275,21 @@ else
 }
 
 export default Answers;
+
+
+/*
+/* <Grid container direction="row" alignItems="center" 
+                          justify="space-around" xs={12}>
+                      <Grid container item direction="column" 
+                                      jusitfy="center" xs={6}>
+                        <Grid item>
+                          <Typography id="player">{item}</Typography>
+                        </Grid>
+                        <Grid>
+                          <Typography>{useranswer[i]}</Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={6} justify="center">
+                        <Typography>{points[i]}</Typography>
+                      </Grid>
+                    </Grid> */

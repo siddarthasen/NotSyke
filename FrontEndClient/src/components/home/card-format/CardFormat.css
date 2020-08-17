@@ -5,12 +5,9 @@ html {
 	background-repeat:   no-repeat;
 	background-position: center center;      
 }
-
 .title2 {
 	font-size: 50
 }
-
-
 #scroll::-webkit-scrollbar {
 	display: none;
 }

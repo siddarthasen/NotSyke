@@ -1,9 +1,11 @@
 #score-title {
     line-height: 150%;
-    font-size: large;
+    font-size: 22px;
     word-wrap: break-word;
-    display: inline;
-    
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    /* margin-bottom: 10px;    */
 }
 #card-answers {
 	mix-blend-mode: normal;
@@ -16,23 +18,57 @@
     padding: 0;
     position: relative;
 }
+#all-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
+    margin-top: 2.5%;  
+}
+#player-info {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+#points-div {
+    display: flex;
+    align-items: center;
+    margin-left: 12%;
+    margin-right: 5%;
+}
 #player {
     font-weight: bold;
+    margin-bottom: 1.5%;
 }
-#line {
-    
+#answer {
+    font-size: small;
+}
+#points {
+    font-weight: bold;
+    font-size: 35px;
+}
+#question {
+    line-height: 150%;
+    font-size: large;
+    word-wrap: break-word;
+    display: inline;
+}
+.line {
+    color: hotpink;
 }
 
 #choice-buttons {
     display: flex;
     flex: 1;
     align-content: center;
-    align-self: center;
+    align-self: baseline;
     justify-content: center;
+    word-wrap: break-word;
     font-size: 15px;
-    height: 40px;
+    height: auto;
     border-radius: 10;
     width: 280px;
+    /* border: 0; */
+    margin-bottom: 10px;
 }
 
 #bottom-buttons {
@@ -42,6 +78,7 @@
     margin-right: 200;
     height: 49;
     width: 300;
+    display: flex;
     align-items: center;
     font-size: 25;
     font-family: 'Segoe Print';

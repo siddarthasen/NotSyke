@@ -97,6 +97,7 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, history, disp
           placeholder="Name"
           onChange={(e) => setName(e.target.value)}
           onKeyPress={(e) => {handleKeyPress(e, 'Join', room, name, history, dispatch)}}
+          inputProps={{maxLength :20}}
         />
       </div>
       <div className="textboxes">
@@ -105,6 +106,7 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, history, disp
           placeholder="Room Code"
           onChange={(e) => setRoom(e.target.value)}
           onKeyPress={(e) => {handleKeyPress(e, 'Join', room, name, history, dispatch)}}
+          inputProps={{maxLength :20}}
         />
       </div>
     </Grid>
@@ -124,6 +126,7 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, history, disp
             placeholder="Username"
             onChange={(e) => setName(e.target.value)}
             onKeyPress={(e) => {handleKeyPress(e, 'Create Room', room, name, history, dispatch)}}
+            inputProps={{maxLength :20}}
           />
         </div>
       </Grid>
