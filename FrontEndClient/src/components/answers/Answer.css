@@ -79,7 +79,7 @@
 
 #bottom-buttons {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     border-radius: 7px;
     border-width: 1px;
     font-size: 10px;

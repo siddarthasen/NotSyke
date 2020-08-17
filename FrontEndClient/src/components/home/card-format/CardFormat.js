@@ -64,7 +64,7 @@ const joinRoom = (buttonName, room, name, history, dispatch) => {
   // const ENDPOINT = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
   const ENDPOINT = "localhost:5000"
   socket = io(ENDPOINT)
-  if(buttonName.localeCompare('Create Room') == 0){
+  if(buttonName.localeCompare('Create Room') === 0){
     dispatch({type: 'SET_CREATOR', payload: true})
     dispatch({type: 'SET_SOCKET', payload: socket})
     dispatch(actions.sendLogIn('Create', name.trim(), room.trim(), socket, history))
@@ -150,7 +150,7 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
     let colors = ['#B297FF', '#82D9FF', '#E85050', 'rgba(4, 191, 16, 0.6)', '#FFD967'];
     let secondaryColors = ['#DED2FF', '#C5EDFF', '#E78686', '#BCE4BE', '#FFF3CE'];
     let num = Math.floor(Math.random() * colors.length);
-    num = num == 5 ? 4 : num;
+    num = num === 5 ? 4 : num;
     window.localStorage.setItem('color', colors[num]);
     dispatch({type: 'PICK_COLOR', payload: {primary: colors[num], secondary: secondaryColors[num]}});
     return colors[num];

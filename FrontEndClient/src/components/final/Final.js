@@ -26,6 +26,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Zoom from '@material-ui/core/Zoom';
 import './Final.css';
+import { find } from 'lodash';
 
 let socket, color;
 
@@ -80,31 +81,29 @@ const Final = (props) => {
         history.push('/')
     }
     const findWinners = () => {
-      //function for finding players that highest score
+      console.log("in winners");
       let retArray = [];
       let winners = [];
       let losers = [];
-      let obj = {};
-      obj.player = players.shift();
-      obj.points = points.shift();
-      winners.push(obj);
-      while (players) {
+      while (players.length !== 0) {
+        let obj = {};
+        obj.player = players.shift();
+        obj.points = points.shift();
+        winners.push(obj);
         if (points[0] < winners[0].points) {
-          while (players) {
+          while (players.length !== 0) {
             let obj = {};
             obj.player = players.shift();
             obj.points = points.shift();
             losers.push(obj);
           }
           retArray[1] = losers;
-        } else {
-          let obj = {};
-          obj.player = players.shift();
-          obj.points = points.shift();
-          winners.push(obj);
+          break;
         }
       }
       retArray[0] = winners;
+      console.log("winners: ", retArray[0]);
+      console.log("losers: ", retArray[1]);
       return retArray;
     }
 
