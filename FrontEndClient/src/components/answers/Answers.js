@@ -7,23 +7,17 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  withStyles, Avatar, Divider, CardHeader, List, ListItemText, ListItem
+ Divider, List, ListItem
 } from '@material-ui/core';
- import { Spring } from 'react-spring/renderprops'
+
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
-import Chip from '@material-ui/core/Chip';
+
 import Slide from '@material-ui/core/Slide';
-import { AwesomeButton } from "react-awesome-button";
-import Box from '@material-ui/core/Box';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
 import Zoom from '@material-ui/core/Zoom';
 import './Answer.css';
 import Modal from '@material-ui/core/Modal';
