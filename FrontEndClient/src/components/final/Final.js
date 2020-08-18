@@ -1,8 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import queryString from 'query-string'
-import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -11,16 +8,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Divider, List, ListItem
 } from '@material-ui/core';
- import { Spring } from 'react-spring/renderprops'
  import { useSelector, useDispatch } from 'react-redux';
-import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
 import Confetti from 'react-dom-confetti';
 
-
-import Zoom from '@material-ui/core/Zoom';
 import './Final.css';
-import { find } from 'lodash';
 
 let socket, color;
 
@@ -84,7 +76,6 @@ const Final = (props) => {
         let obj = {};
         obj.player = players.shift();
         if(obj.player === name){
-          console.log("WINNER")
           setRender(true)
         }
         obj.points = points.shift();
@@ -101,8 +92,6 @@ const Final = (props) => {
         }
       }
       retArray[0] = winners;
-      console.log("winners: ", retArray[0]);
-      console.log("losers: ", retArray[1]);
       setFinalArray(retArray)
     
   }, [])

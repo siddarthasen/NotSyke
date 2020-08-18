@@ -12,7 +12,6 @@ export const sendLogIn = (type, name, room, socket, history) => async dispatch =
         dispatch({type: 'SET_USER', payload: name})
       })
     socket.on('error1', (response) => {
-        console.log(response.error)
         dispatch({type: 'ERROR_CRED', payload: response.error})
       })
     }

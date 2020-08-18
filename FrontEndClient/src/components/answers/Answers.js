@@ -1,8 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import queryString from 'query-string'
-import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -17,12 +14,9 @@ import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
 
 import Slide from '@material-ui/core/Slide';
-
-import Zoom from '@material-ui/core/Zoom';
 import './Answer.css';
 import InputBase from '@material-ui/core/InputBase';
-import Grow from '@material-ui/core/Grow';
-let socket, color, secondaryColor;
+let  color, secondaryColor;
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -38,21 +32,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Answers = (props) => {
-  var count = 0;
   color = useSelector(state => state.color)
   secondaryColor = useSelector(state => state.secondaryColor)
   const classes = useStyles({color,secondaryColor});
   //Access redux state tree:
-  let test = useSelector(state => state)
-  let members = useSelector(state => state.members)
-  let creator = useSelector(state => state.creator)
   let socket = useSelector(state => state.socket)
   let roomID = useSelector(state => state.roomID)
-  let loading = useSelector(state => state.loading)
   let name = useSelector(state => state.name)
   let question = useSelector(state => state.question)
   let userID = useSelector(state => state.userID)
-  let temp = useSelector(state => state)
   const [display, setDisplay] = useState(false);
   const [slide, setSlide] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -113,7 +101,6 @@ const Answers = (props) => {
     try{
     socket.on('displayPoints', (choiceInfo) => {
       dispatch({type: 'PASS_SCREEN'})
-      console.log(choiceInfo)
       if(renderPoints === false)
       {
         let players = choiceInfo.choiceInfo.map(({name}) => name)
@@ -153,7 +140,6 @@ const Answers = (props) => {
   }
 
   const movePage = () => {
-    console.log(exit)
     if(!exit){
     setOpen(true)
     setClicked(true)
@@ -212,7 +198,7 @@ if(renderPoints)
           </CardContent>
           <div id="button-div">
           {exit ? <Button id="bottom-buttons" type="secondary" variant="outlined" className={classes.Button}
-                          onClick={movePage} >Who won???</Button> : 
+                          onClick={movePage} >Who won?</Button> : 
                   <Button id="bottom-buttons" type="secondary" variant="outlined" className={classes.Button}
                           onClick={movePage} disabled={clicked} >Next question</Button>}
                           </div>

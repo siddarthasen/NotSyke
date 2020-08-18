@@ -6,8 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
-import   {withStyles, Avatar, Divider, CardHeader, List, ListItemText, ListItem
-} from '@material-ui/core';
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
@@ -15,7 +13,6 @@ import './Question.css';
 
 
 let color;
-let socket;
 
 const useStyles = makeStyles((theme) => ({
   Button: {
@@ -30,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 const Game = (props) => {
   let history = useHistory();
   //Access redux state tree:
-  let members = useSelector(state=> state.members)
   let socket = useSelector(state=> state.socket)
   let roomID = useSelector(state => state.roomID)
   let name = useSelector(state => state.name)
@@ -41,7 +37,6 @@ const Game = (props) => {
 let question = useSelector(state=> state.question)
 
 const [answer, setAnswer] = useState('')
-const [open, setOpen] = useState(false);
   
   const dispatch = useDispatch()
   
@@ -57,7 +52,6 @@ const [open, setOpen] = useState(false);
 },[]);
 
 const submitAnswer = (event) => {
-  console.log(name)
   dispatch(actions.submitAnswer(roomID, name, answer, socket, question))
   history.push('/Answers', {name: name, room: roomID, answer: answer, question: question})
 }

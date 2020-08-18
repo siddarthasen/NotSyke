@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
+
 #scroll::-webkit-scrollbar {
     display: none;
     align-items: center;
@@ -9,6 +12,7 @@
     display: flex;
     justify-content: center;
     font-weight: bold;
+    font-family: 'Balsamiq Sans';
     /* margin-bottom: 10px;    */
 }
 #card-answer{
@@ -41,13 +45,16 @@
 #player {
     font-weight: bold;
     margin-bottom: 1.5%;
+    font-family: 'Balsamiq Sans';
 }
 #answer {
     font-size: small;
+    font-family: 'Comfortaa';
 }
 #points {
     font-weight: bold;
     font-size: 35px;
+    font-family: 'Balsamiq Sans';
 }
 #question {
     line-height: 150%;
@@ -69,6 +76,7 @@
     border-radius: 10;
     width: 280px;
     /* border: 0; */
+    font-family: 'Comfortaa';
     text-transform: none;
     margin-bottom: 10px;
 }
@@ -94,8 +102,8 @@
     border-width: 2px;
     padding: 15px;
     height: 240px;
-    font-size: 15px;
-    font-family: cursive;
+    font-size: 30px;
+    font-family: 'Balsamiq Sans';
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
@@ -114,6 +122,7 @@
     border-width: 1px;
     font-size: 10px;
     padding: 3.5%;
+    font-family: 'Balsamiq Sans';
     
 }
 #waiting-question{

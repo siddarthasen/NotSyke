@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -14,7 +14,7 @@ import './CardFormat.css'
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../../store/actions';
 import { Button } from '@material-ui/core';
-import Grow from '@material-ui/core/Grow';
+
 let socket;
 let color;
 
@@ -61,8 +61,8 @@ const useStyles = makeStyles({
 });
 
 const joinRoom = (buttonName, room, name, history, dispatch) => {
-  // const ENDPOINT = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-  const ENDPOINT = "localhost:5000"
+  const ENDPOINT = 'http://ec2-3-19-54-135.us-east-2.compute.amazonaws.com:5000'
+  // const ENDPOINT = "localhost:5000"
   socket = io(ENDPOINT)
   if(buttonName.localeCompare('Create Room') === 0){
     dispatch({type: 'SET_CREATOR', payload: true})

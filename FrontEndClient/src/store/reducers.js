@@ -16,7 +16,6 @@ const initalState = {
     color: '',
     out: false,
     userID: null,
-    members: [],
     points: [],
     secondaryColor: ''
 }

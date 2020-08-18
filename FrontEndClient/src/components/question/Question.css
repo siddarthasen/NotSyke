@@ -1,13 +1,12 @@
-#room {
-    font-size: 30px;
-    font-family: 'Chilanka', cursive;
-    margin-bottom: 15px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
+
 #question {
     line-height: 150%;
     font-size: large;
     word-wrap: break-word;
     display: inline;
+    font-family: 'Balsamiq Sans';
 }
 #card-question{
 	mix-blend-mode: normal;
@@ -27,7 +26,7 @@
     padding: 15px;
     height: 240px;
     font-size: 15px;
-    font-family: cursive;
+    font-family: 'Comfortaa';
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;

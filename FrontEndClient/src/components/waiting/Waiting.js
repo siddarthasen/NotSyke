@@ -1,30 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import queryString from 'query-string'
-import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import { makeStyles } from '@material-ui/core/styles';
-import CardFormat from '../home/card-format/CardFormat'
-import Chip from '@material-ui/core/Chip';
 import Slide from '@material-ui/core/Slide';
-import {
-  withStyles, Avatar, Divider, CardHeader, List, ListItemText, ListItem
-} from '@material-ui/core';
- import { Spring } from 'react-spring/renderprops'
+import {List} from '@material-ui/core';
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
-import { AwesomeButton } from "react-awesome-button";
-import { Beforeunload } from 'react-beforeunload';
-import { FixedSizeList } from 'react-window';
 import Zoom from '@material-ui/core/Zoom';
 import './waiting.css'
 

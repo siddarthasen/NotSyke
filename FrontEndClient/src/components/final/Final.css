@@ -1,22 +1,13 @@
-#room {
-    font-size: 30px;
-    font-family: 'Chilanka', cursive;
-    margin-bottom: 15px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
+
 #winner-title {
     line-height: 150%;
     font-size: 22px;
     word-wrap: break-word;
     display: flex;
     justify-content: center;
-    font-weight: bold;
-}
-#score-title {
-    line-height: 150%;
-    font-size: 22px;
-    word-wrap: break-word;
-    display: flex;
-    justify-content: center;
+    font-family: 'Balsamiq Sans';
     font-weight: bold;
 }
 #card-final {
@@ -45,13 +36,15 @@
 
 #winner-final {
     font-size: large;
+    font-family: 'Balsamiq Sans';
 
 }
 #loser-final {
     font-size: 13px;
+    font-family: 'Balsamiq Sans';
 }
 
 #exit-button {
-    font-family: 'Chilanka', 'Comic Sans MS', cursive;
+    font-family: 'Balsamiq Sans';
     font-size: small;
 }
