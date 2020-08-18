@@ -33,22 +33,25 @@
     flex-direction: row;
     justify-content: space-between; 
     margin-top: 2.5%; 
-    width: 275px;
+    width: 225px;
 }
 #loser-info-final {
     display: flex;
     flex-direction: row;
     justify-content: space-between; 
     margin-top: 2.5%; 
-    width: 275px;
+    width: 225px;
 }
 
 #winner-final {
     font-size: large;
-    color: green;
 
 }
 #loser-final {
     font-size: 13px;
-    color: red;
+}
+
+#exit-button {
+    font-family: 'Chilanka', 'Comic Sans MS', cursive;
+    font-size: small;
 }

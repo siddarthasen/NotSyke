@@ -233,6 +233,7 @@ io.on('connection', function(socket) {
         return;
       }
     }
+    socket.disconnect()
    }
    catch(err){
     console.log(err)

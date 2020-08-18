@@ -20,7 +20,8 @@ import Slide from '@material-ui/core/Slide';
 
 import Zoom from '@material-ui/core/Zoom';
 import './Answer.css';
-import Modal from '@material-ui/core/Modal';
+import InputBase from '@material-ui/core/InputBase';
+import Grow from '@material-ui/core/Grow';
 let socket, color, secondaryColor;
 
 const useStyles = makeStyles((theme) => ({
@@ -34,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
     },
     borderColor: ({color}) => `${(color)}`
   },
-  modal: {
-    backgroundColor: ({ secondaryColor}) => `${secondaryColor}`
-  } 
 }));
 
 const Answers = (props) => {
@@ -187,13 +185,13 @@ if(renderPoints)
     justify="center"
     style={{ minHeight: '90vh' }}>
       <Typography id="room">RoomID: {roomID}</Typography>
-      <Zoom in={slide} out={slide}>
+      <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
         <Card id="card-answer">
-        <Grid container alignItems="center" direction="column"></Grid>
           <CardContent>
             <Typography id="score-title">Scores</Typography>
             <List id="scroll" style={{overflow: 'auto', height: 300}}>
               {player.map((item, i) => (
+                
                 <Grid container direction="column">
                   <ListItem key={i}>
                     <div id="all-info">
@@ -219,7 +217,7 @@ if(renderPoints)
                           onClick={movePage} disabled={clicked} >Next question</Button>}
                           </div>
         </Card>
-        </Zoom>
+        </Slide>
     </Grid>
   );
 }
@@ -234,48 +232,49 @@ else
   justify="center"
   style={{ minHeight: '90vh' }}>
     <Typography id="room">RoomID: {roomID}</Typography>
-    <Card id="card-answer">
-    {display ? <Grid container alignItems="center" direction="column">
+    {display ? 
+    <Grid container alignItems="center" direction="column">
+      <Card id="card-answer">
       <CardContent>
         <Typography id="question">{question}</Typography>
         <List id="scroll" style={{overflow: 'auto', height: 300}}>
           {answers.map((item, i) => (
               <ListItem key={i}>
-                <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
-                  <Grid contanier jusitfy="flex-start" alignItem="flex-start">
-                  {!choice && checkValidAnswer(i) ? 
-                    <Button className={classes.Button} onClick={() => chooseAnswer(i)} 
-                            id="choice-buttons" variant="outlined"
-                            type="secondary" >{item}</Button> 
-                  : <Button id="choice-buttons" variant="outlined" type="secondary" disabled
-                            className={classes.Button}>{item}</Button>}
-                  </Grid>
-                </Slide>
+                 <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
+                    <Grid contanier jusitfy="flex-start" alignItem="flex-start">
+                    {!choice && checkValidAnswer(i) ? 
+                      <Button className={classes.Button} onClick={() => chooseAnswer(i)} 
+                              id="choice-buttons" variant="outlined"
+                              type="secondary" >{item}</Button> 
+                    : <Button id="choice-buttons" variant="outlined" type="secondary" disabled
+                              className={classes.Button}>{item}</Button>}
+                    </Grid>
+                  </Slide>
               </ListItem>
             ))}
         </List>
       </CardContent>
+      </Card>
       </Grid> :
       <Grid container alignItems="center" direction="column">
+        <Card id="card-question">
         <CardContent>
-          <div id="question-div">
+        <div id="question-div">
             <Typography id="question">{question}</Typography>
           </div> 
-          <div id="waiting-question" ref={rootRef}>
-            <Modal
-              open
-              aria-labelledby="server-modal-title"
-              aria-describedby="server-modal-description"
-              className={classes.modal}
-              container={() => rootRef.current}
-              >
-                <Typography>Waiting For Answers...</Typography>
-              </Modal>
-           </div>
+            <InputBase
+              editable={false}
+              multiline
+              id="waiting-box"
+              rows={10}
+              inputProps={{maxLength :0}}
+              value="Waiting for Answers..."
+              readOnly={true}
+            />
         </CardContent>
+        </Card>
         </Grid>
       }
-      </Card>
   </Grid>
   )
 }
@@ -283,21 +282,3 @@ else
 }
 
 export default Answers;
-
-
-/*
-/* <Grid container direction="row" alignItems="center" 
-                          justify="space-around" xs={12}>
-                      <Grid container item direction="column" 
-                                      jusitfy="center" xs={6}>
-                        <Grid item>
-                          <Typography id="player">{item}</Typography>
-                        </Grid>
-                        <Grid>
-                          <Typography>{useranswer[i]}</Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={6} justify="center">
-                        <Typography>{points[i]}</Typography>
-                      </Grid>
-                    </Grid> */

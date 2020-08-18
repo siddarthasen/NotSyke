@@ -7,15 +7,15 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-
 import { makeStyles } from '@material-ui/core/styles';
 import {
-List, ListItem
+  Divider, List, ListItem
 } from '@material-ui/core';
  import { Spring } from 'react-spring/renderprops'
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
+import Confetti from 'react-dom-confetti';
 
 
 import Zoom from '@material-ui/core/Zoom';
@@ -57,6 +57,7 @@ const Final = (props) => {
   let players = useSelector(state => state.members)
   let history = useHistory();
   let points = useSelector(state => state.points);
+  let [finalArray, setFinalArray] = useState([]);
 
   // if(players == undefined || players.length < 1){
   //   history.push('/')
@@ -64,6 +65,7 @@ const Final = (props) => {
   const [slide, setSlide] = useState(false);
   const [open, setOpen] = useState(false);
   const [winners, setWinners] = useState([]); // change the winners name to players
+  const[render, setRender] = useState(false)
   
   const dispatch = useDispatch()
   // useEffect(() => {
@@ -74,14 +76,17 @@ const Final = (props) => {
         dispatch({type: 'RESET_USER'})
         history.push('/')
     }
-    const findWinners = () => {
-      console.log("in winners");
+    useEffect(() => {
       let retArray = [];
       let winners = [];
       let losers = [];
       while (players.length !== 0) {
         let obj = {};
         obj.player = players.shift();
+        if(obj.player === name){
+          console.log("WINNER")
+          setRender(true)
+        }
         obj.points = points.shift();
         winners.push(obj);
         if (points[0] < winners[0].points) {
@@ -98,8 +103,9 @@ const Final = (props) => {
       retArray[0] = winners;
       console.log("winners: ", retArray[0]);
       console.log("losers: ", retArray[1]);
-      return retArray;
-    }
+      setFinalArray(retArray)
+    
+  }, [])
 
     window.onbeforeunload = function() {
       socket.emit('remove_user', {roomID: roomID, name: name, part: 'end'})
@@ -117,6 +123,19 @@ const Final = (props) => {
       socket.emit('remove_user', {roomID: roomID, name: name, part: 'end'})
       history.push('/')
     }
+    const config = {
+      angle: 90,
+      spread: "50",
+      startVelocity: 40,
+      elementCount: 70,
+      dragFriction: 0.12,
+      duration: 5000,
+      stagger: 3,
+      width: "10px",
+      height: "10px",
+      perspective: "1000px",
+      colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
+    };
 
     return(
         <Grid 
@@ -125,31 +144,34 @@ const Final = (props) => {
         alignItems="center"
         justify="center"
         style={{ minHeight: '90vh' }}>
+          
+        <Confetti active={render} config={config}/>
           <Typography id="room">RoomID: {roomID}</Typography>
             <Card id="card-final">
             <Grid container alignItems="center" direction="column">
               <CardContent >
                   <Typography id="winner-title">The Winner is... </Typography>
                   <List id="scroll" style={{overflow: 'auto', height: 300}}>
-                  {winners ? winners.map((item, i) => (
+                  {finalArray[0] ? finalArray[0].map((item, i) => (
                       <ListItem key={i}>
                         <div id="winner-info-final">
-                          <Typography id="winner-final">{item}</Typography>
-                          <Typography id="winner-final">{points[i]}</Typography>
+                          <Typography id="winner-final">{item.player}</Typography>
+                          <Typography id="winner-final">{item.points}</Typography>
                         </div>
                       </ListItem>
                       )): null}
-                    {players ? players.map((item, i) => (
+                      <Divider component="li" variant="middle" className="line"/>
+                    {finalArray[1] ? finalArray[1].map((item, i) => (
                         <ListItem key={i}>
                           <div id="loser-info-final">
-                            <Typography id="loser-final">{item}</Typography>
-                            <Typography id="loser-final">{points[i]}</Typography>
+                            <Typography id="loser-final">{item.player}</Typography>
+                            <Typography id="loser-final">{item.points}</Typography>
                           </div>
                       </ListItem>
                       )): null}
                   </List>
               </CardContent>
-              <Button id="bottom-buttons" type="secondary" onClick={movePage}>Exit</Button>
+              <Button id="exit-button" type="secondary" variant="outlined" className={classes.Button} onClick={movePage}>Exit</Button>
               </Grid>
             </Card>
         </Grid>

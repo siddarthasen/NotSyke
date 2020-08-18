@@ -182,8 +182,6 @@ const appBar = {
   alignItems="center"
   justify="center"
   style={{ minHeight: '90vh' }}>
-    <Grow in={true} out={out} style={{ transformOrigin: '0 0 0' }}
-          {...(out? { timeout: 1000 } : {})}>
       <Card id="card">
         <div id="title-spacing">
           <Typography id="title">
@@ -210,7 +208,6 @@ const appBar = {
           {!value ? <Typography id="error">{error}</Typography> : null }
         </Grid>
       </Card>
-      </Grow>
   </Grid>
   )
 }
