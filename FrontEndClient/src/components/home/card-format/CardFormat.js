@@ -61,7 +61,7 @@ const useStyles = makeStyles({
 });
 
 const joinRoom = (buttonName, room, name, history, dispatch) => {
-  const ENDPOINT = 'https://ec2-3-19-54-135.us-east-2.compute.amazonaws.com:5000'
+  const ENDPOINT = 'http://ec2-3-19-54-135.us-east-2.compute.amazonaws.com:5000'
   // const ENDPOINT = "localhost:5000"
   socket = io(ENDPOINT)
   if(buttonName.localeCompare('Create Room') === 0){
