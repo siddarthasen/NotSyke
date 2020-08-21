@@ -21,6 +21,10 @@ var roomList = {};
 
 
 
+app.get('/', (req, res) => {
+  return res.send('Received a GET HTTP method');
+});
+
 io.on('connection', function(socket) {
 
 
