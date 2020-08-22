@@ -63,12 +63,23 @@ const Final = (props) => {
   // useEffect(() => {
   //   findWinners()
   // })
+
+  window.onbeforeunload = function() {
+
+    socket.emit('remove_user', {roomID: roomID, name: name, part: 'exit'})
+    dispatch({type: 'RESET_USER'})
+    history.push('/')
+}
+
     const exitPage = () => {
-        socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+        socket.emit('remove_user', {roomID: roomID, name: name, part: 'exit'})
         dispatch({type: 'RESET_USER'})
         history.push('/')
     }
     useEffect(() => {
+      if(players.length === 0){
+        history.push('/')
+      }
       let retArray = [];
       let winners = [];
       let losers = [];
