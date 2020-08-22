@@ -20,7 +20,6 @@ import IconButton from '@material-ui/core/IconButton';
 
 let socket;
 let color;
-
 const useStyles = makeStyles({
   Button: {
     display: 'flex',
