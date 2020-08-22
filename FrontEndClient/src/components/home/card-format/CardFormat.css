@@ -18,8 +18,8 @@ html {
 	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 	border-radius: 16px;
 	border-radius: 40;
-    height: 350px;
-    width: 360px;
+	height: fit-content;
+	width: 360px;
 	align-items: center;
 	padding: 0;
 }
@@ -65,11 +65,14 @@ html {
 	justify-content: center;
 }
 #error{
-	margin-top: 12px;
+	margin-top: 1px;
+	margin-bottom: 10px;
 	color: red;
 	font-size:13px;
 }
+#tooltip {
 
+}
 @media screen and (max-width: 600px) {
 	#title {
 		font-size: 30px;
@@ -95,5 +98,4 @@ html {
 	#error {
 		margin-top: 8px;
 	}
-	
 }

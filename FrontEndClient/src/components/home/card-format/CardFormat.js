@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect,useState} from 'react';
 import io from 'socket.io-client'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -14,6 +14,9 @@ import './CardFormat.css'
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../../store/actions';
 import { Button } from '@material-ui/core';
+import InfoIcon from '@material-ui/icons/Info';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
 
 let socket;
 let color;
@@ -56,7 +59,20 @@ const useStyles = makeStyles({
     alignSelf: 'center'
   },
   appBarBorder: {
-    backgroundColor: 'black'
+    backgroundColor: 'black'  
+  },
+  info: {
+    width: '100%',
+    textAlign: 'end',
+    marginBottom: 3,
+    marginLeft: 3,
+  },
+  infoButton: {
+    padding: 0,
+    marginRight: '5%'
+  },
+  cardWrapper: {
+    height: 'fit-content'
   }
 });
 
@@ -151,6 +167,7 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   let out = useSelector(state => state.out)
   const classes = useStyles({color});
   let error = useSelector(state=> state.error)
+  const [info, setInfo] = useState(false)
 
   function backgroundColor() {
     let colors = ['#B297FF', '#82D9FF', '#E85050', 'rgba(4, 191, 16, 0.6)', '#FFD967'];
@@ -166,20 +183,15 @@ const appBar = {
   backgroundColor: color,
   alignItems: 'center'
 }
-// const ButtonStyle = {
-//     display: 'flex',
-//     flex: 1,
-//     alignContent: 'center',
-//     alignSelf: 'center',
-//     backgroundColor: 'black',
-//     "&:hover": {
-//       color: color
-// }
-// }
+
 
   useEffect(() => {
   document.body.style.background = backgroundColor();
   }, [])
+
+  const openInfo = () => {
+    setInfo(!info)
+  }
 
 
   return (
@@ -188,7 +200,7 @@ const appBar = {
   alignItems="center"
   justify="center"
   style={{ minHeight: '90vh' }}>
-      <Card id="card">
+      <Card id="card" className={classes.cardWrapper}>
         <div id="title-spacing">
           <Typography id="title">
             NotSyke!
@@ -210,6 +222,19 @@ const appBar = {
             <Button id="submit-button-home" variant="outlined" className={classes.Button}
               onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
             </Button>
+          </div>
+          <div className={classes.info}> 
+            <Tooltip
+              id="tooltip"
+              open={info}
+              title="Create a room or join a room with your friends. 
+                    Input the funniest answer you can think of!
+                    Vote for your favorite answer and see who won!"
+            >
+              <IconButton aria-label="delete" onClick={openInfo} className={classes.infoButton}>
+                <InfoIcon />
+              </IconButton>
+            </Tooltip>
           </div>
           {!value ? <Typography id="error">{error}</Typography> : null }
         </Grid>
