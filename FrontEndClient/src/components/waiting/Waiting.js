@@ -166,7 +166,11 @@ const Waiting = (props) => {
   //   });
   // };
 
-
+  window.addEventListener("pagehide" , function (event) { 
+    socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
+} );
 
 
 window.onbeforeunload = function() {

@@ -93,6 +93,8 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, history, disp
     alignItems="center">
       <div className="textboxes">
         <TextField
+          autoCapitalize='none'
+          autoComplete="off"
           id="username"
           placeholder="Name"
           onChange={(e) => setName(e.target.value)}
@@ -102,6 +104,8 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, history, disp
       </div>
       <div className="textboxes">
         <TextField
+          autoCapitalize='none'
+          autoComplete="off"
           id="password"
           placeholder="Room Code"
           onChange={(e) => setRoom(e.target.value)}
@@ -122,6 +126,8 @@ const RenderRoom = ({value, classes, name, setName, room, setRoom, history, disp
       alignItems="center">
         <div className="textboxes">
           <TextField
+            autoCapitalize='none'
+            autoComplete="off"
             id="username"
             placeholder="Username"
             onChange={(e) => setName(e.target.value)}

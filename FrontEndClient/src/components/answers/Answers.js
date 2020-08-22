@@ -70,6 +70,20 @@ const Answers = (props) => {
   history.push('/')
 }
 
+window.addEventListener("pagehide" , function (event) { 
+  if(renderPoints)
+    {
+      socket.emit('remove_user', {roomID: roomID, name: name, part: 'points'})
+    }
+    else
+    {
+      socket.emit('remove_user', {roomID: roomID, name: name, part: 'answers'})
+    }
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
+} );
+
+
   useEffect(() => {
     try{
     socket.on('displayAnswers', (answerInfo) => {

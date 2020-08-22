@@ -64,6 +64,13 @@ const Final = (props) => {
   //   findWinners()
   // })
 
+  window.addEventListener("pagehide" , function (event) { 
+    socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
+} );
+
+
   window.onbeforeunload = function() {
 
     socket.emit('remove_user', {roomID: roomID, name: name, part: 'exit'})

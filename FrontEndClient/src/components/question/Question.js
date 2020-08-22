@@ -63,6 +63,12 @@ const submitAnswer = (event) => {
 //     history.push('/')
 //   // }
 // } 
+window.addEventListener("pagehide" , function (event) { 
+  socket.emit('remove_user', {roomID: roomID, name: name, part: 'questions'})
+dispatch({type: 'RESET_USER'})
+history.push('/')
+} );
+
 
 window.onbeforeunload = function() {
       socket.emit('remove_user', {roomID: roomID, name: name, part: 'questions'})
@@ -93,7 +99,6 @@ window.onbeforeunload = function() {
               onChange={(e) => setAnswer(e.target.value)}
               inputProps={{maxLength :120}}
             />
-            <h1>hi harry</h1>
            </Grid>
         </CardContent>
         <div id="submit-button-div">
