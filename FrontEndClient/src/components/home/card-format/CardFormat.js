@@ -192,6 +192,7 @@ const appBar = {
   const openInfo = () => {
     setInfo(!info)
   }
+  const infoDesc = "Create or join a room with your friends. \nInput the funniest answer you can think of! \nVote for your favorite answer and see who won!"
 
 
   return (
@@ -226,10 +227,9 @@ const appBar = {
           <div className={classes.info}> 
             <Tooltip
               id="tooltip"
+              arrow
               open={info}
-              title="Create a room or join a room with your friends. 
-                    Input the funniest answer you can think of!
-                    Vote for your favorite answer and see who won!"
+              title={infoDesc}
             >
               <IconButton aria-label="delete" onClick={openInfo} className={classes.infoButton}>
                 <InfoIcon />

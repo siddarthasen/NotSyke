@@ -71,7 +71,7 @@ html {
 	font-size:13px;
 }
 #tooltip {
-
+	white-space:pre-wrap; 
 }
 @media screen and (max-width: 600px) {
 	#title {
