@@ -17,7 +17,6 @@ import { Button } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-
 let socket;
 let color;
 const useStyles = makeStyles({
