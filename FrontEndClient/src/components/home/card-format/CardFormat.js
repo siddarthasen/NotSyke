@@ -199,7 +199,7 @@ const appBar = {
   alignItems="center"
   justify="center"
   style={{ minHeight: '90vh' }}>
-      <Card id="card" className={classes.cardWrapper}>
+      <Card id="card" className={classes.cardWrapper} style={window.screen.availHeight <= 600 ? {height: '300px',width: '300px'} : null}>
         <div id="title-spacing">
           <Typography id="title">
             NotSyke!
@@ -221,6 +221,18 @@ const appBar = {
             <Button id="submit-button-home" variant="outlined" className={classes.Button}
               onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
             </Button>
+          </div>
+          <div className={classes.info}> 
+            <Tooltip
+              id="tooltip"
+              arrow
+              open={info}
+              title={infoDesc}
+            >
+              <IconButton aria-label="delete" onClick={openInfo} className={classes.infoButton}>
+                <InfoIcon />
+              </IconButton>
+            </Tooltip>
           </div>
           {!value ? <Typography id="error">{error}</Typography> : null }
         </Grid>
