@@ -199,7 +199,7 @@ const appBar = {
   alignItems="center"
   justify="center"
   style={{ minHeight: '90vh' }}>
-      <Card id="card" className={classes.cardWrapper} style={window.screen.availHeight <= 600 ? {height: '300px',width: '300px'} : null}>
+      <Card id="card" className={classes.cardWrapper}>
         <div id="title-spacing">
           <Typography id="title">
             NotSyke!

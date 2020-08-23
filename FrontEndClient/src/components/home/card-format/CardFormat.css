@@ -74,6 +74,10 @@ html {
 	#title {
 		font-size: 30px;
 	}
+	#card {
+		height: 300px;
+		width: 300px;
+	}
 	#tab-title {
 		font-size: 12px;
 	}
