@@ -196,7 +196,7 @@ window.onpopstate = function() {
       <Card id="card-waiting">
       <Grid container alignItems="center" justify="center" direction="column">
         <CardContent>
-          <Typography id="waiting">Waiting for People to Join...</Typography>
+          {waiting ? <Typography id="waiting">Please wait till the next round</Typography> :<Typography id="waiting">Waiting for People to Join...</Typography>}
           <List id="scroll" style={{overflow: 'auto', height: 300}}>
             {members != undefined ? members.map((item, i) => (
               <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
