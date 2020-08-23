@@ -222,18 +222,6 @@ const appBar = {
               onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
             </Button>
           </div>
-          <div className={classes.info}> 
-            <Tooltip
-              id="tooltip"
-              arrow
-              open={info}
-              title={infoDesc}
-            >
-              <IconButton aria-label="delete" onClick={openInfo} className={classes.infoButton}>
-                <InfoIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
           {!value ? <Typography id="error">{error}</Typography> : null }
         </Grid>
       </Card>
