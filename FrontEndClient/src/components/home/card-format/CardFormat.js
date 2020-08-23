@@ -68,9 +68,6 @@ const useStyles = makeStyles({
   infoButton: {
     padding: 0,
     marginRight: '5%'
-  },
-  cardWrapper: {
-    height: 'fit-content'
   }
 });
 
