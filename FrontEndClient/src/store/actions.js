@@ -21,9 +21,18 @@ export const sendLogIn = (type, name, room, socket, history) => async dispatch =
       
 }
 
-export const startGame = (room, socket, history, callback) => async dispatch => {
+export const disconnectIOS = (roomID, name, type, socket, history) => async dispatch => {
+    socket.emit('remove_user', {roomID: roomID, name: name, part: type})
+      dispatch({type: 'RESET_USER'})
+      history.push('/')
+    }
+
+export const startGame = (room, name, socket, history, callback) => async dispatch => {
     try{
-    socket.emit('start_game', {room: room, disconnect: false})
+        if(name === undefined){
+            history.push('/')
+        }
+    socket.emit('start_game', {room: room, name: name, disconnect: false})
     socket.on('start', (response) => {
         dispatch({type: 'START_GAME', payload: response.start})
         if(callback)
@@ -57,7 +66,9 @@ export const nextQuestion = (room, socket, name, history, callback) => async dis
 export const requestPrompt = (room, socket, history) => async dispatch => {
     try{
     socket.emit('requestPrompt', {room: room})
+    console.log(room, " is requesting a prompt")
     socket.on('sentPrompt', (response) => {
+        console.log("The response is" + response)
         dispatch({type: 'DISPLAY_QUESTION', payload: response.question})
     })
 }

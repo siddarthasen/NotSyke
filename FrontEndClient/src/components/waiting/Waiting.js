@@ -89,6 +89,7 @@ const Waiting = (props) => {
   color = useSelector(state => state.color)
   let start = useSelector(state => state.start)
   let name = useSelector(state => state.name)
+  const page = useSelector(state => state.page)
   let waiting = useSelector(state => state.waiting)
   const [slide, setSlide] = useState(false);
   const [ready, setReady] = useState(false)
@@ -96,22 +97,34 @@ const Waiting = (props) => {
   const dispatch = useDispatch()
   
   useEffect(() => {
-    // localStorage.setItem(socket, 'socket')
-    // //setting an item into chrome cache
-    // socket = localStorage.getItem('socket')
-    // var endpoint = 'http://ec2-13-59-225-36.us-east-2.compute.amazonaws.com:5000/'
-    // var endpoint = "localhost:5000"
-    // socket = io(endpoint)
-    // dispatch({type: 'SET_SOCKET', payload: socket})
-    // //assume this stuff is in action.js file
-    // if(type === 'Create')
-    // {
-    //   dispatch({type: 'SET_CREATOR', payload: true})
-    // }
-    // dispatch(actions.sendLogIn(type, name, room, endpoint, socket, io))
     setSlide(true)
       
   },[]);
+
+  useEffect(() => {
+    try{
+    socket.on('disconnect', () => {
+      if(window.location.href.indexOf("Waiting") >= 0){
+      dispatch(actions.disconnectIOS(roomID, name, 'waiting', socket, history))
+      }
+      else if(window.location.href.indexOf("Question") >= 0){
+        dispatch(actions.disconnectIOS(roomID, name, 'questions', socket, history))
+      }
+      else if(window.location.href.indexOf("Answers") >= 0){
+        if(page === 'points'){
+          dispatch(actions.disconnectIOS(roomID, name, 'points', socket, history))
+        }
+        else{
+          dispatch(actions.disconnectIOS(roomID, name, 'answers', socket, history))
+        }
+      }
+      dispatch({type: 'RESET_USER'})
+    });
+  }
+  catch(err){
+    history.push('/')
+  }
+  })
 
   useEffect(() => {
     try{
@@ -152,7 +165,7 @@ const Waiting = (props) => {
   const startGame = () => { //used for creator
     if(!ready){
     setReady(true);
-    dispatch(actions.startGame(roomID, socket, history, (update) => {
+    dispatch(actions.startGame(roomID, name, socket, history, (update) => {
       history.push('/Question', {name: name, room: roomID})
     }))
   }

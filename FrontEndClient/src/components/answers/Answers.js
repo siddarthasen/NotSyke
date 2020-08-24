@@ -57,6 +57,12 @@ const Answers = (props) => {
   const rootRef = useRef(null);
   let history = useHistory();
 
+  useEffect(() => {
+    if(renderPoints){
+      dispatch({type: 'SET_PAGE', payload: 'points'})
+    }
+  }, [])
+
   window.onbeforeunload = function() {
     if(renderPoints)
     {
@@ -69,6 +75,25 @@ const Answers = (props) => {
   dispatch({type: 'RESET_USER'})
   history.push('/')
 }
+
+useEffect(() => {
+  try{
+  socket.on('disconnect', () => {
+    if(renderPoints)
+    {
+      dispatch(actions.disconnectIOS(roomID, name, 'points', socket, history))
+    }
+    else
+    {
+      dispatch(actions.disconnectIOS(roomID, name, 'answers', socket, history))
+    }
+  dispatch({type: 'RESET_USER'})
+  });
+}
+catch(err){
+  history.push('/')
+}
+})
 
 window.addEventListener("pagehide" , function (event) { 
   if(renderPoints)

@@ -50,6 +50,17 @@ const [answer, setAnswer] = useState('')
     }
 
 },[]);
+useEffect(() => {
+  try{
+  socket.on('disconnect', () => {
+    dispatch(actions.disconnectIOS(roomID, name, 'questions', socket, history))
+    dispatch({type: 'RESET_USER'})
+  });
+}
+catch(err){
+  history.push('/')
+}
+})
 
 const submitAnswer = (event) => {
   dispatch(actions.submitAnswer(roomID, name, answer, socket, question))

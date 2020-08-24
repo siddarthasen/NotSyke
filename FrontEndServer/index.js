@@ -27,6 +27,13 @@ app.get('/', (req, res) => {
 
 io.on('connection', function(socket) {
 
+  /* 
+    Testing area
+  */
+
+
+  
+
 
   socket.on('join', function({type, name, room}) {
     // name = name.trim().toLowerCase();
@@ -183,6 +190,7 @@ io.on('connection', function(socket) {
 }
 
  socket.on('remove_user', function({roomID, name, part}) {  
+   console.log("removing someone " , name)
    try{
     let removeIndex
     if (roomList[roomID]) {

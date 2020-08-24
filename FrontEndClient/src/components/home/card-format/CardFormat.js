@@ -73,7 +73,11 @@ const useStyles = makeStyles({
 const joinRoom = (buttonName, room, name, history, dispatch) => {
   const ENDPOINT = 'https://not-syke-dev-api.xyz:5000'
   // const ENDPOINT = "localhost:5000"
-  socket = io(ENDPOINT)
+  socket = io(ENDPOINT, {
+    reconnectionAttempts: 1000, // number of reconnection attempts before giving up
+    reconnectionDelay: 2000,        // how long to initially wait before attempting a new reconnection
+    reconnectionDelayMax: 2500, 
+  })
   if(buttonName.localeCompare('Create Room') === 0){
     dispatch({type: 'SET_CREATOR', payload: true})
     dispatch({type: 'SET_SOCKET', payload: socket})
@@ -214,9 +218,11 @@ const appBar = {
                       setRoom={setRoom} room={room} history={history} dispatch={dispatch}/>
         </CardContent>
           <div id="submit-button-div">
-            <Button id="submit-button-home" variant="outlined" className={classes.Button}
+            {name.length > 0 ? <Button id="submit-button-home" variant="outlined" className={classes.Button}
               onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
-            </Button>
+            </Button> : <Button id="submit-button-home" variant="outlined" className={classes.Button} disabled
+              onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
+            </Button>}
           </div>
           {!value ? <Typography id="error">{error}</Typography> : null }
         </Grid>
