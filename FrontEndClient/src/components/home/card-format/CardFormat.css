@@ -22,6 +22,7 @@ html {
     width: 360px;
 	align-items: center;
 	padding: 0;
+	position: relative;
 }
 
 #title-spacing {
@@ -68,6 +69,12 @@ html {
 	margin-top: 12px;
 	color: red;
 	font-size:13px;
+}
+#info {
+	position: absolute;
+	bottom: 0%;
+	margin-bottom: 7px;
+    margin-left: 10px;
 }
 
 @media screen and (max-width: 600px) {
