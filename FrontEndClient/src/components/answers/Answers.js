@@ -63,50 +63,6 @@ const Answers = (props) => {
     }
   }, [])
 
-  window.onbeforeunload = function() {
-    if(renderPoints)
-    {
-      socket.emit('remove_user', {roomID: roomID, name: name, part: 'points'})
-    }
-    else
-    {
-      socket.emit('remove_user', {roomID: roomID, name: name, part: 'answers'})
-    }
-  dispatch({type: 'RESET_USER'})
-  history.push('/')
-}
-
-useEffect(() => {
-  try{
-  socket.on('disconnect', () => {
-    if(renderPoints)
-    {
-      dispatch(actions.disconnectIOS(roomID, name, 'points', socket, history))
-    }
-    else
-    {
-      dispatch(actions.disconnectIOS(roomID, name, 'answers', socket, history))
-    }
-  dispatch({type: 'RESET_USER'})
-  });
-}
-catch(err){
-  history.push('/')
-}
-})
-
-window.addEventListener("pagehide" , function (event) { 
-  if(renderPoints)
-    {
-      socket.emit('remove_user', {roomID: roomID, name: name, part: 'points'})
-    }
-    else
-    {
-      socket.emit('remove_user', {roomID: roomID, name: name, part: 'answers'})
-    }
-  dispatch({type: 'RESET_USER'})
-  history.push('/')
-} );
 
 
   useEffect(() => {
@@ -160,6 +116,28 @@ window.addEventListener("pagehide" , function (event) {
     history.push('/')
   }
   })
+
+//   window.onbeforeunload = function() {
+//     if(renderPoints){
+//       socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
+//     }
+//     else{
+//       socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
+//     }
+//   dispatch({type: 'RESET_USER'})
+//   history.push('/')
+// }
+
+// window.addEventListener("pagehide" , function (event) { 
+//   if(renderPoints){
+//     socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
+//   }
+//   else{
+//     socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
+//   }
+// dispatch({type: 'RESET_USER'})
+// history.push('/')
+// } );
 
 
 

@@ -12,6 +12,7 @@ import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
 import Zoom from '@material-ui/core/Zoom';
 import './waiting.css'
+import ifvisible  from "ifvisible.js"
 
 let socket;
 let color;
@@ -101,30 +102,19 @@ const Waiting = (props) => {
       
   },[]);
 
-  useEffect(() => {
-    try{
-    socket.on('disconnect', () => {
-      if(window.location.href.indexOf("Waiting") >= 0){
-      dispatch(actions.disconnectIOS(roomID, name, 'waiting', socket, history))
-      }
-      else if(window.location.href.indexOf("Question") >= 0){
-        dispatch(actions.disconnectIOS(roomID, name, 'questions', socket, history))
-      }
-      else if(window.location.href.indexOf("Answers") >= 0){
-        if(page === 'points'){
-          dispatch(actions.disconnectIOS(roomID, name, 'points', socket, history))
-        }
-        else{
-          dispatch(actions.disconnectIOS(roomID, name, 'answers', socket, history))
-        }
-      }
-      dispatch({type: 'RESET_USER'})
-    });
+  window.addEventListener("pagehide" , function (event) { 
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
+} );
+
+useEffect(() => {
+  try{
+    socket.emit('dummy')
   }
   catch(err){
     history.push('/')
   }
-  })
+})
 
   useEffect(() => {
     try{
@@ -160,6 +150,13 @@ const Waiting = (props) => {
   }
   })
 
+  window.onbeforeunload = function() {
+
+    socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
+  dispatch({type: 'RESET_USER'})
+  history.push('/')
+}
+
 
 
   const startGame = () => { //used for creator
@@ -180,7 +177,7 @@ const Waiting = (props) => {
   // };
 
   window.addEventListener("pagehide" , function (event) { 
-    socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+    socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
   dispatch({type: 'RESET_USER'})
   history.push('/')
 } );
@@ -188,15 +185,21 @@ const Waiting = (props) => {
 
 window.onbeforeunload = function() {
 
-    socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+    socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
   dispatch({type: 'RESET_USER'})
   history.push('/')
 }
 window.onpopstate = function() {
-  socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+  socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
   dispatch({type: 'RESET_USER'})
   history.push('/')
 }
+// ifvisible.setIdleDuration(5);
+// ifvisible.on("hidden", function(){
+//   socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
+//   dispatch({type: 'RESET_USER'})
+//   history.push('/')
+// });
   return (
 <Grid 
   container

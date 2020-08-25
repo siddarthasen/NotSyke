@@ -50,17 +50,19 @@ const [answer, setAnswer] = useState('')
     }
 
 },[]);
-useEffect(() => {
-  try{
-  socket.on('disconnect', () => {
-    dispatch(actions.disconnectIOS(roomID, name, 'questions', socket, history))
-    dispatch({type: 'RESET_USER'})
-  });
+
+window.onbeforeunload = function() {
+
+  socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
+dispatch({type: 'RESET_USER'})
+history.push('/')
 }
-catch(err){
-  history.push('/')
-}
-})
+
+window.addEventListener("pagehide" , function (event) { 
+  socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
+dispatch({type: 'RESET_USER'})
+history.push('/')
+} );
 
 const submitAnswer = (event) => {
   dispatch(actions.submitAnswer(roomID, name, answer, socket, question))
@@ -74,18 +76,7 @@ const submitAnswer = (event) => {
 //     history.push('/')
 //   // }
 // } 
-window.addEventListener("pagehide" , function (event) { 
-  socket.emit('remove_user', {roomID: roomID, name: name, part: 'questions'})
-dispatch({type: 'RESET_USER'})
-history.push('/')
-} );
 
-
-window.onbeforeunload = function() {
-      socket.emit('remove_user', {roomID: roomID, name: name, part: 'questions'})
-    dispatch({type: 'RESET_USER'})
-    history.push('/')
-}
 
   return (
 <Grid 
