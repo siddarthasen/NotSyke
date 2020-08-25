@@ -104,7 +104,8 @@ const submitAnswer = (event) => {
            </Grid>
         </CardContent>
         <div id="submit-button-div">
-          <Button id="submit-button" variant="outlined" className={classes.Button} onClick={submitAnswer}>Submit</Button>
+          {answer.length > 0 ? <Button id="submit-button" variant="outlined" className={classes.Button} onClick={submitAnswer}>Submit</Button>
+          : <Button id="submit-button" variant="outlined" className={classes.Button} disabled onClick={submitAnswer}>Submit</Button>}
           </div>
         </Grid>
       </Card>
