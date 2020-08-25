@@ -11,8 +11,7 @@ import {List} from '@material-ui/core';
 import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
 import Zoom from '@material-ui/core/Zoom';
-import './waiting.css'
-import ifvisible  from "ifvisible.js"
+import './waiting.css';
 
 let socket;
 let color;
@@ -213,7 +212,7 @@ window.onpopstate = function() {
       <Grid container alignItems="center" justify="center" direction="column">
         <CardContent>
           {waiting ? <Typography id="waiting">Please wait till the next round</Typography> :<Typography id="waiting">Waiting for People to Join...</Typography>}
-          <List id="scroll" style={{overflow: 'auto', height: 300}}>
+          <List id="scroll" style={{overflow: 'auto', height: 260, marginBottom: 10}}>
             {members != undefined ? members.map((item, i) => (
               <Slide direction="up" in={slide} mountOnEnter unmountOnExit>
                 <Grid container alignItems="center" justify="center" >
