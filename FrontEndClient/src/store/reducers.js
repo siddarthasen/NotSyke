@@ -18,7 +18,8 @@ const initalState = {
     userID: null,
     points: [],
     secondaryColor: '',
-    page: ''
+    page: '',
+    refresh: false
 }
 
 function reducer(state=initalState, action) {
@@ -28,7 +29,7 @@ function reducer(state=initalState, action) {
         case 'SET_USER':
             return{...state, name: action.payload}
         case 'ERROR_CRED':
-            return{...state, error: action.payload}
+            return{...state, error: action.payload, refresh: !state.refresh}
         case 'SET_SOCKET':
             return{...state, socket: action.payload}
         case 'START_GAME':

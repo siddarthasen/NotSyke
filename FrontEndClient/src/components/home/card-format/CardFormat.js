@@ -165,7 +165,9 @@ const CardFormat = ({value, handleChange, buttonName, name, setName, room, setRo
   let out = useSelector(state => state.out)
   const classes = useStyles({color});
   let error = useSelector(state=> state.error)
+  const refresh = useSelector(state=> state.refresh)
   const [info, setInfo] = useState(false)
+  const [clicked, setClicked] = useState(false)
 
   function backgroundColor() {
     let colors = ['#B297FF', '#82D9FF', '#E85050', 'rgba(4, 191, 16, 0.6)', '#FFD967'];
@@ -192,6 +194,11 @@ const appBar = {
   }
   const infoDesc = "Create or join a room with your friends. \nInput the funniest answer you can think of! \nVote for your favorite answer and see who won!"
 
+  useEffect(() => {
+    if(error !== ''){
+      setClicked(false)
+    }
+  }, [refresh])
 
   return (
   <Grid 
@@ -218,8 +225,10 @@ const appBar = {
                       setRoom={setRoom} room={room} history={history} dispatch={dispatch}/>
         </CardContent>
           <div id="submit-button-div">
-            {name.length > 0 ? <Button id="submit-button-home" variant="outlined" className={classes.Button}
-              onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
+            {name.length > 0 && clicked == false? <Button id="submit-button-home" variant="outlined" className={classes.Button}
+              onClick={()=> {
+                setClicked(true)
+                joinRoom(buttonName, room, name, history, dispatch)}}>{buttonName}
             </Button> : <Button id="submit-button-home" variant="outlined" className={classes.Button} disabled
               onClick={()=> joinRoom(buttonName, room, name, history, dispatch)}>{buttonName}
             </Button>}
