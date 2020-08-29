@@ -10,43 +10,50 @@ class Room {
       this.question_requests = 0;
       this.inGame = false;
       this.waitingRoom = [];
-      this.rounds = 1;
-      this.questionList = questionList.questions;
+      this.rounds = 7;
+      this.page = '';
+      this.questions = [];
+      this.generateRandomQuestions();
     }
-  
+
+    generateRandomQuestions() {
+      for (let i = 0; i < this.rounds; i++) {
+        let questionID = Math.floor(Math.random() * 10);
+        while (this.questions.indexOf(questionID) != -1) {
+          questionID = Math.floor(Math.random() * 10);
+        }
+        this.questions.push(questionID);
+      }
+    }
+
+    getNextQuestion() {
+      return questionList.questions[this.questions.shift()];
+    }
+
     isNextQuestion() {
       this.question_requests += 1;
       return this.question_requests == this.userList.length;
     }
-  
-    getRandomQuestion() {
-      if (this.questionList.length == 0) {
-        this.questionList = questionList;
-      }
-      let num = Math.floor(Math.random() + 0.1 * this.questionList.length);
-      let question = this.questionList.splice(num, 1);
-      return question[0];
-    }
-  
+
     getNextPlayer() {
       this.player_num += 1;
       this.player_num = this.player_num % this.userList.length;
       return this.userList[this.player_num];
     }
-  
+
     resetQuestionRequests() {
       this.question_requests = 0;
     }
-  
+
     resetResponses() {
       this.answers = 0;
       this.choices = 0;
     }
-  
+
     uniqueName(name) {
       return this.userList.findIndex((user) => user.name === name) === -1;
     }
-  
+
     static randomizeList(lst) {
       let temp, newList
       temp = Array.from(lst);

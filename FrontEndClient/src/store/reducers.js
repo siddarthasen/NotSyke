@@ -18,7 +18,8 @@ const initalState = {
     userID: null,
     points: [],
     secondaryColor: '',
-    page: ''
+    page: '',
+    leave: false
 }
 
 function reducer(state=initalState, action) {
@@ -55,6 +56,8 @@ function reducer(state=initalState, action) {
                 return{...state, members: action.payload.player, points: action.payload.points}
         case 'SET_PAGE':
                 return{...state, page: action.payload}
+        case 'LEAVE_PAGE':
+                return{...state, leave: true}
         default: 
             return{...state}
     }
