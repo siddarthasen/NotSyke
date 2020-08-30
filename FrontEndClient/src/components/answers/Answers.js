@@ -16,6 +16,7 @@ import { useHistory } from "react-router-dom";
 import Slide from '@material-ui/core/Slide';
 import './Answer.css';
 import InputBase from '@material-ui/core/InputBase';
+import MuiAlert from '@material-ui/lab/Alert';
 let  color, secondaryColor;
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +32,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const Answers = (props) => {
   color = useSelector(state => state.color)
   secondaryColor = useSelector(state => state.secondaryColor)
@@ -41,6 +46,8 @@ const Answers = (props) => {
   let name = useSelector(state => state.name)
   let question = useSelector(state => state.question)
   let userID = useSelector(state => state.userID)
+  const leave = useSelector(state => state.leave)
+
   const [display, setDisplay] = useState(false);
   const [slide, setSlide] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -278,6 +285,7 @@ else
         </Card>
         </Grid>
       }
+      {leave ? <Alert id="leaving-alert" severity="error">You are the last person. Leaving room.</Alert> : null}
   </Grid>
   )
 }

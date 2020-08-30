@@ -12,6 +12,7 @@ import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
 import Zoom from '@material-ui/core/Zoom';
 import './waiting.css';
+import MuiAlert from '@material-ui/lab/Alert';
 
 let socket;
 let color;
@@ -79,6 +80,10 @@ const useStyles = makeStyles({
   }
 });
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const Waiting = (props) => {
   const classes = useStyles({color});
   let history = useHistory();
@@ -93,6 +98,7 @@ const Waiting = (props) => {
   let waiting = useSelector(state => state.waiting)
   const [slide, setSlide] = useState(false);
   const [ready, setReady] = useState(false)
+  const leave = useSelector(state => state.leave)
     
   const dispatch = useDispatch()
   
@@ -108,12 +114,21 @@ const Waiting = (props) => {
 
 useEffect(() => {
   try{
-    socket.emit('dummy')
-  }
-  catch(err){
-    history.push('/')
-  }
-})
+    socket.on('disconnect', () => {
+      setTimeout(
+        function() {
+          window.location.reload(true);
+          dispatch({type: 'RESET_USER'});
+
+          history.push('/');
+        },5000);
+      })
+    }
+    catch(err){
+      history.push('/')
+    }
+  })
+
 
   useEffect(() => {
     try{
@@ -122,7 +137,15 @@ useEffect(() => {
     })
     }
     catch(err){
-      history.push('/')
+      dispatch({type: 'LEAVE_PAGE'})
+      console.log(leave)
+      setTimeout(
+        function() {
+          window.location.reload(true);
+          dispatch({type: 'RESET_USER'});
+
+          history.push('/');
+        },5000);
     }
   })
 
@@ -133,15 +156,30 @@ useEffect(() => {
     })
   }
   catch(err){
-    history.push('/')
+    dispatch({type: 'LEAVE_PAGE'})
+    console.log(leave)
+    setTimeout(
+      function() {
+        window.location.reload(true);
+        dispatch({type: 'RESET_USER'});
+
+        history.push('/');
+      },5000);
   }
   })
 
   useEffect(() => {
     try{
     socket.on('return_home', () => {
-      dispatch({type: 'RESET_USER'})
-      history.push('/')
+      dispatch({type: 'LEAVE_PAGE'})
+      console.log(leave)
+      setTimeout(
+        function() {
+          window.location.reload(true);
+          dispatch({type: 'RESET_USER'});
+
+          history.push('/');
+        },2000);
     })
   }
   catch(err){
@@ -152,8 +190,8 @@ useEffect(() => {
   window.onbeforeunload = function() {
 
     socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
-  dispatch({type: 'RESET_USER'})
-  history.push('/')
+    dispatch({type: 'RESET_USER'})
+    history.push('/')
 }
 
 
@@ -166,14 +204,6 @@ useEffect(() => {
     }))
   }
   }
-
-  /*  For this user disconnection. First call when a user disconnects. 
-      Emit to the server. Take out the DISCONNECT variable @Sid. */
-  // const disconnectUser = () => {
-  //   socket.on('disconnect', () => {
-  //     socket.emit('player-disconnect', {roomID: roomID, name: name});
-  //   });
-  // };
 
   window.addEventListener("pagehide" , function (event) { 
     socket.emit('remove_user', {roomID: roomID, name: name, part: '1'})
@@ -193,6 +223,7 @@ window.onpopstate = function() {
   dispatch({type: 'RESET_USER'})
   history.push('/')
 }
+
 // ifvisible.setIdleDuration(5);
 // ifvisible.on("hidden", function(){
 //   socket.emit('remove_user', {roomID: roomID, name: name, part: 'waiting'})
@@ -229,6 +260,7 @@ window.onpopstate = function() {
         </Grid>
       </Card>
       </Zoom>
+      {leave ? <Alert id="leaving-alert" severity="error">You are the last person. Leaving room.</Alert> : null}
   </Grid>
   );
 }

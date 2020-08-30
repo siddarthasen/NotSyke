@@ -9,6 +9,7 @@ import InputBase from '@material-ui/core/InputBase';
  import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../store/actions'
 import { useHistory } from "react-router-dom";
+import MuiAlert from '@material-ui/lab/Alert';
 import './Question.css';
 
 
@@ -24,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const Game = (props) => {
   let history = useHistory();
   //Access redux state tree:
@@ -31,6 +36,7 @@ const Game = (props) => {
   let roomID = useSelector(state => state.roomID)
   let name = useSelector(state => state.name)
   color = useSelector(state => state.color)
+  const leave = useSelector(state => state.leave)
   const classes = useStyles({color});
 
 
@@ -109,6 +115,7 @@ const submitAnswer = (event) => {
           </div>
         </Grid>
       </Card>
+      {leave ? <Alert id="leaving-alert" severity="error">You are the last person. Leaving room.</Alert> : null}
   </Grid>
   );
 }
